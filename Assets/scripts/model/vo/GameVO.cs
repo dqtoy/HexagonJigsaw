@@ -6,6 +6,8 @@
     public float PixelWidth;
     public float PixelHeight;
 
+    public LevelVO level;
+
     private static GameVO instance;
 
     public static GameVO Instance

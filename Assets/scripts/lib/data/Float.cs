@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace lib
 {
-    public class FloatValue : SimpleValue
+    public class Float : SimpleValue
     {
-        public FloatValue(object value = null)
+        public Float(object value = null)
         {
             this.value = value ?? 0;
         }

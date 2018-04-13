@@ -10,9 +10,10 @@ public class UIStart : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Vector3 size = new Vector3();
-        size = camera.ViewportToWorldPoint(size);
-        Txt.text = "像素大小:" + camera.pixelWidth + "," + camera.pixelHeight + "\n世界坐标大小:" + Mathf.Abs(2 * size.x) + "," + Mathf.Abs(2 * size.y);
+        //Vector3 size = new Vector3();
+        //size = camera.ViewportToWorldPoint(size);
+        //Txt.text = "像素大小:" + camera.pixelWidth + "," + camera.pixelHeight + "\n世界坐标大小:" + Mathf.Abs(2 * size.x) + "," + Mathf.Abs(2 * size.y);
+        Txt.text = "";
     }
 	
 	// Update is called once per frame

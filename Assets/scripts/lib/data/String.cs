@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace lib
 {
-    public class StringValue : SimpleValue
+    public class String : SimpleValue
     {
-        public StringValue(object value = null)
+        public String(object value = null)
         {
             this.value = value ?? 0;
         }

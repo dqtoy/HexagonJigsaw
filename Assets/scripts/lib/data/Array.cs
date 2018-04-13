@@ -1,8 +1,8 @@
 ﻿namespace lib
 {
-    public class ArrayValue : ValueBase
+    public class Array : ValueBase
     {
-        public IntValue length = new IntValue();
+        public Int length = new Int();
 
         public int Length
         {

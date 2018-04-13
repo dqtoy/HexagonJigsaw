@@ -34,11 +34,10 @@ namespace lib
                             if(c + 1 < clen && rowStr[c + 1] == '"')
                             {
                                 c++;
-                                end += 2;
+                                end++;
                             }
                             else
                             {
-                                end++;
                                 if (c == clen - 1)
                                 {
                                     row.Add(StringUtils.Slice(rowStr, start, end));
@@ -54,6 +53,10 @@ namespace lib
                             row.Add(StringUtils.Slice(rowStr, start, end));
                             start = c + 1;
                             end = start;
+                        }
+                        else
+                        {
+                            end++;
                         }
                     }
                     else

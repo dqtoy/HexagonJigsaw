@@ -7,14 +7,14 @@ namespace lib
         private DateTime lastDate;
         private int time;
         private int frame;
-        public IntValue Fps;
+        public Int Fps;
 
         public FPSCounter()
         {
             time = 0;
             frame = 0;
             lastDate = DateTime.Now;
-            Fps = new IntValue();
+            Fps = new Int();
         }
 
         public void Update()

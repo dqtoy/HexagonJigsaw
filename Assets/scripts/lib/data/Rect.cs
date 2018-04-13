@@ -2,10 +2,10 @@
 {
     public class Rect
     {
-        public FloatValue X = new FloatValue();
-        public FloatValue Y = new FloatValue();
-        public FloatValue Width = new FloatValue();
-        public FloatValue Height = new FloatValue();
+        public Float X = new Float();
+        public Float Y = new Float();
+        public Float Width = new Float();
+        public Float Height = new Float();
 
         public Rect(float x = 0,float y = 0,float width = 0,float height = 0)
         {

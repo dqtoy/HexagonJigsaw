@@ -4,8 +4,8 @@ namespace lib
 {
     public class Point2D
     {
-        private FloatValue xValue = new FloatValue();
-        private FloatValue yValue = new FloatValue();
+        private Float xValue = new Float();
+        private Float yValue = new Float();
 
         public Point2D(float x = 0,float y = 0)
         {

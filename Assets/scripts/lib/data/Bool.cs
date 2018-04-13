@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace lib
 {
-    public class BoolValue : SimpleValue
+    public class Bool : SimpleValue
     {
-        public BoolValue(object value = null)
+        public Bool(object value = null)
         {
             this.value = value ?? 0;
         }
