@@ -1,4 +1,4 @@
-//Make By CSVCommand. Time 2018.4.13 14:50:24
+//Make By CSVCommand. Time 2018.4.14 16:34:42
 using System.Collections.Generic;
 using lib;
 
@@ -6,8 +6,8 @@ public class LevelConfig
 {
 	private List<string> list;
 	public int id;
-	public List<CoordConfig> coords = new List<CoordConfig>();
 	public List<PieceConfig> pieces = new List<PieceConfig>();
+	public List<PieceConfig> pieces2 = new List<PieceConfig>();
 
 	public void Decode(List<string> list)
 	{
@@ -30,8 +30,9 @@ public class LevelConfig
 				List<string> itemList = StringUtils.Split(list[1],',');
 				for(int n = 0; n < itemList.Count; n++)
 				{
+					if (itemList[n].Length == 0) continue;
 					int item = (int)StringUtils.ToNumber(itemList[n]);
-					coords.Add(CoordConfig.GetConfig(item));
+					pieces.Add(PieceConfig.GetConfig(item));
 				}
 			}
 			if (i == 2)
@@ -39,8 +40,9 @@ public class LevelConfig
 				List<string> itemList = StringUtils.Split(list[2],',');
 				for(int n = 0; n < itemList.Count; n++)
 				{
+					if (itemList[n].Length == 0) continue;
 					int item = (int)StringUtils.ToNumber(itemList[n]);
-					pieces.Add(PieceConfig.GetConfig(item));
+					pieces2.Add(PieceConfig.GetConfig(item));
 				}
 			}
 		}
@@ -64,6 +66,7 @@ public class LevelConfig
 
 	public static void DecodeTable(string str)
 	{
+		Configs.Clear();
 		str = StringUtils.Replace(str, '\r', '\n');
 		str = StringUtils.Replace(str, "\n\n", '\n');
 		List<List<string>> list = CSV.Parse(str);

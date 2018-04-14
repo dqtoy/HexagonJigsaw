@@ -1,4 +1,4 @@
-//Make By CSVCommand. Time 2018.4.13 14:50:24
+//Make By CSVCommand. Time 2018.4.14 16:34:42
 using UnityEngine;
 
 public class ConfigDecode

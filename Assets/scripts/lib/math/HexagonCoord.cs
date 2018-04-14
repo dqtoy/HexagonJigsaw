@@ -98,6 +98,43 @@ namespace lib
             return p;
         }
 
+        /// <summary>
+        /// 获取与某点相邻的所有坐标点
+        /// </summary>
+        /// <param name="coord"></param>
+        /// <returns></returns>
+        public static List<Point2D> GetCoordsNextTo(Point2D coord, HaxgonCoordDirection direction = HaxgonCoordDirection.HORIZONTAL)
+        {
+            List<Point2D> coords = new List<Point2D>();
+            if (direction == HaxgonCoordDirection.HORIZONTAL)
+            {
+                if(coord.x % 2 == 0)
+                {
+                    coords.Add(Point2D.Create(1, 0));
+                    coords.Add(Point2D.Create(1, -1));
+                    coords.Add(Point2D.Create(0, -1));
+                    coords.Add(Point2D.Create(-1, -1));
+                    coords.Add(Point2D.Create(-1, 0));
+                    coords.Add(Point2D.Create(0, 1));
+                }
+                else
+                {
+                    coords.Add(Point2D.Create(1, 0));
+                    coords.Add(Point2D.Create(0, -1));
+                    coords.Add(Point2D.Create(-1, 0));
+                    coords.Add(Point2D.Create(-1, 1));
+                    coords.Add(Point2D.Create(0, 1));
+                    coords.Add(Point2D.Create(1, 1));
+                }
+            }
+            for(int i = 0; i < coords.Count; i++)
+            {
+                coords[i].x += coord.x;
+                coords[i].y += coord.y;
+            }
+            return coords;
+        }
+
         private static float halfSqrt3 = 0.8660254037844386f;
     }
 

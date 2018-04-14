@@ -9,10 +9,10 @@
 
         public Rect(float x = 0,float y = 0,float width = 0,float height = 0)
         {
-            X.Value = x;
-            Y.Value = y;
-            Width.Value = width;
-            Height.Value = height;
+            X.value = x;
+            Y.value = y;
+            Width.value = width;
+            Height.value = height;
         }
     }
 }

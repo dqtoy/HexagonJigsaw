@@ -33,14 +33,14 @@ namespace lib
         /// <summary>
         /// 当前值
         /// </summary>
-        protected object value;
+        protected object val;
 
         /// <summary>
         /// 当前值
         /// </summary>
-        public object Value
+        public object value
         {
-            get { return value; }
+            get { return val; }
             set { SetValue(value); }
         }
 

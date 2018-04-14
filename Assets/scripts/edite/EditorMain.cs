@@ -3,6 +3,8 @@ using System.Collections;
 using lib;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 public class EditorMain : MonoBehaviour
 {
@@ -13,43 +15,227 @@ public class EditorMain : MonoBehaviour
 
     public Image grid;
 
+    public Text levelTxt;
+
     /// <summary>
     /// 要载入的关卡
     /// </summary>
     public Text loadLevelTxt;
 
+    private float offx = -0.28f * 1.5f * 5;
+    private float offy = +0.28f * 8;
+
+    private float offx1 = -0.28f * 1.5f * 5;
+    private float offy1 = -0.28f * 4;
+
+    private float offx2 = +0.28f * 1.5f * 1;
+    private float offy2 = -0.28f * 10;
 
     // Use this for initialization
     void Start()
     {
-        EditorVO.Instance.dispatcher.AddListener("UIcolorDropDownHandle", OnColorChange);
+        ConfigDecode.Decode();
 
-        //生成背景
-        for (int x = 0; x < 9; x++)
+        EditorVO.Instance.dispatcher.AddListener("UIcolorDropDownHandle", OnColorChange);
+        EditorVO.Instance.dispatcher.AddListener("UIsaveHandle", OnSave);
+        EditorVO.Instance.dispatcher.AddListener("UIloadHandle", OnLoad);
+
+        colorDropDown.options = EditorVO.Instance.colors;
+
+        colorDropDown.value = EditorVO.Instance.color.value;
+
+        //生成格子
+        List<GridVO> grids = EditorVO.Instance.grids;
+        for(int i = 0; i < grids.Count; i++)
         {
-            for (int y = 0; y > -6; y--)
-            {
-                GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
-                obj.transform.Rotate(new Vector3(0, 0, 90f));
-                Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(x - 4, y + 2), 0.42f);
-                obj.transform.position = new Vector3(position.x, position.y);
-            }
+            GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
+            obj.transform.Rotate(new Vector3(0, 0, 90f));
+            Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.28f);
+            obj.transform.position = new Vector3((float)(position.x + offx), position.y + offy);
+            (obj.AddComponent<GameGrid>()).vo = grids[i];
+        }
+
+        grids = EditorVO.Instance.otherGrids1;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
+            obj.transform.Rotate(new Vector3(0, 0, 90f));
+            Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.28f);
+            obj.transform.position = new Vector3((float)(position.x + offx1), position.y + offy1);
+            (obj.AddComponent<GameGrid>()).vo = grids[i];
+        }
+
+        grids = EditorVO.Instance.piecesGrids;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
+            obj.transform.Rotate(new Vector3(0, 0, 90f));
+            obj.transform.localScale = new Vector3(0.5f, 0.5f);
+            Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.14f);
+            obj.transform.position = new Vector3((float)(position.x + 3), position.y);
+            (obj.AddComponent<GameGrid>()).vo = grids[i];
         }
     }
 
     private void OnColorChange(lib.Event e)
     {
         grid.sprite = e.Data as Sprite;
+        EditorVO.Instance.SelectColor(e.Data as Sprite);
     }
 
-    void CreateLevel()
+    /// <summary>
+    /// 保存
+    /// </summary>
+    /// <param name="e"></param>
+    private void OnSave(lib.Event e)
     {
-
+        new SaveLevelCommand(Convert.ToInt32(levelTxt.text));
     }
 
+    private void OnLoad(lib.Event e)
+    {
+        //清除之前的颜色
+        List<GridVO> grids = EditorVO.Instance.piecesGrids;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            grids[i].color.value = 0;
+        }
+        grids = EditorVO.Instance.grids;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            grids[i].color.value = 0;
+        }
+        grids = EditorVO.Instance.otherGrids1;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            grids[i].color.value = 0;
+        }
+
+        LevelConfig level = LevelConfig.GetConfig(Convert.ToInt32(loadLevelTxt.text));
+        if (level == null) return;
+        for(int i = 0; i < level.pieces.Count; i++)
+        {
+            for(int n = 0; n < level.pieces[i].coords.Count; n++)
+            {
+                EditorVO.Instance.GetGrid(level.pieces[i].coords[n].x, level.pieces[i].coords[n].y).color.value = i + 1;
+            }
+        }
+        for (int i = 0; i < level.pieces2.Count; i++)
+        {
+            for (int n = 0; n < level.pieces2[i].coords.Count; n++)
+            {
+                EditorVO.Instance.GetGrid1(level.pieces2[i].coords[n].x, level.pieces2[i].coords[n].y).color.value = level.pieces.Count + i + 1;
+            }
+        }
+        new CreateLevelCommand();
+        DrawPieces();
+    }
+
+    private float lastClick = 0;
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetAxis("Fire1") > 0 && lastClick == 0)
+        {
+            Vector3 pos = Input.mousePosition;
+            pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
+            pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
 
+            Point2D p = HaxgonCoord.PositionToCoord(Point2D.Create(pos.x - offx, pos.y - offy), 0.28f);
+            GridVO grid = EditorVO.Instance.GetGrid((int)p.x, (int)p.y);
+            if(grid != null)
+            {
+                grid.color.value = EditorVO.Instance.color.value;
+            }
+
+
+            p = HaxgonCoord.PositionToCoord(Point2D.Create(pos.x - offx1, pos.y - offy1), 0.28f);
+            grid = EditorVO.Instance.GetGrid1((int)p.x, (int)p.y);
+            if (grid != null)
+            {
+                grid.color.value = EditorVO.Instance.color.value;
+            }
+            new CreateLevelCommand();
+            DrawPieces();
+        }
+        lastClick = Input.GetAxis("Fire1");
+    }
+
+    private void DrawPieces()
+    {
+        //清除之前的颜色
+        List<GridVO> grids = EditorVO.Instance.piecesGrids;
+        for(int i = 0; i < grids.Count; i++)
+        {
+            grids[i].color.value = 0;
+        }
+
+        //放置新的关卡片信息
+        for(int i = 0; i < EditorVO.Instance.level.pieces.Count; i++)
+        {
+            SetPiece(EditorVO.Instance.level.pieces[i]);
+        }
+        for (int i = 0; i < EditorVO.Instance.level.otherPieces.Count; i++)
+        {
+            SetPiece(EditorVO.Instance.level.otherPieces[i]);
+        }
+    }
+
+    private void SetPiece(EditorLevelPiece piece)
+    {
+        List<GridVO> grids = EditorVO.Instance.piecesGrids;
+        int minx = piece.grids[0].x;
+        int maxy = piece.grids[0].y;
+        for (int i = 1; i < piece.grids.Count; i++)
+        {
+            if (piece.grids[i].x < minx)
+            {
+                minx = piece.grids[i].x;
+            }
+            if (piece.grids[i].y > maxy)
+            {
+                maxy = piece.grids[i].y;
+            }
+        }
+        int offx = minx % 2 == 0 ? -minx : -minx + 1;
+        int offy = -maxy;
+        for (int y = 0; y > -10; y--)
+        {
+            for (int x = 0; x < 22; x++,x++)
+            {
+                bool find = true;
+                for (int i = 0; i < piece.grids.Count; i++)
+                {
+                    GridVO grid = EditorVO.Instance.GetGridPiece((int)piece.grids[i].x + offx + x, (int)piece.grids[i].y + offy + y);
+                    if (grid == null || grid.color.value != 0)
+                    {
+                        find = false;
+                        break;
+                    }
+                    else
+                    {
+                        //获取周围的格子
+                        List<Point2D> nextCoords = HaxgonCoord.GetCoordsNextTo(Point2D.Create((int)piece.grids[i].x + offx + x, (int)piece.grids[i].y + offy + y));
+                        for (int n = 0; n < nextCoords.Count; n++)
+                        {
+                            GridVO nextGrid = EditorVO.Instance.GetGridPiece((int)nextCoords[n].x, (int)nextCoords[n].y);
+                            if (nextGrid != null && nextGrid.color.value != 0 && nextGrid.color.value != grid.color.value)
+                            {
+                                find = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (find)
+                {
+                    for (int i = 0; i < piece.grids.Count; i++)
+                    {
+                        EditorVO.Instance.GetGridPiece((int)piece.grids[i].x + offx + x, (int)piece.grids[i].y + offy + y).color.value = piece.grids[i].color;
+                    }
+                    return;
+                }
+            }
+        }
     }
 }

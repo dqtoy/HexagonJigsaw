@@ -26,7 +26,7 @@ namespace lib
             frame++;
             if(time > 1000)
             {
-                Fps.Value = frame * 1000 / time;
+                Fps.value = frame * 1000 / time;
                 time = 0;
                 frame = 0;
             }

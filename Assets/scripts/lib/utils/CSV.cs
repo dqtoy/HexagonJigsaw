@@ -13,12 +13,13 @@ namespace lib
             List<string> array = StringUtils.Split(content, '\n');
             for(int i = 0, len = array.Count; i < len; i++)
             {
-                List<string> row = new List<string>();
-                list.Add(row);
                 int start = 0;
                 int end = start;
                 bool special = false;
                 string rowStr = array[i];
+                if (rowStr.Length == 0) continue;
+                List<string> row = new List<string>();
+                list.Add(row);
                 for (int c = 0,clen = array[i].Length; c < clen; c++)
                 {
                     if (rowStr[c] == '"')

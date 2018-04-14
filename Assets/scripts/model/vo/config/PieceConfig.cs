@@ -1,4 +1,4 @@
-//Make By CSVCommand. Time 2018.4.13 14:50:24
+//Make By CSVCommand. Time 2018.4.14 16:34:42
 using System.Collections.Generic;
 using lib;
 
@@ -29,6 +29,7 @@ public class PieceConfig
 				List<string> itemList = StringUtils.Split(list[1],',');
 				for(int n = 0; n < itemList.Count; n++)
 				{
+					if (itemList[n].Length == 0) continue;
 					int item = (int)StringUtils.ToNumber(itemList[n]);
 					coords.Add(CoordConfig.GetConfig(item));
 				}
@@ -54,6 +55,7 @@ public class PieceConfig
 
 	public static void DecodeTable(string str)
 	{
+		Configs.Clear();
 		str = StringUtils.Replace(str, '\r', '\n');
 		str = StringUtils.Replace(str, "\n\n", '\n');
 		List<List<string>> list = CSV.Parse(str);

@@ -18,12 +18,6 @@ public class StartScript : MonoBehaviour {
 
     private void Awake()
     {
-        if(editor)
-        {
-            EditorMain.SetActive(true);
-            return;
-        }
-        EditorMain.SetActive(false);
         //存储屏幕信息
         Vector3 size = new Vector3();
         size = mainCamera.ViewportToWorldPoint(size);
@@ -31,13 +25,19 @@ public class StartScript : MonoBehaviour {
         GameVO.Instance.Height = Mathf.Abs(size.y * 2);
         GameVO.Instance.PixelWidth = mainCamera.pixelWidth;
         GameVO.Instance.PixelHeight = mainCamera.pixelHeight;
+        if (editor)
+        {
+            EditorMain.SetActive(true);
+            return;
+        }
+        EditorMain.SetActive(false);
 
         //读取配置
         ConfigDecode.Decode();
 
         LevelConfig level = LevelConfig.GetConfig(1);
 
-        for(int i = 0; i < level.coords.Count; i++)
+        /*for(int i = 0; i < level.coords.Count; i++)
         {
             GameObject obj = ResourceManager.CreateImage("BBB/D");
             obj.transform.Rotate(new Vector3(0, 0, 90f));
@@ -55,16 +55,8 @@ public class StartScript : MonoBehaviour {
                 Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(level.pieces[n].coords[i].x - 4 + n * 4, level.pieces[n].coords[i].y - 4), 0.42f);
                 obj.transform.position = new Vector3(position.x, position.y);
             }
-        }
-
-        FileStream fs = new FileStream("E:\\ak.txt", FileMode.Create);
-        //获得字节数组
-        byte[] data = System.Text.Encoding.Default.GetBytes("Hello World!");
-        //开始写入
-        fs.Write(data, 0, data.Length);
-        //清空缓冲区、关闭流
-        fs.Flush();
-        fs.Close();
+        }*/
+        
     }
 
     private float lastClick = 0;

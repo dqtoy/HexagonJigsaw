@@ -7,7 +7,7 @@ namespace lib
     {
         public Int(object value = null)
         {
-            this.value = value ?? 0;
+            this.val = value ?? 0;
         }
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace lib
         /// <param name="val"></param>
         protected override void SetValue(object val)
         {
-            if (value == val)
+            if (this.val == val)
             {
                 return;
             }
@@ -24,14 +24,14 @@ namespace lib
             {
                val = (int)Convert.ToDouble(val);
             }
-            old = value;
+            old = this.val;
             if(defendFalsify) //加上防篡改功能
             {
                 DefendEncode(val);
             }
             else
             {
-                value = val;
+                this.val = val;
             }
             DispatchWith(Event.CHANGE);
         }
@@ -47,15 +47,15 @@ namespace lib
             {
                 str += list[i].ToString();
             }
-            value = Convert.ToInt64(str);
+            val = Convert.ToInt64(str);
         }
 
         /// <summary>
         /// 当前值
         /// </summary>
-        public new int Value
+        public new int value
         {
-            get { return (int)value; }
+            get { return (int)val; }
             set { SetValue(value); }
         }
     }

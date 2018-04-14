@@ -6,7 +6,7 @@
 
         public int Length
         {
-            get { return (int)length.Value; }
+            get { return (int)length.value; }
         }
     }
 }

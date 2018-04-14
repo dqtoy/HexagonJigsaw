@@ -7,7 +7,7 @@ namespace lib
     {
         public String(object value = null)
         {
-            this.value = value ?? 0;
+            this.val = value ?? 0;
         }
 
         /// <summary>
@@ -20,12 +20,12 @@ namespace lib
             {
                 val = Convert.ToString(val);
             }
-            if (value == val)
+            if (this.val == val)
             {
                 return;
             }
-            old = value;
-            value = val;
+            old = this.val;
+            this.val = val;
             DispatchWith(Event.CHANGE);
         }
     }

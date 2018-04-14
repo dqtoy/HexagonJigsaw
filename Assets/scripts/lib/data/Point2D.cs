@@ -9,19 +9,19 @@ namespace lib
 
         public Point2D(float x = 0,float y = 0)
         {
-            this.xValue.Value = x;
-            this.yValue.Value = y;
+            this.xValue.value = x;
+            this.yValue.value = y;
         }
 
         public float x
         {
-            get { return (float)xValue.Value; }
-            set { xValue.Value = value; }
+            get { return (float)xValue.value; }
+            set { xValue.value = value; }
         }
         public float y
         {
-            get { return (float)yValue.Value; }
-            set { yValue.Value = value; }
+            get { return (float)yValue.value; }
+            set { yValue.value = value; }
         }
 
         private static List<Point2D> pools = new List<Point2D>();

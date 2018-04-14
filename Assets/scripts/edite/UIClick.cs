@@ -33,8 +33,6 @@ public class UIClick : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("click:" + gameObject.name);
-        if (OnClick != null)
-            OnClick(this.gameObject);
+        EditorVO.Instance.dispatcher.DispatchWith("UI" + gameObject.name + "Handle");
     }
 }

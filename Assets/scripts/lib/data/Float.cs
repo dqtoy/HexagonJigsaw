@@ -7,7 +7,7 @@ namespace lib
     {
         public Float(object value = null)
         {
-            this.value = value ?? 0;
+            this.val = value ?? 0;
         }
 
         /// <summary>
@@ -20,21 +20,21 @@ namespace lib
             {
                 val = (float)Convert.ToDouble(val);
             }
-            if (value == val)
+            if (this.val == val)
             {
                 return;
             }
-            old = value;
-            value = val;
+            old = this.val;
+            this.val = val;
             DispatchWith(Event.CHANGE);
         }
 
         /// <summary>
         /// 当前值
         /// </summary>
-        public new float Value
+        public new float value
         {
-            get { return (float)value; }
+            get { return (float)val; }
             set { SetValue(value); }
         }
     }

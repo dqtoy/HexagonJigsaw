@@ -19,6 +19,14 @@ namespace lib
             return resources[url] as T;
         }
 
+        public static Sprite CreateSprite(string url)
+        {
+            Texture2D txt2d = ResourceManager.GetResource<Texture2D>(url);
+            UnityEngine.Rect rec = new UnityEngine.Rect(0, 0, txt2d.width, txt2d.height);
+            Sprite sp = Sprite.Create(txt2d, rec, new Vector2(0.5f, 0.5f));
+            return sp;
+        }
+
         public static GameObject CreateImage(string url)
         {
             Texture2D txt2d = ResourceManager.GetResource<Texture2D>(url);

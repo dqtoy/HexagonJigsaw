@@ -90,7 +90,6 @@ namespace lib
             int codeP = (int)'.';
             int codeM = (int)'-';
             bool isMinus = false;
-            bool isNumber;
             bool hasPoint = false;
             string before = "";
             string end = "";
