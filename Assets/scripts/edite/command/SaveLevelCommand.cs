@@ -8,7 +8,7 @@ public class SaveLevelCommand
     {
 
         //读取配置
-        ConfigDecode.Decode();
+        //ConfigDecode.Decode();
 
         //删除之前的 level 相关信息
         if(LevelConfig.GetConfig(level) != null)

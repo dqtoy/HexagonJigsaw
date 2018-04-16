@@ -1,7 +1,2 @@
 int,(Piece)Array(int),(Piece)Array(int)
 id,pieces,pieces2
-2,"200,201,202",""
-3,"300,301",""
-5,"500,501",""
-1,"",""
-7,"700,701",""

@@ -8,7 +8,8 @@ public class ConfigDecode
 		CoordConfig.DecodeTable(Resources.Load("config/Coord") + "");
 		LevelConfig.DecodeTable(Resources.Load("config/Level") + "");
 		PieceConfig.DecodeTable(Resources.Load("config/Piece") + "");
-		CoordConfig.DecodeTableItem();
+        Resources.UnloadUnusedAssets();
+        CoordConfig.DecodeTableItem();
 		LevelConfig.DecodeTableItem();
 		PieceConfig.DecodeTableItem();
 	}
