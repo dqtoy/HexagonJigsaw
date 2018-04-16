@@ -17,10 +17,7 @@ public class EditorMain : MonoBehaviour
 
     public Text levelTxt;
 
-    /// <summary>
-    /// 要载入的关卡
-    /// </summary>
-    public Text loadLevelTxt;
+    public Text maxLevelTxt;
 
     private float offx = -0.28f * 1.5f * 5;
     private float offy = +0.28f * 8;
@@ -36,13 +33,12 @@ public class EditorMain : MonoBehaviour
     {
         ConfigDecode.Decode();
 
-        EditorVO.Instance.dispatcher.AddListener("UIcolorDropDownHandle", OnColorChange);
         EditorVO.Instance.dispatcher.AddListener("UIsaveHandle", OnSave);
         EditorVO.Instance.dispatcher.AddListener("UIloadHandle", OnLoad);
+        EditorVO.Instance.dispatcher.AddListener("UIclearHandle", OnClear);
 
-        colorDropDown.options = EditorVO.Instance.colors;
-
-        colorDropDown.value = EditorVO.Instance.color.value;
+        //colorDropDown.options = EditorVO.Instance.colors;
+        //colorDropDown.value = EditorVO.Instance.color.value;
 
         //生成格子
         List<GridVO> grids = EditorVO.Instance.grids;
@@ -83,16 +79,7 @@ public class EditorMain : MonoBehaviour
         EditorVO.Instance.SelectColor(e.Data as Sprite);
     }
 
-    /// <summary>
-    /// 保存
-    /// </summary>
-    /// <param name="e"></param>
-    private void OnSave(lib.Event e)
-    {
-        new SaveLevelCommand(Convert.ToInt32(levelTxt.text));
-    }
-
-    private void OnLoad(lib.Event e)
+    private void OnClear(lib.Event e)
     {
         //清除之前的颜色
         List<GridVO> grids = EditorVO.Instance.piecesGrids;
@@ -110,9 +97,57 @@ public class EditorMain : MonoBehaviour
         {
             grids[i].color.value = 0;
         }
+        EditorTip.Show("已清除");
+    }
 
-        LevelConfig level = LevelConfig.GetConfig(Convert.ToInt32(loadLevelTxt.text));
-        if (level == null) return;
+    /// <summary>
+    /// 保存
+    /// </summary>
+    /// <param name="e"></param>
+    private void OnSave(lib.Event e)
+    {
+        if(levelTxt.text == "")
+        {
+            EditorTip.Show("未输入关卡");
+            return;
+        }
+        EditorTip.Show("保存成中...");
+        new SaveLevelCommand(Convert.ToInt32(levelTxt.text));
+        EditorTip.Show("保存成功!");
+        DrawPieces();
+    }
+
+    private void OnLoad(lib.Event e)
+    {
+        if (levelTxt.text == "")
+        {
+            EditorTip.Show("未输入关卡");
+            return;
+        }
+        LevelConfig level = LevelConfig.GetConfig(Convert.ToInt32(levelTxt.text));
+        if (level == null)
+        {
+            EditorTip.Show("没有对应的关卡!");
+            return;
+        }
+        EditorTip.Show("加载中...");
+        //清除之前的颜色
+        List<GridVO> grids = EditorVO.Instance.piecesGrids;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            grids[i].color.value = 0;
+        }
+        grids = EditorVO.Instance.grids;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            grids[i].color.value = 0;
+        }
+        grids = EditorVO.Instance.otherGrids1;
+        for (int i = 0; i < grids.Count; i++)
+        {
+            grids[i].color.value = 0;
+        }
+
         for(int i = 0; i < level.pieces.Count; i++)
         {
             for(int n = 0; n < level.pieces[i].coords.Count; n++)
@@ -127,6 +162,7 @@ public class EditorMain : MonoBehaviour
                 EditorVO.Instance.GetGrid1(level.pieces2[i].coords[n].x, level.pieces2[i].coords[n].y).color.value = level.pieces.Count + i + 1;
             }
         }
+        EditorTip.Show("加载成功!");
         new CreateLevelCommand();
         DrawPieces();
     }
@@ -159,6 +195,16 @@ public class EditorMain : MonoBehaviour
             DrawPieces();
         }
         lastClick = Input.GetAxis("Fire1");
+
+        int max = 0;
+        for (int i = 0; i < LevelConfig.Configs.Count; i++)
+        {
+            if(LevelConfig.Configs[i].id > max)
+            {
+                max = LevelConfig.Configs[i].id;
+            }
+        }
+        maxLevelTxt.text = "最大关卡:" + max;
     }
 
     private void DrawPieces()

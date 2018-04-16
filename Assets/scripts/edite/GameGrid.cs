@@ -16,11 +16,13 @@ public class GameGrid : MonoBehaviour {
 
         vo.color.AddListener(lib.Event.CHANGE, OnColorChange);
 
+        sprite.color = new Color(1, 1, 1, 0.3f);
     }
 
     private void OnColorChange(lib.Event e)
     {
         sprite.sprite = EditorVO.Instance.colors[vo.color.value].image;
+        sprite.color = new Color(1, 1, 1, vo.color.value==0?0.3f:1f);
     }
 
     // Update is called once per frame
