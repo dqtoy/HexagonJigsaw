@@ -23,7 +23,7 @@ public class UIStart : MonoBehaviour {
             MainData.Instance.dispatcher.AddListener(hexjig.EventType.FINISH_LEVEL, OnFinishLevel);
 
             //开启一个关卡
-            new StartGameCommand(1);
+            new StartGameCommand(5);
         }
         else
         {

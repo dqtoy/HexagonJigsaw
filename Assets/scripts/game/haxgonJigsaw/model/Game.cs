@@ -84,8 +84,9 @@ namespace hexjig
                         type = type
                     };
                     piece.coords.Add(coord);
-                    type++;
                 }
+                type++;
+                piece.Init();
             }
 
             //创建主坐标系
