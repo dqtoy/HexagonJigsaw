@@ -16,7 +16,7 @@ namespace lib
         /// <summary>
         /// 抛出事件的对象
         /// </summary>
-        internal EventDispatcher target;
+        internal IEventDispatcher target;
 
         /// <summary>
         /// 事件内容
@@ -45,7 +45,7 @@ namespace lib
         /// <summary>
         /// 抛出事件的对象
         /// </summary>
-        public EventDispatcher Target
+        public IEventDispatcher Target
         {
             get { return target; }
         }

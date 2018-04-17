@@ -16,6 +16,10 @@ public class ColorPicker : MonoBehaviour {
     public GameObject color6;
     public GameObject color7;
     public GameObject color8;
+    public GameObject color9;
+    public GameObject color10;
+    public GameObject color11;
+    public GameObject color12;
 
     private List<GameObject> list;
 
@@ -31,7 +35,11 @@ public class ColorPicker : MonoBehaviour {
         list.Add(color6);
         list.Add(color7);
         list.Add(color8);
-        for(int i = 0; i < list.Count; i++)
+        list.Add(color9);
+        list.Add(color10);
+        list.Add(color11);
+        list.Add(color12);
+        for (int i = 0; i < list.Count; i++)
         {
             EditorVO.Instance.dispatcher.AddListener("UIcolor" + i + "Handle", UIcolorHandler);
         }

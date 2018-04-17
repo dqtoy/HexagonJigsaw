@@ -6,24 +6,36 @@ namespace lib
     /// <summary>
     /// 六边形坐标系
     /// </summary>
-    public class HaxgonCoord
+    public class HaxgonCoord<T>
     {
         private HaxgonCoordDirection direction;
-        private Dictionary<string, object> coords = new Dictionary<string, object>();
+
+        public Dictionary<string, T> coords = new Dictionary<string, T>();
 
         public HaxgonCoord(HaxgonCoordDirection direction = HaxgonCoordDirection.HORIZONTAL)
         {
             this.direction = direction;
         }
 
-        public void SetCoord(Point2D coord, object value)
+        public void SetCoord(Point2D coord, T value)
         {
-            coords.Add(coord.x + "," + coord.y, value);
+            if (coords.ContainsKey(coord.x + "," + coord.y))
+            {
+                coords[coord.x + "," + coord.y] = value;
+            }
+            else
+            {
+                coords.Add(coord.x + "," + coord.y, value);
+            }
         }
 
-        public object GetCoord(Point2D coord)
+        public T GetCoord(Point2D coord)
         {
-            return coords[coord.x + "," + coord.y];
+            if(coords.ContainsKey(coord.x + "," + coord.y))
+            {
+                return coords[coord.x + "," + coord.y];
+            }
+            return default(T);
         }
 
         /// <summary>

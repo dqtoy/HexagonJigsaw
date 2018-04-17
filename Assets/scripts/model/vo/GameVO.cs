@@ -6,6 +6,8 @@
     public float PixelWidth;
     public float PixelHeight;
 
+    public bool editor;
+
     public LevelVO level;
 
     private static GameVO instance;

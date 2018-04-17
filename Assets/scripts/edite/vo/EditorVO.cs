@@ -30,7 +30,7 @@ public class EditorVO
         op.image = ResourceManager.CreateSprite("image/grid/gridBg");
         colors.Add(op);
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 12; i++)
         {
             op = new Dropdown.OptionData();
             op.text = "颜色" + (i + 1);
@@ -43,7 +43,7 @@ public class EditorVO
         //生成格子
         for (int x = 0; x < 11; x++)
         {
-            for (int y = 0; y > -6; y--)
+            for (int y = 0; y > -7; y--)
             {
                 GridVO grid = new GridVO();
                 grid.x = new Int(x);
@@ -56,7 +56,7 @@ public class EditorVO
         //生成干扰格子
         for (int x = 0; x < 11; x++)
         {
-            for (int y = 0; y > -6; y--)
+            for (int y = 0; y > -5; y--)
             {
                 GridVO grid = new GridVO();
                 grid.x = new Int(x);

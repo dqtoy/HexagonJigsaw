@@ -19,14 +19,14 @@ public class EditorMain : MonoBehaviour
 
     public Text maxLevelTxt;
 
-    private float offx = -0.28f * 1.5f * 5;
-    private float offy = +0.28f * 8;
+    private float offx = -0.4f * 1.5f * 7;
+    private float offy = +0.4f * 10;
 
-    private float offx1 = -0.28f * 1.5f * 5;
-    private float offy1 = -0.28f * 4;
+    private float offx1 = -0.4f * 1.5f * 7;
+    private float offy1 = -0.4f * 3;
 
-    private float offx2 = +0.28f * 1.5f * 1;
-    private float offy2 = -0.28f * 10;
+    private float offx2 = +0.4f * 1.5f * 1;
+    private float offy2 = -0.4f * 10;
 
     // Use this for initialization
     void Start()
@@ -45,8 +45,7 @@ public class EditorMain : MonoBehaviour
         for(int i = 0; i < grids.Count; i++)
         {
             GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
-            obj.transform.Rotate(new Vector3(0, 0, 90f));
-            Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.28f);
+            Point2D position = HaxgonCoord<Point2D>.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.4f);
             obj.transform.position = new Vector3((float)(position.x + offx), position.y + offy);
             (obj.AddComponent<GameGrid>()).vo = grids[i];
         }
@@ -55,8 +54,7 @@ public class EditorMain : MonoBehaviour
         for (int i = 0; i < grids.Count; i++)
         {
             GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
-            obj.transform.Rotate(new Vector3(0, 0, 90f));
-            Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.28f);
+            Point2D position = HaxgonCoord<Point2D>.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.4f);
             obj.transform.position = new Vector3((float)(position.x + offx1), position.y + offy1);
             (obj.AddComponent<GameGrid>()).vo = grids[i];
         }
@@ -65,9 +63,8 @@ public class EditorMain : MonoBehaviour
         for (int i = 0; i < grids.Count; i++)
         {
             GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
-            obj.transform.Rotate(new Vector3(0, 0, 90f));
             obj.transform.localScale = new Vector3(0.5f, 0.5f);
-            Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.14f);
+            Point2D position = HaxgonCoord<Point2D>.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.2f);
             obj.transform.position = new Vector3((float)(position.x + 3), position.y);
             (obj.AddComponent<GameGrid>()).vo = grids[i];
         }
@@ -177,7 +174,7 @@ public class EditorMain : MonoBehaviour
             pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
             pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
 
-            Point2D p = HaxgonCoord.PositionToCoord(Point2D.Create(pos.x - offx, pos.y - offy), 0.28f);
+            Point2D p = HaxgonCoord<Point2D>.PositionToCoord(Point2D.Create(pos.x - offx, pos.y - offy), 0.4f);
             GridVO grid = EditorVO.Instance.GetGrid((int)p.x, (int)p.y);
             if(grid != null)
             {
@@ -185,7 +182,7 @@ public class EditorMain : MonoBehaviour
             }
 
 
-            p = HaxgonCoord.PositionToCoord(Point2D.Create(pos.x - offx1, pos.y - offy1), 0.28f);
+            p = HaxgonCoord<Point2D>.PositionToCoord(Point2D.Create(pos.x - offx1, pos.y - offy1), 0.4f);
             grid = EditorVO.Instance.GetGrid1((int)p.x, (int)p.y);
             if (grid != null)
             {
@@ -261,7 +258,7 @@ public class EditorMain : MonoBehaviour
                     else
                     {
                         //获取周围的格子
-                        List<Point2D> nextCoords = HaxgonCoord.GetCoordsNextTo(Point2D.Create((int)piece.grids[i].x + offx + x, (int)piece.grids[i].y + offy + y));
+                        List<Point2D> nextCoords = HaxgonCoord<Point2D>.GetCoordsNextTo(Point2D.Create((int)piece.grids[i].x + offx + x, (int)piece.grids[i].y + offy + y));
                         for (int n = 0; n < nextCoords.Count; n++)
                         {
                             GridVO nextGrid = EditorVO.Instance.GetGridPiece((int)nextCoords[n].x, (int)nextCoords[n].y);

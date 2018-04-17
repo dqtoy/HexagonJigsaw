@@ -25,6 +25,10 @@ public class StartScript : MonoBehaviour {
         GameVO.Instance.Height = Mathf.Abs(size.y * 2);
         GameVO.Instance.PixelWidth = mainCamera.pixelWidth;
         GameVO.Instance.PixelHeight = mainCamera.pixelHeight;
+
+        GameVO.Instance.editor = editor;
+
+        //是否开启编辑器
         if (editor)
         {
             EditorMain.SetActive(true);
@@ -35,44 +39,9 @@ public class StartScript : MonoBehaviour {
         //读取配置
         ConfigDecode.Decode();
 
-        LevelConfig level = LevelConfig.GetConfig(1);
-
-        /*for(int i = 0; i < level.coords.Count; i++)
-        {
-            GameObject obj = ResourceManager.CreateImage("BBB/D");
-            obj.transform.Rotate(new Vector3(0, 0, 90f));
-            Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(level.coords[i].x - 4, level.coords[i].y + 4), 0.42f);
-            obj.transform.position = new Vector3(position.x, position.y);
-        }
-
-
-        for(int n = 0; n < level.pieces.Count; n++)
-        {
-            for (int i = 0; i < level.pieces[n].coords.Count; i++)
-            {
-                GameObject obj = ResourceManager.CreateImage("BBB/D");
-                obj.transform.Rotate(new Vector3(0, 0, 90f));
-                Point2D position = HaxgonCoord.CoordToPosition(Point2D.Create(level.pieces[n].coords[i].x - 4 + n * 4, level.pieces[n].coords[i].y - 4), 0.42f);
-                obj.transform.position = new Vector3(position.x, position.y);
-            }
-        }*/
-        
+        gameObject.AddComponent<hexjig.Start>();
     }
 
-    private float lastClick = 0;
-
-    // Update is called once per frame
     void Update () {
-
-        /*
-        if (Input.GetAxis("Fire1") > 0 && lastClick == 0)
-        {
-            Vector3 pos = Input.mousePosition;
-            pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
-            pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
-            Point2D p = HaxgonCoord.PositionToCoord(Point2D.Create(pos.x, pos.y), 0.46f);
-            Debug.Log(p.x + "," + p.y);
-        }
-        lastClick = Input.GetAxis("Fire1");*/
     }
 }

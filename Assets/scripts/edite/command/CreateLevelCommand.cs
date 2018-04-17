@@ -74,7 +74,7 @@ public class CreateLevelCommand
 
     private GridVO GetGridNextTo(int x,int y,int color, List<GridVO> grids)
     {
-        List<Point2D> nextCoords = HaxgonCoord.GetCoordsNextTo(Point2D.Create(x, y));
+        List<Point2D> nextCoords = HaxgonCoord<Point2D>.GetCoordsNextTo(Point2D.Create(x, y));
         for (int i = 0; i < grids.Count; i++)
         {
             for(int n = 0; n < nextCoords.Count; n++)

@@ -3,13 +3,8 @@ using System.Collections.Generic;
 
 namespace lib
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="e"></param>
-    public delegate void listenerBack(Event e);
 
-    public class EventDispatcher
+    public class EventDispatcher : IEventDispatcher
     {
         private Dictionary<string, ArrayList> listeners = new Dictionary<string, ArrayList>();
 
