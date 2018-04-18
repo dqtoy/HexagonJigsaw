@@ -11,7 +11,7 @@ namespace hexjig
         public HaxgonCoord<Coord> coordSys = new HaxgonCoord<Coord>();
 
         private int maxx = 19;
-        private int miny = -7;
+        private int miny = -9;
 
         public float offx;
         public float offy;
@@ -188,7 +188,7 @@ namespace hexjig
                 }
             }
             offx1 = -((maxX - minX) * 0.5f + minX);
-            offy1 = -((maxY - minY) * 0.5f + minY) - 3;
+            offy1 = -((maxY - minY) * 0.5f + minY) - 3.5f;
             p1.transform.position = new Vector3(offx1, offy1);
 
             for (int i = 0; i < pieces.length; i++)
