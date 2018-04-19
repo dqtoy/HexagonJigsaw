@@ -68,6 +68,24 @@ public class EditorMain : MonoBehaviour
             obj.transform.position = new Vector3((float)(position.x + 2), position.y);
             (obj.AddComponent<GameGrid>()).vo = grids[i];
         }
+
+        for (int i = 0; i < LevelConfig.Configs.Count; i++)
+        {
+            for (int j = 0; j < LevelConfig.Configs[i].pieces.Count; j++)
+            {
+                if (LevelConfig.Configs[i].pieces[j] == null)
+                {
+                    EditorTip.Show("关卡 " + LevelConfig.Configs[i].id + " 缺少片信息");
+                }
+            }
+            for (int j = 0; j < LevelConfig.Configs[i].pieces2.Count; j++)
+            {
+                if (LevelConfig.Configs[i].pieces2[j] == null)
+                {
+                    EditorTip.Show("关卡 " + LevelConfig.Configs[i].id + " 缺少片信息");
+                }
+            }
+        }
     }
 
     private void OnColorChange(lib.Event e)

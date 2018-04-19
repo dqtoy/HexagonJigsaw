@@ -9,7 +9,7 @@ public class EditorTip : MonoBehaviour {
     private List<string> tips = new List<string>();
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         instance = this;
     }
 
