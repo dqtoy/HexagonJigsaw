@@ -159,9 +159,9 @@ public class EditorMain : MonoBehaviour
         {
             for (int n = 0; n < level.pieces2[i].coords.Count; n++)
             {
-                if (EditorVO.Instance.GetGrid(level.pieces2[i].coords[n].x, level.pieces2[i].coords[n].y).color.value != 0)
+                if (EditorVO.Instance.GetGrid1(level.pieces2[i].coords[n].x, level.pieces2[i].coords[n].y).color.value != 0)
                 {
-                    EditorTip.Show("关卡数据错误，有重叠!");
+                    EditorTip.Show("关卡数据错误，多余片有重叠!");
                 }
                 EditorVO.Instance.GetGrid1(level.pieces2[i].coords[n].x, level.pieces2[i].coords[n].y).color.value = level.pieces.Count + i + 1;
             }
