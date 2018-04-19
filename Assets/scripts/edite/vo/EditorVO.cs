@@ -56,7 +56,7 @@ public class EditorVO
         //生成干扰格子
         for (int x = 0; x < 11; x++)
         {
-            for (int y = 0; y > -5; y--)
+            for (int y = 0; y > -7; y--)
             {
                 GridVO grid = new GridVO();
                 grid.x = new Int(x);
