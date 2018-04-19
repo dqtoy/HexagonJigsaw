@@ -31,6 +31,10 @@ public class EditorTip : MonoBehaviour {
 
     private void show(string txt)
     {
+        if(tips.Count > 0 && tips[tips.Count - 1] == txt)
+        {
+            return;
+        }
         tips.Add(txt);
     }
 
