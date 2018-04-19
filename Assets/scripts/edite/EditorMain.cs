@@ -19,13 +19,13 @@ public class EditorMain : MonoBehaviour
 
     public Text maxLevelTxt;
 
-    private float offx = -0.4f * 1.5f * 7;
+    private float offx = -0.4f * 1.5f * 8;
     private float offy = +0.4f * 10;
 
-    private float offx1 = -0.4f * 1.5f * 7;
+    private float offx1 = -0.4f * 1.5f * 8;
     private float offy1 = -0.4f * 3;
 
-    private float offx2 = +0.4f * 1.5f * 1;
+    private float offx2 = +0.4f * 1.0f * 1;
     private float offy2 = -0.4f * 10;
 
     // Use this for initialization
@@ -65,7 +65,7 @@ public class EditorMain : MonoBehaviour
             GameObject obj = ResourceManager.CreateImage("image/grid/gridBg");
             obj.transform.localScale = new Vector3(0.5f, 0.5f);
             Point2D position = HaxgonCoord<Point2D>.CoordToPosition(Point2D.Create(grids[i].x.value, grids[i].y.value), 0.2f);
-            obj.transform.position = new Vector3((float)(position.x + 3), position.y);
+            obj.transform.position = new Vector3((float)(position.x + 2), position.y);
             (obj.AddComponent<GameGrid>()).vo = grids[i];
         }
     }
@@ -127,7 +127,6 @@ public class EditorMain : MonoBehaviour
             EditorTip.Show("没有对应的关卡!");
             return;
         }
-        EditorTip.Show("加载中...");
         //清除之前的颜色
         List<GridVO> grids = EditorVO.Instance.piecesGrids;
         for (int i = 0; i < grids.Count; i++)
@@ -149,6 +148,10 @@ public class EditorMain : MonoBehaviour
         {
             for(int n = 0; n < level.pieces[i].coords.Count; n++)
             {
+                if(EditorVO.Instance.GetGrid(level.pieces[i].coords[n].x, level.pieces[i].coords[n].y).color.value != 0)
+                {
+                    EditorTip.Show("关卡数据错误，有重叠!");
+                }
                 EditorVO.Instance.GetGrid(level.pieces[i].coords[n].x, level.pieces[i].coords[n].y).color.value = i + 1;
             }
         }
@@ -156,6 +159,10 @@ public class EditorMain : MonoBehaviour
         {
             for (int n = 0; n < level.pieces2[i].coords.Count; n++)
             {
+                if (EditorVO.Instance.GetGrid(level.pieces2[i].coords[n].x, level.pieces2[i].coords[n].y).color.value != 0)
+                {
+                    EditorTip.Show("关卡数据错误，有重叠!");
+                }
                 EditorVO.Instance.GetGrid1(level.pieces2[i].coords[n].x, level.pieces2[i].coords[n].y).color.value = level.pieces.Count + i + 1;
             }
         }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EditorTip : MonoBehaviour {
 
     private int showTime = 0;
+    private List<string> tips = new List<string>();
 
 	// Use this for initialization
 	void Start () {
@@ -19,13 +20,18 @@ public class EditorTip : MonoBehaviour {
         {
             showTime = 0;
             gameObject.GetComponent<Text>().text = "";
+            if(tips.Count > 0)
+            {
+                gameObject.GetComponent<Text>().text = tips[0];
+                showTime = 120;
+                tips.RemoveAt(0);
+            }
         }
     }
 
     private void show(string txt)
     {
-        gameObject.GetComponent<Text>().text = txt;
-        showTime = 120;
+        tips.Add(txt);
     }
 
     private static EditorTip instance;
