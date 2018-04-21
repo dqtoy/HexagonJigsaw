@@ -1,4 +1,5 @@
 ﻿using lib;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,11 +13,14 @@ namespace hexjig
 
         private int maxx = 19;
         private int miny = -9;
+        private int[] movesy = { 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 3 };
 
         public float offx;
         public float offy;
         public float offx1;
         public float offy1;
+
+        private DateTime startTime;
 
         public GameObject root;
 
@@ -28,12 +32,10 @@ namespace hexjig
             //创建跟接点
             root = new GameObject();
             root.name = "GameRoot";
+            root.layer = 8;
 
-            //创建背景
-            GameObject bg = ResourceManager.CreateImage("image/bg");
-            bg.transform.parent = root.transform;
-            bg.transform.localScale = new Vector3(GameVO.Instance.PixelWidth, GameVO.Instance.PixelHeight);
-            bg.transform.position = new Vector3(0, 0, 101);
+            MainData.Instance.dispatcher.AddListener(EventType.RESTART,OnRestart);
+            MainData.Instance.dispatcher.AddListener(EventType.SHOW_TIP, OnShowTip);
 
 
             //外面有 19 x 9 的大小
@@ -111,6 +113,43 @@ namespace hexjig
 
             //生成显示相关内容
             CreateDisplay();
+
+            //计时
+            MainData.Instance.time.value = 0;
+            startTime = System.DateTime.Now;
+        }
+
+        private void OnShowTip(lib.Event e)
+        {
+            for (int i = 0; i < pieces.length; i++)
+            {
+                if(pieces[i].isAnswer && pieces[i].hasShowTip == false)
+                {
+                    pieces[i].ShowTip();
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 重新开始关卡
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnRestart(lib.Event e)
+        {
+            //重置所有的片
+            for(int i = 0; i < pieces.length; i++)
+            {
+                pieces[i].Reset();
+            }
+
+            //重置点阵信息
+            foreach (var item in coordSys.coords)
+            {
+                Coord coord = item.Value;
+                coord.piece = null;
+                coord.type = 0;
+            }
         }
 
         private void CreateDisplay()
@@ -147,12 +186,12 @@ namespace hexjig
                 }
             }
             offx = -((maxX - minX) * 0.5f + minX);
-            offy = -((maxY - minY) * 0.5f + minY) + 0.6f;
+            offy = -((maxY - minY) * 0.5f + minY) + GameVO.Instance.Height * 0.25f;
             p.transform.position = new Vector3(offx, offy);
 
             GameObject outBackground = new GameObject();
             outBackground.transform.parent = root.transform;
-
+            
             //生成背景
             minX = 1000;
             maxX = -1000;
@@ -160,10 +199,11 @@ namespace hexjig
             maxY = -1000;
             GameObject p1 = new GameObject();
             p1.transform.parent = root.transform;
-            for (int y = 0; y > this.miny; y--)
+            for (int x = 0; x < this.maxx; x++)
             {
-                for (int x = 0; x < this.maxx; x++)
+                for (int py = 0; py > this.miny; py--)
                 {
+                    int y = py - 3 + movesy[x];
                     Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(x, y), 0.2f);
                     /*GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
@@ -188,7 +228,7 @@ namespace hexjig
                 }
             }
             offx1 = -((maxX - minX) * 0.5f + minX);
-            offy1 = -((maxY - minY) * 0.5f + minY) - 3.5f;
+            offy1 = -((maxY - minY) * 0.5f + minY) -2.4f;
             p1.transform.position = new Vector3(offx1, offy1);
 
             for (int i = 0; i < pieces.length; i++)
@@ -206,6 +246,14 @@ namespace hexjig
 
         public void Update()
         {
+            for(int i = 0; i < pieces.length; i++)
+            {
+                pieces[i].Update();
+            }
+
+            double time = System.DateTime.Now.Subtract(startTime).TotalMilliseconds;
+            MainData.Instance.time.value = (int)time;
+
             if (Input.GetAxis("Fire1") > 0 && lastClick == 0)
             {
                 Vector3 pos = Input.mousePosition;
@@ -252,14 +300,18 @@ namespace hexjig
 
         private Point2D AutoSetPiece(Piece piece, HaxgonCoord<Coord> sys)
         {
-            for (int y = 0; y > this.miny; y--)
+            for (int x = 0; x < this.maxx; x++)
             {
-                for (int x = 0; x < this.maxx; x++, x++)
+                for (int py = 0; py > this.miny; py--)
                 {
+                    int y = py - 3 + movesy[x];
                     bool find = true;
                     for (int i = 0; i < piece.coords.length; i++)
                     {
-                        Coord grid = sys.GetCoord(Point2D.Create(piece.coords[i].x + piece.offx + x,piece.coords[i].y + piece.offy + y));
+                        Point2D p = HaxgonCoord<Coord>.PositionToCoord(HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(piece.coords[i].x + piece.offx, piece.coords[i].y + piece.offy),0.2f),0.2f);
+                        p.x += x;
+                        p.y += y;
+                        Coord grid = sys.GetCoord(p);
                         if (grid == null || grid.type != 0)
                         {
                             find = false;
@@ -268,7 +320,7 @@ namespace hexjig
                         else
                         {
                             //获取周围的格子
-                            List<Point2D> nextCoords = HaxgonCoord<Point2D>.GetCoordsNextTo(Point2D.Create((int)piece.coords[i].x + piece.offx + x, (int)piece.coords[i].y + piece.offy + y));
+                            List<Point2D> nextCoords = HaxgonCoord<Coord>.GetCoordsNextTo(p);
                             for (int n = 0; n < nextCoords.Count; n++)
                             {
                                 Coord nextGrid = sys.GetCoord(Point2D.Create(nextCoords[n].x, nextCoords[n].y));
@@ -284,7 +336,10 @@ namespace hexjig
                     {
                         for (int i = 0; i < piece.coords.length; i++)
                         {
-                            sys.SetCoord(Point2D.Create(piece.coords[i].x + piece.offx + x, piece.coords[i].y + piece.offy + y), piece.coords[i]);
+                            Point2D p = HaxgonCoord<Coord>.PositionToCoord(HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(piece.coords[i].x + piece.offx, piece.coords[i].y + piece.offy), 0.2f), 0.2f);
+                            p.x += x;
+                            p.y += y;
+                            sys.SetCoord(p, piece.coords[i]);
                         }
                         return Point2D.Create(x, y);
                     }
@@ -310,7 +365,7 @@ namespace hexjig
             }
             if(finish)
             {
-                MainData.Instance.dispatcher.DispatchWith(EventType.FINISH_LEVEL);
+                MainData.Instance.dispatcher.DispatchWith(EventType.FINISH_LEVEL, MainData.Instance.time.value);
             }
         }
     }

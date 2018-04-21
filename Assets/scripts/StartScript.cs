@@ -18,6 +18,9 @@ public class StartScript : MonoBehaviour {
 
     private void Awake()
     {
+        //读取配置
+        ConfigDecode.Decode();
+
         //存储屏幕信息
         Vector3 size = new Vector3();
         size = mainCamera.ViewportToWorldPoint(size);
@@ -36,12 +39,12 @@ public class StartScript : MonoBehaviour {
         }
         EditorMain.SetActive(false);
 
-        //读取配置
-        ConfigDecode.Decode();
-
         gameObject.AddComponent<hexjig.Start>();
+
+
     }
 
-    void Update () {
+    void Update ()
+    {
     }
 }

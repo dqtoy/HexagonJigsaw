@@ -237,5 +237,40 @@ namespace lib
             }
             return str;
         }
+
+        /**
+         * 将时间(ms) 转换为 00:00 的格式
+         * @param time
+         */
+        public static string TimeToMS(float time)
+        {
+            int minute = (int)Math.Floor((time) / (1000 * 60));
+            int second = (int)Math.Floor((time % (1000 * 60)) / (1000));
+            return (minute < 10 ? "0" + minute : "" + minute) + ":" + (second < 10 ? "0" + second : "" + second);
+        }
+
+        /**
+         * 将时间(ms) 转换为 00:00:00 的格式
+         * @param time
+         */
+        public static string TimeToHMS(float time)
+        {
+            int hour = (int) Math.Floor(time / (1000 * 3600));
+            int minute = (int)Math.Floor((time % (1000 * 3600)) / (1000 * 60));
+            int second = (int)Math.Floor((time % (1000 * 60)) / (1000));
+            return (hour < 10 ? "0" + hour : "" + hour) + ":" + (minute < 10 ? "0" + minute : "" + minute) + ":" + (second < 10 ? "0" + second : "" + second);
+        }
+
+        /**
+         * 将时间(ms) 转换为 00:00:00 的格式
+         * @param time
+         */
+        public static string TimeToMSM(float time)
+        {
+            var minute = (int)Math.Floor((time % (1000 * 3600)) / (1000 * 60));
+            var second = (int)Math.Floor((time % (1000 * 60)) / (1000));
+            var ms = (int)Math.Floor((time % 1000) / 10);
+            return (minute < 10 ? "0" + minute : "" + minute) + ":" + (second < 10 ? "0" + second : "" + second) + ":" + (ms < 10 ? "0" + ms : "" + ms);
+        }
     }
 }

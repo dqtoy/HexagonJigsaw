@@ -1,4 +1,6 @@
-﻿using lib;
+﻿using System;
+using System.Collections.Generic;
+using lib;
 using UnityEngine;
 
 namespace hexjig
@@ -40,12 +42,17 @@ namespace hexjig
         //显示相关
         public GameObject background;
         private GameObject show;
+        public GameObject tip;
         private GameObject shader;
         //阴影透明度
         private float shaderAlpha = 0.5f;
         private GameObject showOut;
         private GameObject outBackground;
         private GameObject stageBackground;
+
+        //是否显示过提示
+        public bool hasShowTip = false;
+        private List<SpriteRenderer> tipGrids;
 
         public Piece()
         {
@@ -97,6 +104,8 @@ namespace hexjig
 
             show = new GameObject();
             show.transform.parent = game.root.transform;
+            tip = new GameObject();
+            tip.transform.parent = game.root.transform;
             shader = new GameObject();
             shader.transform.parent = game.root.transform;
             showOut = new GameObject();
@@ -118,16 +127,37 @@ namespace hexjig
             }
             else
             {
+                Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(outCoord.x, outCoord.y), 0.2f);
+                x -= position.x;
+                y -= position.y;
                 Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(x - game.offx1, y - game.offy1), 0.2f);
                 for (int i = 0; i < coords.length; i++)
                 {
-                    if (p.x == outCoord.x + coords[i].x + offx && p.y == outCoord.y + coords[i].y + offy)
+                    if (p.x == coords[i].x + offx && p.y == coords[i].y + offy)
                     {
                         return true;
                     }
                 }
             }
             return false;
+        }
+
+        //重置
+        internal void Reset()
+        {
+            show.SetActive(false);
+            shader.SetActive(false);
+            showOut.SetActive(true);
+            isInStage = false;
+        }
+
+        /// <summary>
+        /// 显示提示
+        /// </summary>
+        public void ShowTip()
+        {
+            hasShowTip = true;
+            tip.SetActive(true);
         }
 
         public void CreateDisplay()
@@ -137,17 +167,34 @@ namespace hexjig
             {
                 GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y),0.4f);
-                image.transform.position = new Vector3(position.x,position.y,1);
+                image.transform.localPosition = new Vector3(position.x,position.y,1);
                 image.transform.parent = show.transform;
             }
             show.SetActive(false);
+
+            if(isAnswer)
+            {
+                //创建提示
+                tipGrids = new List<SpriteRenderer>();
+                for (int i = 0; i < coords.length; i++)
+                {
+                    GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
+                    Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.4f);
+                    image.transform.localPosition = new Vector3(position.x, position.y, 0);
+                    image.transform.parent = tip.transform;
+                    tipGrids.Add(image.GetComponent<SpriteRenderer>());
+                    image.GetComponent<SpriteRenderer>().color = new Color(image.GetComponent<SpriteRenderer>().color.r, image.GetComponent<SpriteRenderer>().color.g, image.GetComponent<SpriteRenderer>().color.b, shaderAlpha);
+                }
+                tip.transform.localPosition = new Vector3(Game.Instance.offx, Game.Instance.offy);
+                tip.SetActive(false);
+            }
 
             //创建阴影
             for (int i = 0; i < coords.length; i++)
             {
                 GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.4f);
-                image.transform.position = new Vector3(position.x, position.y,2);
+                image.transform.localPosition = new Vector3(position.x, position.y,3);
                 image.transform.parent = shader.transform;
                 image.GetComponent<SpriteRenderer>().color = new Color(image.GetComponent<SpriteRenderer>().color.r, image.GetComponent<SpriteRenderer>().color.g, image.GetComponent<SpriteRenderer>().color.b, shaderAlpha);
             }
@@ -158,16 +205,20 @@ namespace hexjig
             {
                 GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
                 image.transform.localScale = new Vector3(0.5f, 0.5f);
-                Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(outCoord.x + coords[i].x + offx, outCoord.y + coords[i].y + offy), 0.2f);
-                image.transform.position = new Vector3(position.x, position.y,2);
+                Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x + offx,coords[i].y + offy), 0.2f);
+                Point2D position2 = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(outCoord.x, outCoord.y),0.2f);
+                position.x += position2.x;
+                position.y += position2.y;
+
+                image.transform.localPosition = new Vector3(position.x, position.y,3);
                 image.transform.parent = showOut.transform;
 
                 image = ResourceManager.CreateImage("image/grid/gridBg");
                 image.transform.localScale = new Vector3(0.5f, 0.5f);
-                image.transform.position = new Vector3(position.x, position.y, 3);
+                image.transform.localPosition = new Vector3(position.x, position.y, 4);
                 image.transform.parent = background.transform;
             }
-            showOut.transform.position = new Vector3(game.offx1, game.offy1);
+            showOut.transform.localPosition = new Vector3(game.offx1, game.offy1);
         }
 
         public bool IsInPiece(int x,int y)
@@ -285,6 +336,30 @@ namespace hexjig
                 else
                 {
                     shader.SetActive(false);
+                }
+            }
+        }
+
+        private float tipAlpha = 0.3f;
+        private float tipAlphaV = 0.02f;
+        public void Update()
+        {
+            if(hasShowTip)
+            {
+                tipAlpha += tipAlphaV;
+                if(tipAlpha > 0.7f)
+                {
+                    tipAlpha = 0.7f;
+                    tipAlphaV = -tipAlphaV;
+                }
+                else if(tipAlpha < 0.3)
+                {
+                    tipAlpha = 0.3f;
+                    tipAlphaV = -tipAlphaV;
+                }
+                for(int i = 0; i < tipGrids.Count; i++)
+                {
+                    tipGrids[i].color = new Color(tipGrids[i].color.r, tipGrids[i].color.g, tipGrids[i].color.b, tipAlpha);
                 }
             }
         }

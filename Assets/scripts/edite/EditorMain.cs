@@ -33,6 +33,20 @@ public class EditorMain : MonoBehaviour
     {
         ConfigDecode.Decode();
 
+        //删除重复的 piece 信息
+        for(int i = 0; i < PieceConfig.Configs.Count; i ++)
+        {
+            for(int j = i + 1; j < PieceConfig.Configs.Count; j++)
+            {
+                if(PieceConfig.Configs[i].id == PieceConfig.Configs[j].id)
+                {
+                    PieceConfig.Configs.RemoveAt(j);
+                    EditorTip.Show("重复的片信息 : " + PieceConfig.Configs[i].id);
+                    j--;
+                }
+            }
+        }
+
         EditorVO.Instance.dispatcher.AddListener("UIsaveHandle", OnSave);
         EditorVO.Instance.dispatcher.AddListener("UIloadHandle", OnLoad);
         EditorVO.Instance.dispatcher.AddListener("UIclearHandle", OnClear);

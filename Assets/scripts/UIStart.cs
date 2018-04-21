@@ -8,70 +8,24 @@ using System;
 
 public class UIStart : MonoBehaviour {
 
-    public Text levelTxt;
+    public GameObject mainUI;
+    public GameObject dailyUI;
+    public GameObject freedomUI;
+    public GameObject gameUI;
+    public GameObject resultUI;
 
-    private List<LevelConfig> levels;
+    private GameObject show;
 
-	// Use this for initialization
-	void Start () {
-        if(GameVO.Instance.editor == false)
+    // Use this for initialization
+    void Start ()
+    {
+        if (GameVO.Instance.editor == false)
         {
             gameObject.SetActive(true);
 
-            //监听是否开启一个新的关卡
-            MainData.Instance.dispatcher.AddListener(hexjig.EventType.START_LEVEL, OnStartLevel);
+            GameVO.Instance.dispatcher.AddListener(GameEvent.SHOW_MODULE,OnShowModule);
 
-            //监听关卡是否完成
-            MainData.Instance.dispatcher.AddListener(hexjig.EventType.FINISH_LEVEL, OnFinishLevel);
-
-            //随机10个关卡，1-999 6  1000-1999 3  2000 1
-            levels = new List<LevelConfig>();
-            List<int> list = new List<int>();
-            List<int> list2 = new List<int>();
-            List<int> list3 = new List<int>();
-            for (int i = 0; i < LevelConfig.Configs.Count; i++)
-            {
-                if(LevelConfig.Configs[i].id < 1000)
-                {
-                    list.Add(i);
-                }
-                else if(LevelConfig.Configs[i].id < 2000)
-                {
-                    list2.Add(i);
-                }
-                else
-                {
-                    list3.Add(i);
-                }
-            }
-            int len = 0;
-            while(len < 6)
-            {
-                int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list.Count);
-                int ind = list[index];
-                list.RemoveAt(index);
-                levels.Add(LevelConfig.Configs[ind]);
-                len++;
-            }
-            len = 0;
-            while (len < 3)
-            {
-                int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list2.Count);
-                int ind = list2[index];
-                list2.RemoveAt(index);
-                levels.Add(LevelConfig.Configs[ind]);
-                len++;
-            }
-            len = 0;
-            while (len < 1)
-            {
-                int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list3.Count);
-                int ind = list3[index];
-                list3.RemoveAt(index);
-                levels.Add(LevelConfig.Configs[ind]);
-                len++;
-            }
-            StartNextLevel();
+            GameVO.Instance.ShowModule(ModuleName.Main);
         }
         else
         {
@@ -79,13 +33,52 @@ public class UIStart : MonoBehaviour {
         }
     }
 
+    private void OnShowModule(lib.Event e)
+    { 
+        if (show != null)
+        {
+            show.SetActive(false);
+            show = null;
+        }
+        ModuleEventData d = e.Data as ModuleEventData;
+        GameVO.Instance.moduleData = d.value;
+        switch (d.name)
+        {
+            case ModuleName.Main:
+                mainUI.SetActive(true);
+                show = mainUI;
+                break;
+            case ModuleName.Daily:
+                dailyUI.SetActive(true);
+                show = dailyUI;
+                break;
+            case ModuleName.Freedom:
+                freedomUI.SetActive(true);
+                show = freedomUI;
+                break;
+            case ModuleName.Game:
+                gameUI.SetActive(true);
+                show = gameUI;
+                break;
+            case ModuleName.Result:
+                resultUI.SetActive(true);
+                show = resultUI;
+                break;
+        }
+    }
+
+    private void OnRestartHandler(lib.Event e)
+    {
+        MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.RESTART);
+    }
+
     private void StartNextLevel()
     {
-        int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * levels.Count);
-        LevelConfig config = levels[index];
-        levels.RemoveAt(index);
+        //int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * levels.Count);
+        //LevelConfig config = levels[index];
+        //levels.RemoveAt(index);
         //开启一个关卡
-        new StartGameCommand(config.id);
+        //new StartGameCommand(config.id);
     }
 
     /// <summary>
@@ -94,7 +87,7 @@ public class UIStart : MonoBehaviour {
     /// <param name="e"></param>
     private void OnStartLevel(lib.Event e)
     {
-        levelTxt.text = "当前关卡:" + MainData.Instance.levelId.value;
+        //levelTxt.text = "当前关卡:" + MainData.Instance.levelId.value;
     }
 
     /// <summary>
@@ -107,7 +100,7 @@ public class UIStart : MonoBehaviour {
         new DisposeGameCommand();
 
         //完成关卡后跳到下一个关卡，如果没有，则不用管
-        StartNextLevel();
+        //StartNextLevel();
     }
 
     // Update is called once per frame

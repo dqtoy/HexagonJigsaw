@@ -10,7 +10,7 @@ namespace hexjig
         public EventDispatcher dispatcher = new EventDispatcher();
 
         /// <summary>
-        /// 当前关卡耗时
+        /// 当前关卡耗时，毫秒
         /// </summary>
         public Int time = new Int();
 
@@ -47,9 +47,19 @@ namespace hexjig
         public static string START_LEVEL = "start_level";
 
         /// <summary>
+        /// 重新开启关卡
+        /// </summary>
+        public static string RESTART = "restart";
+
+        /// <summary>
         /// 完成关卡
         /// </summary>
         public static string FINISH_LEVEL = "finish_level";
+
+        /// <summary>
+        /// 显示提示
+        /// </summary>
+        public static string SHOW_TIP = "show_tip";
 
         /// <summary>
         /// 退出关卡
@@ -60,5 +70,6 @@ namespace hexjig
         /// 消除游戏
         /// </summary>
         internal static string DISPOSE_GAME = "dispose_game";
+
     }
 }
