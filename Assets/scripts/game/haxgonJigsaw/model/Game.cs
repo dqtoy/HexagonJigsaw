@@ -372,5 +372,11 @@ namespace hexjig
                 MainData.Instance.dispatcher.DispatchWith(EventType.FINISH_LEVEL, MainData.Instance.time.value);
             }
         }
+
+        public void Dispose()
+        {
+            MainData.Instance.dispatcher.RemoveListener(EventType.RESTART, OnRestart);
+            MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_TIP, OnShowTip);
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace hexjig
         {
             if (Game.Instance != null)
             {
+                Game.Instance.Dispose();
                 Destroy(Game.Instance.root);
                 Game.Instance = null;
             }
