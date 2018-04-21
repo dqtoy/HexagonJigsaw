@@ -11,9 +11,9 @@ namespace hexjig
 
         public HaxgonCoord<Coord> coordSys = new HaxgonCoord<Coord>();
 
-        private int maxx = 19;
+        private int maxx = 23;
         private int miny = -9;
-        private int[] movesy = { 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 3 };
+        private int[] movesy = { 0,0,0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 3,3,3 };
 
         public float offx;
         public float offy;
@@ -205,10 +205,14 @@ namespace hexjig
                 {
                     int y = py - 3 + movesy[x];
                     Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(x, y), 0.2f);
-                    /*GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
+
+                    /*
+                    GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
                     image.transform.position = new Vector3(position.x, position.y,100);
-                    image.transform.parent = p1.transform;*/
+                    image.transform.parent = p1.transform;
+                    //*/
+
                     if (position.x < minX)
                     {
                         minX = position.x;
