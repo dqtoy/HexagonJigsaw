@@ -19,18 +19,11 @@ public class StartScript : MonoBehaviour {
     private void Awake()
     {
         //设置窗体大小
-        Screen.SetResolution(720/2,1280/2,false);
+        //Screen.SetResolution(720/2,1280/2,false);
 
         //读取配置
         ConfigDecode.Decode();
 
-        //存储屏幕信息
-        Vector3 size = new Vector3();
-        size = mainCamera.ViewportToWorldPoint(size);
-        GameVO.Instance.Width = Mathf.Abs(size.x * 2);
-        GameVO.Instance.Height = Mathf.Abs(size.y * 2);
-        GameVO.Instance.PixelWidth = mainCamera.pixelWidth;
-        GameVO.Instance.PixelHeight = mainCamera.pixelHeight;
 
         GameVO.Instance.editor = editor;
 
@@ -45,13 +38,17 @@ public class StartScript : MonoBehaviour {
 
     private void Start()
     {
+        //存储屏幕信息
+        Vector3 size = new Vector3();
+        size = mainCamera.ViewportToWorldPoint(size);
+        GameVO.Instance.Width = Mathf.Abs(size.x * 2);
+        GameVO.Instance.Height = Mathf.Abs(size.y * 2);
+        GameVO.Instance.PixelWidth = mainCamera.pixelWidth;
+        GameVO.Instance.PixelHeight = mainCamera.pixelHeight;
+
         if (!editor)
         {
             gameObject.AddComponent<hexjig.Start>();
         }
-    }
-
-    void Update ()
-    {
     }
 }
