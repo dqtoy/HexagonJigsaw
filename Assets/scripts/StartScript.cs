@@ -18,6 +18,9 @@ public class StartScript : MonoBehaviour {
 
     private void Awake()
     {
+        //设置窗体大小
+        Screen.SetResolution(720/2,1280/2,false);
+
         //读取配置
         ConfigDecode.Decode();
 
@@ -38,10 +41,14 @@ public class StartScript : MonoBehaviour {
             return;
         }
         EditorMain.SetActive(false);
+    }
 
-        gameObject.AddComponent<hexjig.Start>();
-
-
+    private void Start()
+    {
+        if (!editor)
+        {
+            gameObject.AddComponent<hexjig.Start>();
+        }
     }
 
     void Update ()

@@ -19,6 +19,7 @@ public class UIStart : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        gameObject.transform.localScale = new Vector3(GameVO.Instance.PixelWidth/720f,GameVO.Instance.PixelWidth / 720f);
         if (GameVO.Instance.editor == false)
         {
             gameObject.SetActive(true);

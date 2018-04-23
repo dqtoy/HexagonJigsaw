@@ -13,6 +13,11 @@ public class GameCameraFix : MonoBehaviour {
 
     private void Awake()
     {
+        if(GameVO.Instance.editor)
+        {
+            gameCamera.orthographicSize = 6;
+            return;
+        }
         int width = gameCamera.pixelWidth;
         int height = gameCamera.pixelHeight;
         if(fixMode == GameCameraFixMode.FIX_WIDTH)
@@ -24,6 +29,8 @@ public class GameCameraFix : MonoBehaviour {
             gameCamera.orthographicSize = height / 200f;
         }
     }
+
+    public static bool testFlag = false;
 }
 
 public enum GameCameraFixMode
