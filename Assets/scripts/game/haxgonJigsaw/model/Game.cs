@@ -37,13 +37,13 @@ namespace hexjig
             MainData.Instance.dispatcher.AddListener(EventType.RESTART,OnRestart);
             MainData.Instance.dispatcher.AddListener(EventType.SHOW_TIP, OnShowTip);
 
-
-            //外面有 19 x 9 的大小
+            //外面有 23 x 9 的大小
             HaxgonCoord<Coord> sys = new HaxgonCoord<Coord>();
-            for (int y = 0; y > miny; y--)
+            for (int py = 0; py > miny; py--)
             {
                 for (int x = 0; x < maxx; x++)
                 {
+                    int y = py - 3 + movesy[x];
                     sys.SetCoord(Point2D.Create(x, y), new Coord { type = 0 });
                 }
             }
@@ -206,8 +206,7 @@ namespace hexjig
                     int y = py - 3 + movesy[x];
                     Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(x, y), 0.2f);
 
-                    /*
-                    GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
+                    /*GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
                     image.transform.position = new Vector3(position.x, position.y,100);
                     image.transform.parent = p1.transform;
@@ -263,7 +262,6 @@ namespace hexjig
                 Vector3 pos = Input.mousePosition;
                 pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
                 pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
-
                 //Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(pos.x - offx1, pos.y - offy1), 0.2f);
                 //Point2D p1 = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(pos.x - offx, pos.y - offy), 0.4f);
                 for (int i = 0; i < pieces.length; i++)
@@ -304,50 +302,141 @@ namespace hexjig
 
         private Point2D AutoSetPiece(Piece piece, HaxgonCoord<Coord> sys)
         {
-            for (int x = 0; x < this.maxx; x++)
+            List<Point2D> list = new List<Point2D>();
+            float minX = 1000;
+            float maxX = -1000;
+            float minY = 1000;
+            float maxY = -1000;
+            for (int py = 0; py > this.miny; py--)
             {
-                for (int py = 0; py > this.miny; py--)
+                for (int x = 0; x < this.maxx; x++)
                 {
                     int y = py - 3 + movesy[x];
-                    bool find = true;
-                    for (int i = 0; i < piece.coords.length; i++)
+                    list.Add(Point2D.Create(x, y));
+                    Point2D position = HaxgonCoord<Coord>.CoordToPosition(list[list.Count -1], 0.2f);
+                    if (position.x < minX)
                     {
-                        Point2D p = HaxgonCoord<Coord>.PositionToCoord(HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(piece.coords[i].x + piece.offx, piece.coords[i].y + piece.offy),0.2f),0.2f);
-                        p.x += x;
-                        p.y += y;
-                        Coord grid = sys.GetCoord(p);
-                        if (grid == null || grid.type != 0)
+                        minX = position.x;
+                    }
+                    if (position.x > maxX)
+                    {
+                        maxX = position.x;
+                    }
+                    if (position.y < minY)
+                    {
+                        minY = position.y;
+                    }
+                    if (position.y > maxY)
+                    {
+                        maxY = position.y;
+                    }
+                }
+            }
+            Point2D center = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create((minX + maxX) * 0.5f, (minY + maxY) * 0.5f), 0.2f);
+
+            //从可选格子的正中心开始，以六边形的方式向外扩展找可以放的地方
+            Dictionary<string, bool> findMap = new Dictionary<string, bool>();
+            Dictionary<string, bool> findMap2 = new Dictionary<string, bool>();
+            findMap2.Add(center.x + "," + center.y, true);
+            List<Point2D> currentList = new List<Point2D>();
+            currentList.Add(center);
+            while (list.Count > 0)
+            {
+                for (int i = 0; i < currentList.Count; i++)
+                {
+                    //在 list 中查找该点
+                    bool findInList = false;
+                    for (int l = 0; l < list.Count; l++)
+                    {
+                        if (list[l].x == currentList[i].x && list[l].y == currentList[i].y)
+                        {
+                            list.RemoveAt(l);
+                            findInList = true;
+                            break;
+                        }
+                    }
+                    if (findInList)
+                    {
+                        //如果找到则查看该点是否可以放
+                        Point2D result = TrySetPiece((int)currentList[i].x, (int)currentList[i].y, piece, sys);
+                        if (result != null)
+                        {
+                            return result;
+                        }
+                    }
+                }
+                List<Point2D> newList = new List<Point2D>();
+                //展开所有的点
+                for (int i = 0; i < currentList.Count; i++)
+                {
+                    if (findMap.ContainsKey(currentList[i].x + "," + currentList[i].y))
+                    {
+                        continue;
+                    }
+                    //展开
+                    List<Point2D> nextCoords = HaxgonCoord<Coord>.GetCoordsNextTo(currentList[i]);
+                    for(int n = 0; n < nextCoords.Count; n++)
+                    {
+                        if(findMap2.ContainsKey(nextCoords[n].x + "," + nextCoords[n].y))
+                        {
+                            continue;
+                        }
+                        findMap2.Add(nextCoords[n].x + "," + nextCoords[n].y, true);
+                        newList.Add(nextCoords[n]);
+                    }
+                }
+                currentList = newList;
+            }
+            return null;
+        }
+
+        private Point2D TrySetPiece(int x,int y, Piece piece, HaxgonCoord<Coord> sys)
+        {
+            bool find = true;
+            for (int i = 0; i < piece.coords.length; i++)
+            {
+                Point2D p = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(piece.coords[i].x, piece.coords[i].y), 0.2f);
+                p.x += piece.offx * 0.5f;
+                p.y += piece.offy * 0.5f;
+                Point2D p2 = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(x, y), 0.2f);
+                p2.x += p.x;
+                p2.y += p.y;
+                p = HaxgonCoord<Coord>.PositionToCoord(p2, 0.2f);
+                Coord grid = sys.GetCoord(p);
+                if (grid == null || grid.type != 0)
+                {
+                    find = false;
+                    break;
+                }
+                else
+                {
+                    //获取周围的格子
+                    List<Point2D> nextCoords = HaxgonCoord<Coord>.GetCoordsNextTo(p);
+                    for (int n = 0; n < nextCoords.Count; n++)
+                    {
+                        Coord nextGrid = sys.GetCoord(Point2D.Create(nextCoords[n].x, nextCoords[n].y));
+                        if (nextGrid != null && nextGrid.piece != grid.piece)
                         {
                             find = false;
                             break;
                         }
-                        else
-                        {
-                            //获取周围的格子
-                            List<Point2D> nextCoords = HaxgonCoord<Coord>.GetCoordsNextTo(p);
-                            for (int n = 0; n < nextCoords.Count; n++)
-                            {
-                                Coord nextGrid = sys.GetCoord(Point2D.Create(nextCoords[n].x, nextCoords[n].y));
-                                if (nextGrid != null && nextGrid.piece != grid.piece)
-                                {
-                                    find = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (find)
-                    {
-                        for (int i = 0; i < piece.coords.length; i++)
-                        {
-                            Point2D p = HaxgonCoord<Coord>.PositionToCoord(HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(piece.coords[i].x + piece.offx, piece.coords[i].y + piece.offy), 0.2f), 0.2f);
-                            p.x += x;
-                            p.y += y;
-                            sys.SetCoord(p, piece.coords[i]);
-                        }
-                        return Point2D.Create(x, y);
                     }
                 }
+            }
+            if (find)
+            {
+                for (int i = 0; i < piece.coords.length; i++)
+                {
+                    Point2D p = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(piece.coords[i].x, piece.coords[i].y), 0.2f);
+                    p.x += piece.offx * 0.5f;
+                    p.y += piece.offy * 0.5f;
+                    Point2D p2 = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(x, y), 0.2f);
+                    p2.x += p.x;
+                    p2.y += p.y;
+                    p = HaxgonCoord<Coord>.PositionToCoord(p2, 0.2f);
+                    sys.SetCoord(p, piece.coords[i]);
+                }
+                return Point2D.Create(x, y);
             }
             return null;
         }

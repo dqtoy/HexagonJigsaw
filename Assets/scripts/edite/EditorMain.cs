@@ -31,6 +31,9 @@ public class EditorMain : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        new EditorMainThread();
+        new CheckThread();
+
         ConfigDecode.Decode();
 
         //删除重复的 piece 信息
@@ -140,7 +143,7 @@ public class EditorMain : MonoBehaviour
             EditorTip.Show("未输入关卡");
             return;
         }
-        EditorTip.Show("保存成中...");
+        EditorTip.Show("保存中...");
         new SaveLevelCommand(Convert.ToInt32(levelTxt.text));
         EditorTip.Show("保存成功!");
         DrawPieces();
@@ -207,6 +210,9 @@ public class EditorMain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        EditorMainThread.Instance.Update();
+        CheckThread.Instance.Update();
+
         if (Input.GetAxis("Fire1") > 0 && lastClick == 0)
         {
             Vector3 pos = Input.mousePosition;
@@ -319,5 +325,10 @@ public class EditorMain : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        Thread.ExitAll();
     }
 }

@@ -31,9 +31,9 @@ namespace hexjig
 
         public bool isAnswer;
 
-        public int offx;
+        public float offx;
 
-        public int offy;
+        public float offy;
 
         //
         private float tipOffx;
@@ -68,12 +68,9 @@ namespace hexjig
             float pmaxY = -1000;
             for (int i = 1; i < coords.length; i++)
             {
-                if (coords[i].x < minx)
+                if (coords[i].x < minx || coords[i].x == minx && coords[i].y > maxy)
                 {
                     minx = coords[i].x;
-                }
-                if (coords[i].y > maxy)
-                {
                     maxy = coords[i].y;
                 }
 
@@ -96,20 +93,23 @@ namespace hexjig
                     pmaxY = position.y;
                 }
             }
-            offx = minx % 2 == 0 ? -minx : -minx + 1;
-            offy = -maxy;
+            offx = -HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(minx, maxy), 0.4f).x;
+            offy = -HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(minx, maxy), 0.4f).y;
 
             tipOffx = -pminX - (pmaxX - pminX) * 0.5f;
             tipOffy = -pminY + 0.6f;
 
-            show = new GameObject();
-            show.transform.parent = game.root.transform;
-            tip = new GameObject();
-            tip.transform.parent = game.root.transform;
-            shader = new GameObject();
-            shader.transform.parent = game.root.transform;
-            showOut = new GameObject();
-            showOut.transform.parent = game.root.transform;
+            if(game != null)
+            {
+                show = new GameObject();
+                show.transform.parent = game.root.transform;
+                tip = new GameObject();
+                tip.transform.parent = game.root.transform;
+                shader = new GameObject();
+                shader.transform.parent = game.root.transform;
+                showOut = new GameObject();
+                showOut.transform.parent = game.root.transform;
+            }
         }
 
         public bool IsTouchIn(float x,float y)
@@ -127,13 +127,17 @@ namespace hexjig
             }
             else
             {
+                x -= offx * 0.5f;
+                y -= offy * 0.5f;
+
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(outCoord.x, outCoord.y), 0.2f);
                 x -= position.x;
                 y -= position.y;
+
                 Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(x - game.offx1, y - game.offy1), 0.2f);
                 for (int i = 0; i < coords.length; i++)
                 {
-                    if (p.x == coords[i].x + offx && p.y == coords[i].y + offy)
+                    if (p.x == coords[i].x && p.y == coords[i].y)
                     {
                         return true;
                     }
@@ -203,22 +207,22 @@ namespace hexjig
             //创建库中的显示
             for (int i = 0; i < coords.length; i++)
             {
-                GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
-                image.transform.localScale = new Vector3(0.5f, 0.5f);
-                Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x + offx,coords[i].y + offy), 0.2f);
+                Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x,coords[i].y), 0.2f);
                 Point2D position2 = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(outCoord.x, outCoord.y),0.2f);
                 position.x += position2.x;
                 position.y += position2.y;
 
-                image.transform.localPosition = new Vector3(position.x, position.y,3);
+                GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
+                image.transform.localScale = new Vector3(0.5f, 0.5f);
+                image.transform.localPosition = new Vector3(position.x, position.y, 3);
                 image.transform.parent = showOut.transform;
 
                 image = ResourceManager.CreateImage("image/grid/gridBg");
                 image.transform.localScale = new Vector3(0.5f, 0.5f);
-                image.transform.localPosition = new Vector3(position.x, position.y, 4);
-                image.transform.parent = background.transform;
+                image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f, 4);
+                image.transform.parent = background.transform;//*/
             }
-            showOut.transform.localPosition = new Vector3(game.offx1, game.offy1);
+            showOut.transform.localPosition = new Vector3(game.offx1 + offx * 0.5f, game.offy1 + offy * 0.5f);
         }
 
         public bool IsInPiece(int x,int y)

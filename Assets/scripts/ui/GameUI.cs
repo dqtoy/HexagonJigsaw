@@ -108,7 +108,6 @@ public class GameUI : MonoBehaviour {
             else if (GameVO.Instance.difficulty == DifficultyMode.Hard)
             {
                 level = list3[(int)(UnityEngine.Random.Range(0, 1.0f) * list3.Count)];
-                level = 2000;
             }
         }
         new StartGameCommand(level);

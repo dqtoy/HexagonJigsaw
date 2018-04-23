@@ -1,17 +1,17 @@
 ﻿using lib;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 public class SaveLevelCommand
 {
     public SaveLevelCommand(int level)
     {
-
         //读取配置
         //ConfigDecode.Decode();
 
         //删除之前的 level 相关信息
-        if(LevelConfig.GetConfig(level) != null)
+        if (LevelConfig.GetConfig(level) != null)
         {
             LevelConfig old = LevelConfig.GetConfig(level);
             LevelConfig.Configs.Remove(old);
@@ -71,6 +71,7 @@ public class SaveLevelCommand
             PieceConfig.Configs.Add(pieceConfig);
         }
         Save();
+        CheckOut();
     }
 
     private void Save()
@@ -128,5 +129,19 @@ public class SaveLevelCommand
         //清空缓冲区、关闭流
         fs.Flush();
         fs.Close();
+    }
+
+    /// <summary>
+    /// 检测是否有放不下的
+    /// </summary>
+    private void CheckOut()
+    {
+        List<LevelConfig> levels = LevelConfig.Configs;
+        for (int i = 0; i < levels.Count; i++)
+        {
+            ThreadEvent te = ThreadEvent.Create("check",levels[i]);
+            te.URL = "gameLevel/level1/SceneBackground";
+            ThreadEventList.GetList(EditorMainThread.ThreadId, CheckThread.ThreadId).AddEvent(te);
+        }
     }
 }
