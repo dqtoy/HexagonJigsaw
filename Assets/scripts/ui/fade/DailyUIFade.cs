@@ -39,8 +39,8 @@ public class DailyUIFade : UIFade
         {
             line1.DOScaleX(0, outTime).onComplete = TweenComplete;
             line2.DOScaleX(0, outTime);
-            daily2.DOScaleX(0, outTime);
-            quit.DOScaleX(0, outTime);
+            daily2.DOScaleX(0, 0.1f);
+            quit.DOScaleX(0, 0.1f);
             buttons.DOScale(new Vector3(0, 0),outTime);
         }
         else if(name == ModuleName.Game)
@@ -181,8 +181,8 @@ public class DailyUIFade : UIFade
 
             line1.DOScaleX(1, inTime);
             line2.DOScaleX(1, inTime);
-            daily2.DOScaleX(1, inTime);
-            quit.DOScaleX(1, inTime);
+            daily2.DOScaleX(1, 0.1f);
+            quit.DOScaleX(1, 0.1f);
             buttons.DOScale(new Vector3(1, 1),inTime);
         }
         else if(name == ModuleName.Game || name == ModuleName.Result)

@@ -28,6 +28,11 @@ public class SettingUI : MonoBehaviour {
     public Image soundIcon;
     public Image soundIcon2;
 
+    public Image soundProgress;
+    public Image soundProgressLess;
+    public Image musicProgress;
+    public Image musicProgressLess;
+
     private void Awake()
     {
         ButtonClick.dispatcher.AddListener("quitSetting", OnQuit);
@@ -78,20 +83,22 @@ public class SettingUI : MonoBehaviour {
             GameVO.Instance.soundEditor.value = false;
             musicVolumn.SetActive(true);
             musicBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
-            musicBg.DOColor(new Color((float)(201.0 / 255.0), (float)(251.0 / 255.0), (float)(130.0 / 255.0)), 0.2f);
+            //musicBg.DOColor(new Color((float)(201.0 / 255.0), (float)(251.0 / 255.0), (float)(130.0 / 255.0)), 0.2f);
         }
         else
         {
             musicVolumn.SetActive(false);
             musicBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
-            musicBg.DOColor(new Color((float)(255.0 / 255.0), (float)(255.0 / 255.0), (float)(255.0 / 255.0)), 0.2f);
+            //musicBg.DOColor(new Color((float)(255.0 / 255.0), (float)(255.0 / 255.0), (float)(255.0 / 255.0)), 0.2f);
         }
     }
 
     private void OnMusicVolumnChange(lib.Event e = null)
     {
         musicVolumnTxt.text = "" + GameVO.Instance.musicVolumn.value;
-        if(GameVO.Instance.musicVolumn.value == 0)
+        musicProgress.fillAmount = GameVO.Instance.musicVolumn.value / 100.0f;
+        musicProgressLess.fillAmount = 1 - GameVO.Instance.musicVolumn.value / 100.0f;
+        if (GameVO.Instance.musicVolumn.value == 0)
         {
             musicIcon.gameObject.SetActive(false);
             musicIcon2.gameObject.SetActive(true);
@@ -132,20 +139,22 @@ public class SettingUI : MonoBehaviour {
         {
             GameVO.Instance.musicEditor.value = false;
             soundVolumn.SetActive(true);
-            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
-            soundBg.DOColor(new Color((float)(201.0 / 255.0), (float)(251.0 / 255.0), (float)(130.0 / 255.0)), 0.2f);
+            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
+            //soundBg.DOColor(new Color((float)(201.0 / 255.0), (float)(251.0 / 255.0), (float)(130.0 / 255.0)), 0.2f);
         }
         else
         {
             soundVolumn.SetActive(false);
-            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
-            soundBg.DOColor(new Color((float)(255.0 / 255.0), (float)(255.0 / 255.0), (float)(255.0 / 255.0)), 0.2f);
+            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
+            //soundBg.DOColor(new Color((float)(255.0 / 255.0), (float)(255.0 / 255.0), (float)(255.0 / 255.0)), 0.2f);
         }
     }
 
     private void OnSoundVolumnChange(lib.Event e = null)
     {
         soundVolumnTxt.text = "" + GameVO.Instance.soundVolumn.value;
+        soundProgress.fillAmount = GameVO.Instance.soundVolumn.value / 100.0f;
+        soundProgressLess.fillAmount = 1 - GameVO.Instance.soundVolumn.value / 100.0f;
         if (GameVO.Instance.soundVolumn.value == 0)
         {
             soundIcon.gameObject.SetActive(false);

@@ -4,8 +4,14 @@ public class Daily
 {
     public Array<DailyLevelVO> levels = new Array<DailyLevelVO>();
 
+    //每日进度
+    public Int progress = new Int();
+
+    public Int all = new Int(10);
+
     public void Finish(int levelId, int time)
     {
+        int count = 0;
         for(int i = 0;i < levels.length; i++)
         {
             if(levels[i].config.id == levelId)
@@ -20,7 +26,12 @@ public class Daily
                     levels[i].time = time;
                 }
             }
+            if(levels[i].pass)
+            {
+                count++;
+            }
         }
+        progress.value = count;
     }
 
     public bool HasNextLevel(int levelId)

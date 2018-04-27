@@ -128,6 +128,7 @@ public class GameVO
             daily.levels.Add(levelvo);
             len++;
         }
+        daily.all.value = daily.levels.length;
     }
 
     /// <summary>

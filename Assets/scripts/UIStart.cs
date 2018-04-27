@@ -42,7 +42,6 @@ public class UIStart : MonoBehaviour {
         ModuleName old = showModule;
         show.SetActive(false);
         show = null;
-        GameVO.Instance.moduleData = nextModule;
         showModule = nextModule;
         switch (nextModule)
         {
@@ -71,12 +70,24 @@ public class UIStart : MonoBehaviour {
                 show = settingUI;
                 break;
         }
+        if(old == ModuleName.Result && showModule == ModuleName.Main)
+        {
+            if(GameVO.Instance.model == GameModel.Daily)
+            {
+                dailyUI.GetComponent<UIFade>().FadeIn(ModuleName.Game);
+            }
+            if (GameVO.Instance.model == GameModel.Freedom)
+            {
+                dailyUI.GetComponent<UIFade>().FadeIn(ModuleName.Game);
+            }
+        }
         show.GetComponent<UIFade>().FadeIn(old);
     }
 
     private void OnShowModule(lib.Event e)
     {
         ModuleEventData d = e.Data as ModuleEventData;
+        GameVO.Instance.moduleData = d.value;
         if (show != null)
         {
             nextModule = d.name;
@@ -84,7 +95,6 @@ public class UIStart : MonoBehaviour {
             show.GetComponent<UIFade>().AddListener(lib.Event.COMPLETE, OnFadeOut);
             return;
         }
-        GameVO.Instance.moduleData = d.value;
         showModule = d.name;
         switch (d.name)
         {

@@ -10,12 +10,12 @@ public class ResultUI : MonoBehaviour {
 
     public Text timeTxt;
     public Text modelTxt;
-    public GameObject nextButton;
+    //public GameObject nextButton;
 
     private void Awake()
     {
         ButtonClick.dispatcher.AddListener("quitResult", OnQuit);
-        ButtonClick.dispatcher.AddListener("again", OnAgain);
+        ButtonClick.dispatcher.AddListener("home", OnShowHome);
         ButtonClick.dispatcher.AddListener("next", OnNext);
     }
 
@@ -31,7 +31,7 @@ public class ResultUI : MonoBehaviour {
         }
     }
 
-    private void OnAgain(lib.Event e)
+    private void OnShowHome(lib.Event e)
     {
         //GameVO.Instance.ShowModule(ModuleName.Game, MainData.Instance.levelId.value);
         GameVO.Instance.ShowModule(ModuleName.Main);
@@ -51,14 +51,14 @@ public class ResultUI : MonoBehaviour {
 
     private void OnEnable()
     {
-        nextButton.SetActive(true);
+        /*nextButton.SetActive(true);
         if (GameVO.Instance.model == GameModel.Daily)
         {
             if(!GameVO.Instance.daily.HasNextLevel(MainData.Instance.levelId.value))
             {
                 nextButton.SetActive(false);
             }
-        }
+        }*/
         timeTxt.text = StringUtils.TimeToMS((int)GameVO.Instance.moduleData);
         modelTxt.text = GameVO.Instance.model == GameModel.Daily ? "Challenge model" : "Freedom model";
     }

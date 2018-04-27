@@ -15,8 +15,7 @@ public class ResultUIFade : UIFade {
     public RectTransform line2;
     public RectTransform hex;
     public RectTransform quit;
-    public RectTransform again;
-    public RectTransform next;
+    public RectTransform home;
     public RectTransform share;
     public RectTransform root;
 
@@ -31,8 +30,7 @@ public class ResultUIFade : UIFade {
         model.DOScaleX(0, 0.3f);
         hex.DOScaleX(0, 0.3f);
         hex.DOScaleY(0, 0.3f);
-        quit.DOScaleX(0, 0.3f);
-        again.DOScaleX(0, 0.3f).onComplete = TweenComplete;
+        quit.DOScaleX(0, 0.3f).onComplete = TweenComplete;
     }
 
     private void TweenComplete()
@@ -50,8 +48,7 @@ public class ResultUIFade : UIFade {
         line2.localScale = new Vector3(0, 1);
         hex.localScale = new Vector3(0, 0);
         quit.localScale = new Vector3(0, 1);
-        again.localScale = new Vector3(0, 1);
-        next.localScale = new Vector3(0, 1);
+        home.localScale = new Vector3(0, 1);
         share.localScale = new Vector3(0, 0);
 
         MainData.Instance.showCutRoot.transform.localPosition = new Vector3(MainData.Instance.showCutRoot.transform.localPosition.x, MainData.Instance.showCutRoot.transform.localPosition.y,100);
@@ -78,8 +75,7 @@ public class ResultUIFade : UIFade {
         hex.DOScaleX(1, 0.2f);
         hex.DOScaleY(1, 0.2f);
         quit.DOScaleX(1, 0.2f);
-        again.DOScaleX(1, 0.2f);
-        next.DOScaleX(1, 0.2f).onComplete = FadeIn5;
+        home.DOScaleX(1, 0.2f).onComplete = FadeIn5;
     }
 
     private void FadeIn5()

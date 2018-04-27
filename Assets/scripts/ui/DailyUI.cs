@@ -22,7 +22,11 @@ public class DailyUI : MonoBehaviour {
         new Color(240,113,217)
     };
 
+    public Text dailyProgressTxt;
+
     public Transform buttonsTransform;
+    public Image progress;
+    public Image progressLess;
 
     private void Awake()
     {
@@ -45,6 +49,14 @@ public class DailyUI : MonoBehaviour {
                 }
             }
         }
+        GameVO.Instance.daily.progress.AddListener(lib.Event.CHANGE, OnDailyProgressChange);
+    }
+
+    private void OnDailyProgressChange(lib.Event e = null)
+    {
+        dailyProgressTxt.text = GameVO.Instance.daily.progress.value + "/" + GameVO.Instance.daily.all.value;
+        progress.fillAmount = 1.0f * GameVO.Instance.daily.progress.value / GameVO.Instance.daily.all.value;
+        progressLess.fillAmount = 1 - 1.0f * GameVO.Instance.daily.progress.value / GameVO.Instance.daily.all.value;
     }
 
     /// <summary>
@@ -80,5 +92,6 @@ public class DailyUI : MonoBehaviour {
                 times[i].text = "";
             }
         }
+        OnDailyProgressChange();
     }
 }
