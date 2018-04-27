@@ -24,6 +24,7 @@ public class ButtonClick : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        ResourceManager.PlaySound("sound/click", false, GameVO.Instance.soundVolumn.value / 100.0f);
         _dispatcher.DispatchWith(gameObject.name, gameObject);
     }
 

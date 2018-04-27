@@ -12,8 +12,16 @@ public class GameUIFade : UIFade
     public RectTransform txt;
     public RectTransform operateBg;
     public RectTransform restart;
+    public RectTransform restartBg;
+    public RectTransform restartIcon;
     public RectTransform tip;
+    public RectTransform tipBg;
+    public RectTransform tipIcon;
     public RectTransform hex;
+    private Tweener restartTween;
+    private Tweener tipTween;
+    private int restartEffectGap = 10;
+    private int tipEffectGap = 10;
 
     private ModuleName moduleName;
 
@@ -54,6 +62,8 @@ public class GameUIFade : UIFade
 
     override public void FadeIn(ModuleName name)
     {
+        PlayTipEffect();
+        PlayRestartEffect();
         moduleName = name;
         if (name == ModuleName.Freedom || name == ModuleName.Daily)
         {
@@ -71,6 +81,20 @@ public class GameUIFade : UIFade
         }
     }
 
+    private void Update()
+    {
+        tipEffectGap--;
+        if(tipEffectGap == 0)
+        {
+            PlayTipEffect();
+        }
+        restartEffectGap--;
+        if(restartEffectGap == 0)
+        {
+            PlayRestartEffect();
+        }
+    }
+
     private void FadeIn2()
     {
         if(moduleName == ModuleName.Freedom || moduleName == ModuleName.Daily)
@@ -81,5 +105,31 @@ public class GameUIFade : UIFade
             MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_START_EFFECT);
             
         }
+    }
+
+    private void PlayTipEffect()
+    {
+        tipTween = tipIcon.DOLocalMove(new Vector3(0, 25), 0.3f).SetDelay(1.5f).SetLoops(4, LoopType.Yoyo).SetEase(Ease.InCirc);
+        tipTween.onComplete = PlayTipEffectComplete;
+        tipBg.DOShakeScale(1.0f, new Vector3(0.3f, 0.3f), 4, 10).SetDelay(0.5f).SetEase(Ease.InOutQuart);
+        tipEffectGap = 60 * UnityEngine.Random.Range(10, 20);
+    }
+
+    private void PlayTipEffectComplete()
+    {
+        tipTween = null;
+    }
+
+    private void PlayRestartEffect()
+    {
+        restartTween = restartIcon.DOLocalMove(new Vector3(0, 13), 0.3f).SetDelay(1.5f).SetLoops(4, LoopType.Yoyo).SetEase(Ease.InCirc);
+        restartTween.onComplete = PlayRestartEffectComplete;
+        restartBg.DOShakeScale(1.0f, new Vector3(0.1f, 0.1f), 4, 10).SetDelay(0.5f).SetEase(Ease.InOutQuart);
+        restartEffectGap = 60 * UnityEngine.Random.Range(10, 20);
+    }
+
+    private void PlayRestartEffectComplete()
+    {
+        restartTween = null;
     }
 }

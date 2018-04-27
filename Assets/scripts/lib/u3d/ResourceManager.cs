@@ -51,6 +51,17 @@ namespace lib
             obj.GetComponent<RectTransform>().sizeDelta = new Vector2(txt2d.width, txt2d.height);
             return obj;
         }
+
+        public static AudioSource PlaySound(string url,bool loop = false,float volume = 1.0f)
+        {
+            GameObject obj = new GameObject();
+            AudioSource audio = obj.AddComponent<AudioSource>();
+            audio.clip = ResourceManager.GetResource<AudioClip>(url);
+            audio.loop = loop;
+            audio.volume = volume;
+            audio.Play();
+            return audio;
+        }
     }
 
 }

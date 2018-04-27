@@ -78,6 +78,8 @@ namespace hexjig
         /// </summary>
         public static string SHOW_CUT = "show_cut";
 
+        public static string SET_PIECE = "set_piece";
+
         /// <summary>
         /// 消除游戏
         /// </summary>
@@ -93,6 +95,7 @@ namespace hexjig
         /// 
         /// </summary>
         internal static string SHOW_START_EFFECT = "show_start_effect";
+
 
     }
 }

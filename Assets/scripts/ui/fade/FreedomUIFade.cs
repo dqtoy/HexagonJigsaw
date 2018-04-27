@@ -47,20 +47,6 @@ public class FreedomUIFade : UIFade
         {
             line1.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 9), outTime);
             line2.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 9), outTime).onComplete = TweenComplete;
-
-            DoEffect(easy, easyBg, 0, true);
-            DoEffect(easy, easyIcon, 0, true);
-            DoEffect(easy, easyTxt, 0, true);
-
-            DoEffect(normal, normalBg, 0, true);
-            DoEffect(normal, normalIcon, 0, true);
-            DoEffect(normal, normalTxt, 0, true);
-
-            DoEffect(hard, hardBg, 0, true);
-            DoEffect(hard, hardIcon, 0, true);
-            DoEffect(hard, hardTxt, 0, true);
-
-            DoEffect(quit, quitButton, 0, true);
         }
         else if(name == ModuleName.Game)
         {
@@ -141,19 +127,35 @@ public class FreedomUIFade : UIFade
             line1.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(400, 9), inTime);
             line2.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(1016, 9), inTime);
 
-            DoEffect(easy, easyBg, easyStart);
-            DoEffect(easy, easyIcon, easyStart);
-            DoEffect(easy, easyTxt, easyStart);
+            easyTxt.rectTransform.localScale = new Vector3(0, 0);
+            easyTxt.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
 
-            DoEffect(normal, normalBg, normalStart);
-            DoEffect(normal, normalIcon, normalStart);
-            DoEffect(normal, normalTxt, normalStart);
+            normalTxt.rectTransform.localScale = new Vector3(0, 0);
+            normalTxt.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
 
-            DoEffect(hard, hardBg, hardStart);
-            DoEffect(hard, hardIcon, hardStart);
-            DoEffect(hard, hardTxt, hardStart);
+            hardTxt.rectTransform.localScale = new Vector3(0, 0);
+            hardTxt.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
 
-            DoEffect(quit, quitButton, quitStart);
+            easyIcon.rectTransform.localScale = new Vector3(0, 0);
+            easyIcon.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
+
+            normalIcon.rectTransform.localScale = new Vector3(0, 0);
+            normalIcon.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
+
+            hardIcon.rectTransform.localScale = new Vector3(0, 0);
+            hardIcon.rectTransform.DOScale(1, 0.6f).SetDelay(1.2f);
+
+            easyBg.rectTransform.localScale = new Vector3(0, 0);
+            easyBg.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
+            easyBg.rectTransform.DOLocalRotate(new Vector3(0, -720, 0), 1.2f).SetDelay(0.8f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutBounce);
+
+            normalBg.rectTransform.localScale = new Vector3(0, 0);
+            normalBg.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
+            normalBg.rectTransform.DOLocalRotate(new Vector3(0, -720, 0), 1.2f).SetDelay(0.8f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutBounce);
+
+            hardBg.rectTransform.localScale = new Vector3(0, 0);
+            hardBg.rectTransform.DOScale(1, 0.6f).SetDelay(1.33f);
+            hardBg.rectTransform.DOLocalRotate(new Vector3(0, -720, 0), 1.2f).SetDelay(1.33f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutBounce);
         }
         else if(name == ModuleName.Game || name == ModuleName.Result)
         {

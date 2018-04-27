@@ -1,15 +1,15 @@
-﻿using System.Collections;
+﻿using hexjig;
+using lib;
 using System.Collections.Generic;
 using UnityEngine;
-using hexjig;
-using lib;
-using System;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameUI : MonoBehaviour {
 
     public Text timeTxt;
     public TextExd modelTxt;
+    public GameObject flush;
 
     //临时测试
     public Text levelTxt;
@@ -20,7 +20,13 @@ public class GameUI : MonoBehaviour {
         ButtonClick.dispatcher.AddListener("restart", OnRestart);
         ButtonClick.dispatcher.AddListener("tip", OnTip);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.FINISH_LEVEL, OnFinshLevel);
-        MainData.Instance.time.AddListener(lib.Event.CHANGE, OnTimeChange);
+        MainData.Instance.time.AddListener(lib.Event.CHANGE, OnTimeChange); 
+        MainData.Instance.dispatcher.AddListener(hexjig.EventType.SET_PIECE, OnSetPiece);
+    }
+
+    private void OnSetPiece(lib.Event e)
+    {
+        ResourceManager.PlaySound("sound/setpiece", false, GameVO.Instance.soundVolumn.value / 100.0f);
     }
 
     private void OnTip(lib.Event e)
@@ -51,6 +57,7 @@ public class GameUI : MonoBehaviour {
             }
             else
             {
+                ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
                 MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
                 MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
                 GameVO.Instance.ShowModule(ModuleName.Result, e.Data);
@@ -69,6 +76,11 @@ public class GameUI : MonoBehaviour {
 
     private void OnQuit(lib.Event e)
     {
+        flush.GetComponent<RectTransform>().sizeDelta = new Vector2(GameVO.Instance.PixelWidth, GameVO.Instance.PixelHeight);
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(flush.GetComponent<Image>().DOColor(new Color(1, 1, 1, 1), 0.15f));
+        mySequence.Append(flush.GetComponent<Image>().DOColor(new Color(1, 1, 1, 0), 0.1f));
+        ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
         MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
         MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
         GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);

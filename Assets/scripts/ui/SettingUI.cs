@@ -60,7 +60,7 @@ public class SettingUI : MonoBehaviour {
 
     private void OnClickMusicPlus(lib.Event e)
     {
-        GameVO.Instance.musicVolumn.value++;
+        GameVO.Instance.musicVolumn.value += 10;
         if(GameVO.Instance.musicVolumn.value > 100)
         {
             GameVO.Instance.musicVolumn.value = 100;
@@ -69,7 +69,7 @@ public class SettingUI : MonoBehaviour {
 
     private void OnClickMusicReduce(lib.Event e)
     {
-        GameVO.Instance.musicVolumn.value--;
+        GameVO.Instance.musicVolumn.value -= 10;
         if (GameVO.Instance.musicVolumn.value < 0)
         {
             GameVO.Instance.musicVolumn.value = 0;
@@ -117,7 +117,7 @@ public class SettingUI : MonoBehaviour {
 
     private void OnClickSoundPlus(lib.Event e)
     {
-        GameVO.Instance.soundVolumn.value++;
+        GameVO.Instance.soundVolumn.value += 10;
         if (GameVO.Instance.soundVolumn.value > 100)
         {
             GameVO.Instance.soundVolumn.value = 100;
@@ -126,7 +126,7 @@ public class SettingUI : MonoBehaviour {
 
     private void OnClickSoundReduce(lib.Event e)
     {
-        GameVO.Instance.soundVolumn.value--;
+        GameVO.Instance.soundVolumn.value -= 10;
         if (GameVO.Instance.soundVolumn.value < 0)
         {
             GameVO.Instance.soundVolumn.value = 0;

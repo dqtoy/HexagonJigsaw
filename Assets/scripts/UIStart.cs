@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using hexjig;
 using lib;
 using System;
+using DG.Tweening;
 
 public class UIStart : MonoBehaviour {
 
@@ -22,6 +23,11 @@ public class UIStart : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        //播放背景音乐
+        GameVO.Instance.bgm = ResourceManager.PlaySound("music/1", false, GameVO.Instance.musicVolumn.value / 100.0f);
+        GameVO.Instance.bgm.DOFade(GameVO.Instance.musicVolumn.value / 100.0f, 1f);
+        GameVO.Instance.musicVolumn.AddListener(lib.Event.CHANGE, OnMusicVolumnChange);
+
         gameObject.transform.localScale = new Vector3(GameVO.Instance.PixelWidth/720f,GameVO.Instance.PixelWidth / 720f);
         if (GameVO.Instance.editor == false)
         {
@@ -37,8 +43,14 @@ public class UIStart : MonoBehaviour {
         }
     }
 
+    private void OnMusicVolumnChange(lib.Event e)
+    {
+        GameVO.Instance.bgm.volume = GameVO.Instance.musicVolumn.value / 100.0f;
+    }
+
     private void OnFadeOut(lib.Event e)
     {
+        ResourceManager.PlaySound("sound/changeScene", false, GameVO.Instance.soundVolumn.value / 100.0f);
         ModuleName old = showModule;
         show.SetActive(false);
         show = null;

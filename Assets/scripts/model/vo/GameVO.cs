@@ -1,6 +1,7 @@
 ﻿using lib;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class GameVO
 {
@@ -10,10 +11,12 @@ public class GameVO
     public float PixelWidth;
     public float PixelHeight;
 
+    public AudioSource bgm;
+
     /// <summary>
     /// 背景音乐音量
     /// </summary>
-    public Int musicVolumn = new Int(100);
+    public Int musicVolumn = new Int(60);
 
     /// <summary>
     /// 音效音量

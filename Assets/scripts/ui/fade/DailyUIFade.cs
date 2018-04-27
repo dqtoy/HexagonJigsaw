@@ -27,6 +27,11 @@ public class DailyUIFade : UIFade
     public RectTransform level9;
     public RectTransform level10;
 
+    public GameObject effect6;
+    public GameObject effect9;
+    public GameObject effect10;
+    public GameObject effectAllPass;
+
     [HideInInspector]
     public static int dailyIndex;
 
@@ -41,7 +46,7 @@ public class DailyUIFade : UIFade
             line2.DOScaleX(0, outTime);
             daily2.DOScaleX(0, 0.1f);
             quit.DOScaleX(0, 0.1f);
-            buttons.DOScale(new Vector3(0, 0),outTime);
+            //buttons.DOScale(new Vector3(0, 0),outTime);
         }
         else if(name == ModuleName.Game)
         {
@@ -170,6 +175,11 @@ public class DailyUIFade : UIFade
 
     override public void FadeIn(ModuleName name)
     {
+        effect6.SetActive(false);
+        effect9.SetActive(false);
+        effect10.SetActive(false);
+        effectAllPass.SetActive(false);
+
         moduleName = name;
         if(name == ModuleName.Main)
         {
@@ -177,13 +187,14 @@ public class DailyUIFade : UIFade
             line2.localScale = new Vector3(0, 1);
             daily2.localScale = new Vector3(0, 1);
             quit.localScale = new Vector3(0, 1);
-            buttons.localScale = new Vector3(0, 0);
+            //buttons.localScale = new Vector3(0, 0);
 
             line1.DOScaleX(1, inTime);
             line2.DOScaleX(1, inTime);
             daily2.DOScaleX(1, 0.1f);
             quit.DOScaleX(1, 0.1f);
-            buttons.DOScale(new Vector3(1, 1),inTime);
+
+            //buttons.DOScale(new Vector3(1, 1),inTime);
         }
         else if(name == ModuleName.Game || name == ModuleName.Result)
         {

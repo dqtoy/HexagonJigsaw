@@ -323,6 +323,7 @@ namespace hexjig
                 }
                 if (showResult)
                 {
+                    MainData.Instance.dispatcher.DispatchWith(EventType.SET_PIECE);
                     show.transform.position = new Vector3(position0.x + game.offx - copy.x, position0.y + game.offy - copy.y);
                     show.SetActive(true);
                     shader.SetActive(false);
