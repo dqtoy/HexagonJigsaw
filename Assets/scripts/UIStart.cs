@@ -13,8 +13,11 @@ public class UIStart : MonoBehaviour {
     public GameObject freedomUI;
     public GameObject gameUI;
     public GameObject resultUI;
+    public GameObject settingUI;
 
     private GameObject show;
+    private ModuleName showModule;
+    private ModuleName nextModule;
 
     // Use this for initialization
     void Start ()
@@ -34,15 +37,55 @@ public class UIStart : MonoBehaviour {
         }
     }
 
+    private void OnFadeOut(lib.Event e)
+    {
+        ModuleName old = showModule;
+        show.SetActive(false);
+        show = null;
+        GameVO.Instance.moduleData = nextModule;
+        showModule = nextModule;
+        switch (nextModule)
+        {
+            case ModuleName.Main:
+                mainUI.SetActive(true);
+                show = mainUI;
+                break;
+            case ModuleName.Daily:
+                dailyUI.SetActive(true);
+                show = dailyUI;
+                break;
+            case ModuleName.Freedom:
+                freedomUI.SetActive(true);
+                show = freedomUI;
+                break;
+            case ModuleName.Game:
+                gameUI.SetActive(true);
+                show = gameUI;
+                break;
+            case ModuleName.Result:
+                resultUI.SetActive(true);
+                show = resultUI;
+                break;
+            case ModuleName.Setting:
+                settingUI.SetActive(true);
+                show = settingUI;
+                break;
+        }
+        show.GetComponent<UIFade>().FadeIn(old);
+    }
+
     private void OnShowModule(lib.Event e)
-    { 
+    {
+        ModuleEventData d = e.Data as ModuleEventData;
         if (show != null)
         {
-            show.SetActive(false);
-            show = null;
+            nextModule = d.name;
+            show.GetComponent<UIFade>().FadeOut(nextModule);
+            show.GetComponent<UIFade>().AddListener(lib.Event.COMPLETE, OnFadeOut);
+            return;
         }
-        ModuleEventData d = e.Data as ModuleEventData;
         GameVO.Instance.moduleData = d.value;
+        showModule = d.name;
         switch (d.name)
         {
             case ModuleName.Main:
@@ -64,6 +107,10 @@ public class UIStart : MonoBehaviour {
             case ModuleName.Result:
                 resultUI.SetActive(true);
                 show = resultUI;
+                break;
+            case ModuleName.Setting:
+                settingUI.SetActive(true);
+                show = settingUI;
                 break;
         }
     }

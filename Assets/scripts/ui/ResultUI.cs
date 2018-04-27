@@ -33,7 +33,8 @@ public class ResultUI : MonoBehaviour {
 
     private void OnAgain(lib.Event e)
     {
-        GameVO.Instance.ShowModule(ModuleName.Game, MainData.Instance.levelId.value);
+        //GameVO.Instance.ShowModule(ModuleName.Game, MainData.Instance.levelId.value);
+        GameVO.Instance.ShowModule(ModuleName.Main);
     }
 
     private void OnQuit(lib.Event e)

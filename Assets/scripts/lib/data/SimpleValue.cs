@@ -8,7 +8,7 @@ namespace lib
         /// <summary>
         /// 旧的值
         /// </summary>
-        protected object old;
+        protected object oldValue;
 
         /// <summary>
         /// 防篡改
@@ -67,9 +67,9 @@ namespace lib
         /// <summary>
         /// 上一次的值
         /// </summary>
-        public object Old
+        public object old
         {
-            get { return old; }
+            get { return oldValue; }
         }
 
         public bool DefendFalsify

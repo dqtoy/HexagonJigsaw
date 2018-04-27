@@ -24,7 +24,7 @@ namespace lib
             {
                val = (int)Convert.ToDouble(val);
             }
-            old = this.val;
+            oldValue = this.val;
             if(defendFalsify) //加上防篡改功能
             {
                 DefendEncode(val);
@@ -57,6 +57,14 @@ namespace lib
         {
             get { return (int)val; }
             set { SetValue(value); }
+        }
+
+        /// <summary>
+        /// 上一次的值
+        /// </summary>
+        public new int old
+        {
+            get { return (int)oldValue; }
         }
     }
 }

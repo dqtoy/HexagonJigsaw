@@ -26,6 +26,7 @@ namespace lib
             List<object> values = new List<object>();
             object  currentValue = null;
             //当前 key
+            List<string> keys = new List<string>();
             string key = "";
             //当前对象的父对象
             object parentValue = null;
@@ -41,6 +42,10 @@ namespace lib
                     //等待查找最外层 value  等待查找 Object value  查找 Array value
                     if (type == Step.WaitOutValue || type == Step.WaitObjectValue || type == Step.WaitArrayValueOrEnd)
                     {
+                        if (type == Step.WaitObjectValue)
+                        {
+                            keys.Add(key);
+                        }
                         values.Add(new Dictionary<string, object>());
                         parentValue = currentValue;
                         currentValue = values[values.Count - 1];
@@ -69,6 +74,20 @@ namespace lib
                                 throw new Exception("Json 解析数字错误");
                             }
                         }
+                        if (type == Step.EnterObjectValue)
+                        {
+                            object val = StringUtils.ToNumber(StringUtils.Slice(str, start, i));
+                            if (val != null)
+                            {
+                                (currentValue as Dictionary<string, object>).Add(key, val);
+                                findNumber = false;
+                            }
+                            else
+                            {
+                                throw new Exception("Json 解析数字错误");
+                            }
+                            type = Step.WaitObjectKeyOrEnd;
+                        }
                     }
                     if(type == Step.WaitObjectKeyOrEnd || type == Step.WaitObjectSplitOrEnd)
                     {
@@ -84,6 +103,8 @@ namespace lib
                                 }
                                 else //否则就是 object
                                 {
+                                    key = keys[keys.Count-1];
+                                    keys.RemoveAt(keys.Count - 1);
                                     (parentValue as Dictionary<string, object>).Add(key, currentValue);
                                     type = Step.WaitObjectSplitOrEnd;
                                 }
@@ -108,6 +129,11 @@ namespace lib
                 {
                     if (type == Step.WaitObjectValueSign)
                     {
+                        type = Step.WaitObjectValue;
+                    }
+                    else if(type == Step.EnterObjectKey)
+                    {
+                        key = StringUtils.Slice(str, start, i);
                         type = Step.WaitObjectValue;
                     }
                     else if (type != Step.EnterOutValue || type != Step.EnterObjectKey || type != Step.EnterObjectValue)
@@ -186,7 +212,7 @@ namespace lib
                         throw new Exception("Json 解析错误，错误的符号 ']'");
                     }
                 }
-                else if (str[i] == '"')
+                else if (str[i] == '"' || str[i] == '\'')
                 {
                     if (type == Step.WaitOutValue) 
                     {
@@ -286,33 +312,36 @@ namespace lib
                 }
                 else if(str[i] == 'n')
                 {
-                    if (StringUtils.Slice(str, i, i + 4) == "null")
+                    if(type == Step.WaitObjectValue)
                     {
-                        if (type == Step.WaitOutValue)
+                        if (StringUtils.Slice(str, i, i + 4) == "null")
                         {
-                            values.Add(null);
-                            type = Step.Over;
+                            if (type == Step.WaitOutValue)
+                            {
+                                values.Add(null);
+                                type = Step.Over;
+                            }
+                            else if (type == Step.WaitObjectValue)
+                            {
+                                (currentValue as Dictionary<string, object>).Add(key, null);
+                                type = Step.WaitObjectSplitOrEnd;
+                            }
+                            else if (type == Step.WaitArrayValueOrEnd)
+                            {
+                                (currentValue as List<object>).Add(null);
+                                type = Step.WaitArraySplitOrEnd;
+                            }
+                            i += 3;
                         }
-                        else if (type == Step.WaitObjectValue)
+                        else
                         {
-                            (currentValue as Dictionary<string, object>).Add(key, null);
-                            type = Step.WaitObjectSplitOrEnd;
+                            throw new Exception("Json 解析错误，错误的值 ");
                         }
-                        else if (type == Step.WaitArrayValueOrEnd)
-                        {
-                            (currentValue as List<object>).Add(null);
-                            type = Step.WaitArraySplitOrEnd;
-                        }
-                        i += 3;
-                    }
-                    else
-                    {
-                        throw new Exception("Json 解析错误，错误的值 ");
                     }
                 }
                 else if (str[i] == '0' || str[i] == '1' || str[i] == '2' || str[i] == '3' || str[i] == '4' || str[i] == '5' || str[i] == '6' || str[i] == '7' || str[i] == '8' || str[i] == '9' || str[i] == '-' || str[i] == '.')
                 {
-                    if(type == Step.WaitOutValue || type == Step.WaitObjectValue || type == Step.WaitArrayValueOrEnd)
+                    if(type == Step.WaitOutValue || type == Step.WaitObjectValue || type == Step.WaitArrayValueOrEnd || type == Step.WaitObjectKeyOrEnd)
                     {
                         findNumber = true;
                         start = i;
@@ -328,15 +357,24 @@ namespace lib
                         {
                             type = Step.EnterArrayValue;
                         }
+                        else if(type == Step.WaitObjectKeyOrEnd)
+                        {
+                            type = Step.EnterObjectKey;
+                        }
                     }
-                    else if(type != Step.EnterOutValue && type != Step.EnterObjectValue && type != Step.EnterArrayValue)
+                    else if(type != Step.EnterOutValue && type != Step.EnterObjectKey && type != Step.EnterObjectValue && type != Step.EnterArrayValue)
                     {
                         throw new Exception("Json 解析错误，错误的符号 '" + str[i] + "'");
                     }
                 }
                 else if(str[i] == ' ' || str[i] == '\t' || str[i] == '\v' || str[i] == '\r' || str[i] == '\n')
                 {
-                    if(findNumber)
+                    if (type == Step.EnterObjectKey)
+                    {
+                        key = StringUtils.Slice(str, start, i);
+                        type = Step.WaitObjectValue;
+                    }
+                    else if (findNumber)
                     {
                         if (type == Step.EnterOutValue)
                         {

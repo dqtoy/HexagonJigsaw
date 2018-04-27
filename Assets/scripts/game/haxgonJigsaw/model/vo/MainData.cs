@@ -1,4 +1,5 @@
 ﻿using lib;
+using UnityEngine;
 
 namespace hexjig
 {
@@ -18,6 +19,12 @@ namespace hexjig
         /// 关卡 id
         /// </summary>
         public Int levelId = new Int();
+
+        //关卡尺寸大小
+        public float levelWidth;
+        public float levelHeight;
+
+        public GameObject showCutRoot; 
 
         /// <summary>
         /// 当前关卡配置
@@ -67,9 +74,25 @@ namespace hexjig
         public static string QUIT_LEVEL = "quit_level";
 
         /// <summary>
+        /// 显示截图
+        /// </summary>
+        public static string SHOW_CUT = "show_cut";
+
+        /// <summary>
         /// 消除游戏
         /// </summary>
         internal static string DISPOSE_GAME = "dispose_game";
+
+        /// <summary>
+        /// 隐藏游戏
+        /// </summary>
+        internal static string HIDE_GAME = "hide_game";
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal static string SHOW_START_EFFECT = "show_start_effect";
 
     }
 }

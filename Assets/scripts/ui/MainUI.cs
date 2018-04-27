@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using lib;
 using UnityEngine;
+using DG.Tweening;
 
 public class MainUI : MonoBehaviour {
 
@@ -10,6 +11,12 @@ public class MainUI : MonoBehaviour {
     {
         ButtonClick.dispatcher.AddListener("daily", OnShowDaily);
         ButtonClick.dispatcher.AddListener("freedom", OnShowFreedom);
+        ButtonClick.dispatcher.AddListener("setting", OnShowSetting);
+    }
+
+    private void OnShowSetting(lib.Event e)
+    {
+        GameVO.Instance.ShowModule(ModuleName.Setting);
     }
 
     private void OnShowDaily(lib.Event e)

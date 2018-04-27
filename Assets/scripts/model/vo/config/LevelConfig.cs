@@ -1,4 +1,5 @@
-//Make By CSVCommand. Time 2018.4.14 16:34:42
+//Make By CSVCommand. Time 2018.4.24 19:0:51
+using System;
 using System.Collections.Generic;
 using lib;
 
@@ -76,6 +77,29 @@ public class LevelConfig
 			item.Decode(list[i]);
 			Configs.Add(item);
 		}
+	}
+
+	public static LevelConfig GetConfigWidth(string paramName,object value)
+	{
+		Type t = typeof(LevelConfig);
+		for (int i = 0; i < Configs.Count; i++)
+		{
+			object val = t.GetField(paramName).GetValue(Configs[i]);
+			bool flag = false;
+			if (val is string)
+			{
+				flag = ((string)value).Equals(val);
+			}
+			else
+			{
+				flag = val == value;
+			}
+			if (flag)
+			{
+				return Configs[i];
+			}
+		}
+		return null;
 	}
 
 	public static void DecodeTableItem()

@@ -97,7 +97,7 @@ namespace hexjig
             offy = -HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(minx, maxy), 0.4f).y;
 
             tipOffx = -pminX - (pmaxX - pminX) * 0.5f;
-            tipOffy = -pminY + 0.6f;
+            tipOffy = -pminY + 1.6f;
 
             if(game != null)
             {
@@ -162,6 +162,14 @@ namespace hexjig
         {
             hasShowTip = true;
             tip.SetActive(true);
+        }
+
+        public void ShowCut()
+        {
+            if(isInStage)
+            {
+                show.transform.parent = Game.Instance.stageRoot.transform;
+            }
         }
 
         public void CreateDisplay()

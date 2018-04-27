@@ -14,6 +14,8 @@ public class StartScript : MonoBehaviour {
     /// </summary>
     public bool editor = false;
 
+    public bool startFlag = false;
+
     public GameObject EditorMain;
 
     private void Awake()
@@ -24,8 +26,9 @@ public class StartScript : MonoBehaviour {
         //读取配置
         ConfigDecode.Decode();
 
-
         GameVO.Instance.editor = editor;
+
+        GameVO.Instance.language.value = LanguageTypeConfig.GetConfigWidth("name", "en_us").id;
 
         //是否开启编辑器
         if (editor)

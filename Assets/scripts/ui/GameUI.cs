@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class GameUI : MonoBehaviour {
 
     public Text timeTxt;
-    public Text modelTxt;
+    public TextExd modelTxt;
 
     //临时测试
     public Text levelTxt;
@@ -48,6 +48,7 @@ public class GameUI : MonoBehaviour {
         {
 
         }
+        MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
         MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
         GameVO.Instance.ShowModule(ModuleName.Result, e.Data);
     }
@@ -114,6 +115,6 @@ public class GameUI : MonoBehaviour {
 
         levelTxt.text = level + "";
 
-        modelTxt.text = GameVO.Instance.model == GameModel.Daily ? "Challenge model" : "Freedom model";
+        modelTxt.languageId = GameVO.Instance.model == GameModel.Daily ? 10 : 9;
     }
 }

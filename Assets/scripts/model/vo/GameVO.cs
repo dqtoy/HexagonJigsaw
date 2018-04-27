@@ -11,6 +11,31 @@ public class GameVO
     public float PixelHeight;
 
     /// <summary>
+    /// 背景音乐音量
+    /// </summary>
+    public Int musicVolumn = new Int(100);
+
+    /// <summary>
+    /// 音效音量
+    /// </summary>
+    public Int soundVolumn = new Int(100);
+
+    /// <summary>
+    /// 背景音乐是否在编辑状态
+    /// </summary>
+    public Bool musicEditor = new Bool(false);
+
+    /// <summary>
+    /// 音效是否在编辑状态
+    /// </summary>
+    public Bool soundEditor = new Bool(false);
+
+    /// <summary>
+    /// 当前语言
+    /// </summary>
+    public Int language = new Int();
+
+    /// <summary>
     /// 是否处于编辑模式
     /// </summary>
     public bool editor;
@@ -155,7 +180,8 @@ public enum ModuleName
     Daily = 2,
     Freedom = 3,
     Game = 4,
-    Result = 5
+    Result = 5,
+    Setting = 6
 }
 
 public enum DifficultyMode

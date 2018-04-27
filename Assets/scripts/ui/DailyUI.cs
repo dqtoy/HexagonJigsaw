@@ -22,10 +22,12 @@ public class DailyUI : MonoBehaviour {
         new Color(240,113,217)
     };
 
+    public Transform buttonsTransform;
+
     private void Awake()
     {
         ButtonClick.dispatcher.AddListener("quitDaily", OnQuit);
-        foreach (Transform child in transform)
+        foreach (Transform child in buttonsTransform)
         {
             if(StringUtils.Slice(child.gameObject.name,0,"level".Length) == "level")
             {
@@ -53,6 +55,7 @@ public class DailyUI : MonoBehaviour {
     {
         GameObject obj = e.Data as GameObject;
         int index = (int)StringUtils.ToNumber(StringUtils.Slice(obj.name,"level".Length,obj.name.Length)) - 1;
+        DailyUIFade.dailyIndex = index;
         GameVO.Instance.model = GameModel.Daily;
         GameVO.Instance.ShowModule(ModuleName.Game, GameVO.Instance.daily.levels[index].config.id);
     }

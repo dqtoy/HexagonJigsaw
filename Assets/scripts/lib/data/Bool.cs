@@ -24,7 +24,7 @@ namespace lib
             {
                 return;
             }
-            old = this.val;
+            oldValue = this.val;
             this.val = val;
             DispatchWith(Event.CHANGE);
         }

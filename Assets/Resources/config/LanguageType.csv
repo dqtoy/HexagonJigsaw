@@ -1,0 +1,9 @@
+int,string,string,string
+id,name,font,des
+1,zh_cn,微软雅黑,中文
+2,zh_tw,微软雅黑,繁体中文
+3,ja_jp,consolas,日语
+4,ko_kr,consolas,韩语
+5,en_us,consolas,英语
+6,de_de,consolas,德语
+7,es_la,consolas,西班牙语

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace hexjig
 {
@@ -13,7 +14,7 @@ namespace hexjig
 
         private int maxx = 23;
         private int miny = -9;
-        private int[] movesy = { 0,0,0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 3,3,3 };
+        private int[] movesy = { 0,0,0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2,2,2 };
 
         public float offx;
         public float offy;
@@ -23,6 +24,8 @@ namespace hexjig
         private DateTime startTime;
 
         public GameObject root;
+
+        public GameObject stageRoot;
 
         public static Game Instance;
 
@@ -36,6 +39,9 @@ namespace hexjig
 
             MainData.Instance.dispatcher.AddListener(EventType.RESTART,OnRestart);
             MainData.Instance.dispatcher.AddListener(EventType.SHOW_TIP, OnShowTip);
+            MainData.Instance.dispatcher.AddListener(EventType.HIDE_GAME, OnHideGame);
+            MainData.Instance.dispatcher.AddListener(EventType.SHOW_START_EFFECT, ShowStartEffect);
+            MainData.Instance.dispatcher.AddListener(EventType.SHOW_CUT, ShowCut);
 
             //外面有 23 x 9 的大小
             HaxgonCoord<Coord> sys = new HaxgonCoord<Coord>();
@@ -119,6 +125,45 @@ namespace hexjig
             startTime = System.DateTime.Now;
         }
 
+        /// <summary>
+        /// 显示截图
+        /// </summary>
+        /// <param name="e"></param>
+        private void ShowCut(lib.Event e)
+        {
+            //0.2 1.07 -17
+            stageRoot.transform.parent = root.transform.parent;
+            GameObject image = ResourceManager.CreateImage("image/uiitem/rect");
+            image.transform.parent = stageRoot.transform;
+            image.transform.localPosition = new Vector3(-offx, -offy + GameVO.Instance.Height * 0.25f);
+            float size = 13 * 0.6f;
+            image.GetComponent<SpriteRenderer>().drawMode = SpriteDrawMode.Sliced;
+            image.GetComponent<SpriteRenderer>().size = new Vector2(size, size);
+            for (int i = 0; i < this.pieces.length; i++)
+            {
+                pieces[i].ShowCut();
+            }
+            Background bk = new Background();
+            bk.Draw(1, 0, size - 0.4f);
+            bk.container.transform.parent = stageRoot.transform;
+            bk.container.transform.localPosition = new Vector3(-offx, -offy + GameVO.Instance.Height * 0.25f);
+            //添加一个缩放层，达到以中心为缩放点缩放的效果
+            MainData.Instance.showCutRoot = new GameObject();
+            stageRoot.transform.localPosition = new Vector3(stageRoot.transform.localPosition.x, stageRoot.transform.localPosition.y - GameVO.Instance.Height * 0.25f, stageRoot.transform.localPosition.z);
+            stageRoot.transform.parent = MainData.Instance.showCutRoot.transform;
+            MainData.Instance.showCutRoot.transform.localPosition = new Vector3(0, GameVO.Instance.Height * 0.25f);
+        }
+
+        private void ShowStartEffect(lib.Event e)
+        {
+            root.SetActive(true);
+        }
+
+        private void OnHideGame(lib.Event e)
+        {
+            root.SetActive(false);
+        }
+
         private void OnShowTip(lib.Event e)
         {
             for (int i = 0; i < pieces.length; i++)
@@ -185,9 +230,12 @@ namespace hexjig
                     maxY = position.y;
                 }
             }
+            MainData.Instance.levelWidth = maxX - minX + 1.5f;
+            MainData.Instance.levelHeight = maxY - minY + 1.5f;
             offx = -((maxX - minX) * 0.5f + minX);
             offy = -((maxY - minY) * 0.5f + minY) + GameVO.Instance.Height * 0.25f;
             p.transform.position = new Vector3(offx, offy);
+            stageRoot = p;
 
             GameObject outBackground = new GameObject();
             outBackground.transform.parent = root.transform;
@@ -206,7 +254,8 @@ namespace hexjig
                     int y = py - 3 + movesy[x];
                     Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(x, y), 0.2f);
 
-                    /*GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
+                    /*
+                    GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
                     image.transform.position = new Vector3(position.x, position.y,100);
                     image.transform.parent = p1.transform;
@@ -466,6 +515,9 @@ namespace hexjig
         {
             MainData.Instance.dispatcher.RemoveListener(EventType.RESTART, OnRestart);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_TIP, OnShowTip);
+            MainData.Instance.dispatcher.RemoveListener(EventType.HIDE_GAME, OnHideGame);
+            MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_START_EFFECT, ShowStartEffect);
+            MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_CUT, ShowCut);
         }
     }
 }

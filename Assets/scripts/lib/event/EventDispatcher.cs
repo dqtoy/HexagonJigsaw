@@ -4,9 +4,56 @@ using System.Collections.Generic;
 namespace lib
 {
 
+    /*
+     * @Example 
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using lib;
+
+    public abstract class UIFade : MonoBehaviour , IEventDispatcher {
+
+        private EventDispatcher dispatcher;
+
+        abstract public void FadeOut();
+        abstract public void FadeIn();
+
+        public UIFade()
+        {
+            dispatcher = new EventDispatcher(this);
+        }
+
+        public void AddListener(string type, listenerBack listener)
+        {
+            dispatcher.AddListener(type, listener);
+        }
+
+        public void RemoveListener(string type, listenerBack listener)
+        {
+            dispatcher.RemoveListener(type, listener);
+        }
+
+        public void Dispatch(lib.Event e)
+        {
+            dispatcher.Dispatch(e);
+        }
+
+        public void DispatchWith(string type, object data = null)
+        {
+            dispatcher.DispatchWith(type, data);
+        }
+    }
+     */
     public class EventDispatcher : IEventDispatcher
     {
         private Dictionary<string, ArrayList> listeners = new Dictionary<string, ArrayList>();
+
+        private IEventDispatcher target;
+
+        public EventDispatcher(IEventDispatcher target = null)
+        {
+            this.target = target == null ? this : target;
+        }
 
         /// <summary>
         /// 注册事件
@@ -19,7 +66,10 @@ namespace lib
             {
                 listeners.Add(type, new ArrayList());
             }
-            listeners[type].Add(listener);
+            if(listeners[type].Contains(listener) == false)
+            {
+                listeners[type].Add(listener);
+            }
         }
 
         /// <summary>
@@ -49,7 +99,7 @@ namespace lib
         /// <param name="e"> 事件 </param>
         public void Dispatch(Event e)
         {
-            e.target = this;
+            e.target = target;
             if (listeners.ContainsKey(e.Type))
             {
                 ArrayList list = listeners[e.Type].Clone() as ArrayList;
@@ -72,3 +122,4 @@ namespace lib
         }
     }
 }
+

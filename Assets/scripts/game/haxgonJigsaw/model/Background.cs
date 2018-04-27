@@ -13,7 +13,7 @@ namespace hexjig
         private float posSpeed = 0.00015f;
         private float rotation = 0;
         private float rotationSpeed = 0.020f;
-        private GameObject container;
+        public GameObject container;
 
         public Background()
         {
@@ -28,9 +28,18 @@ namespace hexjig
             posSpeed = (Random.Range(1,2) == 1? 1 : - 1) *(posSpeed + (Random.Range(0, posSpeed/2) - posSpeed / 4));
             rotationSpeed = (Random.Range(1, 2) == 1 ? 1 : -1) * (rotationSpeed + (Random.Range(0, rotationSpeed / 2) - rotationSpeed / 4));
             container.transform.Rotate(new Vector3(0, 0, 360 * Random.Range(0, 1.0f)));
-            Update();
         }
 
+        public void Draw(float pos,float rotation,float size)
+        {
+            bg1.transform.localScale = new Vector3(size * 1 * 100 * pos, size * 1 * 100);
+            bg1.transform.localPosition = new Vector3(size * 1 * (pos * 0.5f - 0.5f), 0, 101);
+
+            bg2.transform.localScale = new Vector3(size * 1 * 100 * (1.0f - pos), size * 1 * 100);
+            bg2.transform.localPosition = new Vector3(size * 1 * (0.5f - (1.0f - pos) * 0.5f), 0, 101);
+
+            container.transform.localEulerAngles = new Vector3(0, 0, 0);
+        }
 
         public void Update()
         {
@@ -79,10 +88,10 @@ namespace hexjig
             }
 
             bg1.transform.localScale = new Vector3(GameVO.Instance.Height * 1.42f * 100 * pos, GameVO.Instance.Height * 1.42f * 100);
-            bg1.transform.localPosition = new Vector3(GameVO.Instance.Height * 1.42f * (pos * 0.5f - 0.5f), 0, 110);
+            bg1.transform.localPosition = new Vector3(GameVO.Instance.Height * 1.42f * (pos * 0.5f - 0.5f), 0, 210);
 
             bg2.transform.localScale = new Vector3(GameVO.Instance.Height * 1.42f * 100 * (1.0f - pos), GameVO.Instance.Height * 1.42f * 100);
-            bg2.transform.localPosition = new Vector3(GameVO.Instance.Height * 1.42f * (0.5f - (1.0f - pos) * 0.5f), 0, 110);
+            bg2.transform.localPosition = new Vector3(GameVO.Instance.Height * 1.42f * (0.5f - (1.0f - pos) * 0.5f), 0, 210);
 
             container.transform.Rotate(new Vector3(0, 0, rotationSpeed));
         }
