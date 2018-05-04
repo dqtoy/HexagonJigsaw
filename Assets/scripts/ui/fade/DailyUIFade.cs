@@ -27,6 +27,9 @@ public class DailyUIFade : UIFade
     public RectTransform level9;
     public RectTransform level10;
 
+    public GameObject level6Txt;
+    public GameObject level9Txt;
+    public GameObject level10Txt;
     public GameObject effect6;
     public GameObject effect9;
     public GameObject effect10;
@@ -175,10 +178,41 @@ public class DailyUIFade : UIFade
 
     override public void FadeIn(ModuleName name)
     {
-        effect6.SetActive(false);
-        effect9.SetActive(false);
-        effect10.SetActive(false);
-        effectAllPass.SetActive(false);
+        if(GameVO.Instance.daily.levels[5].pass == false)
+        {
+            effect6.SetActive(false);
+        }
+        else if (GameVO.Instance.daily.levels[5].pass && GameVO.Instance.daily.levels[5].hasCheck == true)
+        {
+            level6Txt.SetActive(false);
+            effect6.SetActive(true);
+        }
+        if (GameVO.Instance.daily.levels[8].pass == false)
+        {
+            effect9.SetActive(false);
+        }
+        else if (GameVO.Instance.daily.levels[8].pass && GameVO.Instance.daily.levels[8].hasCheck == true)
+        {
+            level9Txt.SetActive(false);
+            effect9.SetActive(true);
+        }
+        if (GameVO.Instance.daily.levels[9].pass == false)
+        {
+            effect10.SetActive(false);
+        }
+        else if (GameVO.Instance.daily.levels[9].pass && GameVO.Instance.daily.levels[9].hasCheck == true)
+        {
+            level10Txt.SetActive(false);
+            effect10.SetActive(true);
+        }
+        if(GameVO.Instance.daily.HasAllPass() == false)
+        {
+            effectAllPass.SetActive(false);
+        }
+        else if(GameVO.Instance.daily.HasAllPass() == true && GameVO.Instance.daily.checkAll == true)
+        {
+            effectAllPass.SetActive(true);
+        }
 
         moduleName = name;
         if(name == ModuleName.Main)
@@ -190,7 +224,7 @@ public class DailyUIFade : UIFade
             //buttons.localScale = new Vector3(0, 0);
 
             line1.DOScaleX(1, inTime);
-            line2.DOScaleX(1, inTime);
+            line2.DOScaleX(1, inTime).onComplete = CheckPassEffect;
             daily2.DOScaleX(1, 0.1f);
             quit.DOScaleX(1, 0.1f);
 
@@ -318,7 +352,44 @@ public class DailyUIFade : UIFade
         if (moduleName == ModuleName.Game || moduleName == ModuleName.Result)
         {
             daily2.DOScaleX(1, 0.1f);
-            quit.DOScaleX(1, 0.1f);
+            quit.DOScaleX(1, 0.1f).onComplete = CheckPassEffect;
         }
+    }
+
+    private void CheckPassEffect()
+    {
+        if(GameVO.Instance.daily.levels[5].pass && !GameVO.Instance.daily.levels[5].hasCheck)
+        {
+            GameVO.Instance.daily.levels[5].hasCheck = true;
+            level6Txt.SetActive(false);
+            effect6.SetActive(true);
+            effect6.GetComponent<AnimatorControl>().AddListener(lib.Event.COMPLETE, CheckNextEffect);
+            return;
+        }
+        if (GameVO.Instance.daily.levels[8].pass && !GameVO.Instance.daily.levels[8].hasCheck)
+        {
+            GameVO.Instance.daily.levels[8].hasCheck = true;
+            level9Txt.SetActive(false);
+            effect9.SetActive(true);
+            effect9.GetComponent<AnimatorControl>().AddListener(lib.Event.COMPLETE, CheckNextEffect);
+            return;
+        }
+        if (GameVO.Instance.daily.levels[9].pass && !GameVO.Instance.daily.levels[9].hasCheck)
+        {
+            GameVO.Instance.daily.levels[9].hasCheck = true;
+            level10Txt.SetActive(false);
+            effect10.SetActive(true);
+            effect10.GetComponent<AnimatorControl>().AddListener(lib.Event.COMPLETE, CheckNextEffect);
+            return;
+        }
+        if(GameVO.Instance.daily.HasAllPass() == true && GameVO.Instance.daily.checkAll == false)
+        {
+            effectAllPass.SetActive(true);
+        }
+    }
+
+    private void CheckNextEffect(lib.Event e)
+    {
+        CheckPassEffect();
     }
 }

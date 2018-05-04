@@ -25,6 +25,30 @@ public class GameUIFade : UIFade
 
     private ModuleName moduleName;
 
+    private void Awake()
+    {
+        MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT, OnShowGameChangeOut);
+        MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT, OnShowGameChangeIn);
+    }
+
+    private void OnShowGameChangeOut(lib.Event e)
+    {
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(operateBg.DOScaleY(0, 0.4f));
+        mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete;
+        txt.DOScaleX(0, 0.4f);
+    }
+
+    private void OnShowGameChangeIn(lib.Event e)
+    {
+        txt.DOScaleX(1, 0.2f);
+    }
+
+    private void OnShowGameChangeInComplete()
+    {
+        MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE);
+    }
+
     override public void FadeOut(ModuleName name)
     {
         moduleName = name;

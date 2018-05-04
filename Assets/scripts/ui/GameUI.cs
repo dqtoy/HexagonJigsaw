@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class GameUI : MonoBehaviour {
 
@@ -16,12 +17,14 @@ public class GameUI : MonoBehaviour {
 
     private void Awake()
     {
+        flush.SetActive(false);
         ButtonClick.dispatcher.AddListener("quitGame", OnQuit);
         ButtonClick.dispatcher.AddListener("restart", OnRestart);
         ButtonClick.dispatcher.AddListener("tip", OnTip);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.FINISH_LEVEL, OnFinshLevel);
-        MainData.Instance.time.AddListener(lib.Event.CHANGE, OnTimeChange); 
+        MainData.Instance.time.AddListener(lib.Event.CHANGE, OnTimeChange);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.SET_PIECE, OnSetPiece);
+        MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE, OnFinshLevel2);
     }
 
     private void OnSetPiece(lib.Event e)
@@ -51,9 +54,8 @@ public class GameUI : MonoBehaviour {
             GameVO.Instance.daily.Finish(MainData.Instance.levelId.value,MainData.Instance.time.value);
             if(GameVO.Instance.daily.HasNextLevel(MainData.Instance.levelId.value))
             {
-
-                new StartGameCommand(GameVO.Instance.daily.GetNextLevel(MainData.Instance.levelId.value));
-                levelTxt.text = GameVO.Instance.daily.GetNextLevel(MainData.Instance.levelId.value) + "";
+                //先播放之前关卡的退场动画
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT);
             }
             else
             {
@@ -65,7 +67,29 @@ public class GameUI : MonoBehaviour {
         }
         else
         {
+            //先播放之前关卡的退场动画
+            MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT);
+        }
+    }
+
+
+    private void OnFinshLevel2(lib.Event e)
+    {
+        if(GameVO.Instance.model == GameModel.Daily)
+        {
+            //修改记录
+            GameVO.Instance.daily.Finish(MainData.Instance.levelId.value, MainData.Instance.time.value);
+            if (GameVO.Instance.daily.HasNextLevel(MainData.Instance.levelId.value))
+            {
+                new StartGameCommand(GameVO.Instance.daily.GetNextLevel(MainData.Instance.levelId.value));
+                levelTxt.text = GameVO.Instance.daily.GetNextLevel(MainData.Instance.levelId.value) + "";
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT);
+            }
+        }
+        else
+        {
             StartFreedomLevel();
+            MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT);
         }
     }
 
@@ -76,10 +100,11 @@ public class GameUI : MonoBehaviour {
 
     private void OnQuit(lib.Event e)
     {
+        flush.SetActive(true);
         flush.GetComponent<RectTransform>().sizeDelta = new Vector2(GameVO.Instance.PixelWidth, GameVO.Instance.PixelHeight);
         Sequence mySequence = DOTween.Sequence();
         mySequence.Append(flush.GetComponent<Image>().DOColor(new Color(1, 1, 1, 1), 0.15f));
-        mySequence.Append(flush.GetComponent<Image>().DOColor(new Color(1, 1, 1, 0), 0.1f));
+        mySequence.Append(flush.GetComponent<Image>().DOColor(new Color(1, 1, 1, 0), 0.1f)).onComplete = FlushComplete;
         ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
         MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
         MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
@@ -92,6 +117,11 @@ public class GameUI : MonoBehaviour {
         {
             GameVO.Instance.ShowModule(ModuleName.Freedom);
         }*/
+    }
+
+    private void FlushComplete()
+    {
+        flush.SetActive(false);
     }
 
     private void OnEnable()

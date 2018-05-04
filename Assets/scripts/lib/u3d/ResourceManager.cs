@@ -56,6 +56,7 @@ namespace lib
         {
             GameObject obj = new GameObject();
             AudioSource audio = obj.AddComponent<AudioSource>();
+            obj.AddComponent<SoundControl>();
             audio.clip = ResourceManager.GetResource<AudioClip>(url);
             audio.loop = loop;
             audio.volume = volume;

@@ -2,7 +2,7 @@
 
 namespace lib
 {
-    public class Point2D
+    public class Point2D : ObjectValue
     {
         private Float xValue = new Float();
         private Float yValue = new Float();
@@ -18,10 +18,16 @@ namespace lib
             get { return (float)xValue.value; }
             set { xValue.value = value; }
         }
+
         public float y
         {
             get { return (float)yValue.value; }
             set { yValue.value = value; }
+        }
+
+        public Point2D Clone()
+        {
+            return Point2D.Create(x, y);
         }
 
         private static List<Point2D> pools = new List<Point2D>();
@@ -42,6 +48,25 @@ namespace lib
         public static void Release(Point2D p)
         {
             pools.Add(p);
+        }
+
+
+        /// <summary>
+        /// 范序列化
+        /// </summary>
+        /// <param name="val"></param>
+        override protected void Decode(string val)
+        {
+
+        }
+
+        /// <summary>
+        /// 序列化
+        /// </summary>
+        /// <returns></returns>
+        override protected string Encode()
+        {
+            return "{'x': " + x + ",'y': " + y + "}";
         }
     }
 }

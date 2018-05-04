@@ -12,12 +12,16 @@ namespace lib
         private void Awake()
         {
             Instance = this;
+
+            BufferPool.bufferRoot = new GameObject();
+            BufferPool.bufferRoot.name = "BufferPool";
+            BufferPool.bufferRoot.SetActive(false);
         }
+
 
         // Update is called once per frame
         void Update()
         {
-
         }
         
         public GameObject Create(UnityEngine.Object obj)

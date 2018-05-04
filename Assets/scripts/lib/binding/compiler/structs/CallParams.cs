@@ -1,16 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-public class NewBehaviourScript : MonoBehaviour {
+namespace lib
+{
+    class CallParams
+    {
+        public string type = "callParams";
+        public List<Expr> list = new List<Expr>();
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        public void addParam(Expr expr)
+        {
+            this.list.Add(expr);
+        }
+
+        public void addParamAt(Expr expr,int index)
+        {
+            this.list.Insert(index, expr);
+        }
+
+        public void checkPropertyBinding(CommonInfo commonInfo)
+        {
+            for (var i = 0; i < this.list.Count; i++)
+            {
+                this.list[i].checkPropertyBinding(commonInfo);
+            }
+        }
+
+        public object[] getValueList()
+        {
+            List<object> param = new List<object>();
+            for (var i = 0; i < this.list.Count; i++)
+            {
+                param.Add((this.list[i]).getValue());
+            }
+            return param.ToArray();
+        }
+    }
 }

@@ -9,6 +9,20 @@ public class Daily
 
     public Int all = new Int(10);
 
+    public bool checkAll = false;
+
+    public int GetCurrentLevel()
+    {
+        for (int i = 0; i < levels.length; i++)
+        {
+            if (levels[i].pass == false)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void Finish(int levelId, int time)
     {
         int count = 0;
@@ -32,6 +46,18 @@ public class Daily
             }
         }
         progress.value = count;
+    }
+
+    public bool HasAllPass()
+    {
+        for (int i = 0; i < levels.length; i++)
+        {
+            if(levels[i].pass == false)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public bool HasNextLevel(int levelId)

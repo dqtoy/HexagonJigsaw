@@ -1,25 +1,27 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using lib;
 using UnityEngine;
 using UnityEngine.UI;
+using lib;
+using DG.Tweening;
 
 public class DailyUI : MonoBehaviour {
 
     private List<Text> txts = new List<Text>();
     private List<Text> times = new List<Text>();
+    private List<Image> icons = new List<Image>();
     private Color[] colors = {
-        new Color(245,108,113),
-        new Color(250,228,103),
-        new Color(186,250,103),
-        new Color(118,240,112),
-        new Color(103,235,250),
-        new Color(103,190,250),
-        new Color(103,141,250),
-        new Color(165,108,244),
-        new Color(212,111,241),
-        new Color(240,113,217)
+        new Color(245/255.0f,108/255.0f,113/255.0f),
+        new Color(250/255.0f,228/255.0f,103/255.0f),
+        new Color(186/255.0f,250/255.0f,103/255.0f),
+        new Color(118/255.0f,240/255.0f,112/255.0f),
+        new Color(103/255.0f,235/255.0f,250/255.0f),
+        new Color(103/255.0f,190/255.0f,250/255.0f),
+        new Color(103/255.0f,141/255.0f,250/255.0f),
+        new Color(165/255.0f,108/255.0f,244/255.0f),
+        new Color(212/255.0f,111/255.0f,241/255.0f),
+        new Color(240/255.0f,113/255.0f,217/255.0f)
     };
 
     public Text dailyProgressTxt;
@@ -46,9 +48,17 @@ public class DailyUI : MonoBehaviour {
                     {
                         times.Add(child2.gameObject.GetComponent<Text>());
                     }
+                    if (child2.gameObject.name == "icon")
+                    {
+                        icons.Add(child2.gameObject.GetComponent<Image>());
+                    }
                 }
             }
         }
+        txts.Reverse();
+        times.Reverse();
+        icons.Reverse();
+
         GameVO.Instance.daily.progress.AddListener(lib.Event.CHANGE, OnDailyProgressChange);
     }
 
@@ -67,6 +77,19 @@ public class DailyUI : MonoBehaviour {
     {
         GameObject obj = e.Data as GameObject;
         int index = (int)StringUtils.ToNumber(StringUtils.Slice(obj.name,"level".Length,obj.name.Length)) - 1;
+        if(index != 0)
+        {
+            if(GameVO.Instance.daily.levels[index - 1].pass == false)
+            {
+                Color c = txts[GameVO.Instance.daily.GetCurrentLevel()].color;
+                Sequence mySequence = DOTween.Sequence();
+                mySequence.Append(txts[GameVO.Instance.daily.GetCurrentLevel()].DOColor(new Color(c.r,c.g,c.b,0),0.2f));
+                mySequence.Append(txts[GameVO.Instance.daily.GetCurrentLevel()].DOColor(new Color(c.r, c.g, c.b, 1), 0.2f));
+                mySequence.Append(txts[GameVO.Instance.daily.GetCurrentLevel()].DOColor(new Color(c.r, c.g, c.b, 0), 0.2f));
+                mySequence.Append(txts[GameVO.Instance.daily.GetCurrentLevel()].DOColor(new Color(c.r, c.g, c.b, 1), 0.2f));
+                return;
+            }
+        }
         DailyUIFade.dailyIndex = index;
         GameVO.Instance.model = GameModel.Daily;
         GameVO.Instance.ShowModule(ModuleName.Game, GameVO.Instance.daily.levels[index].config.id);
@@ -85,11 +108,16 @@ public class DailyUI : MonoBehaviour {
             if(vo.pass)
             {
                 times[i].text = StringUtils.TimeToMS(vo.time);
-                times[i].color = colors[i];
+                txts[i].color = colors[i];
+                icons[i].color = colors[i];
             }
             else
             {
                 times[i].text = "";
+                if (i == 0 || GameVO.Instance.daily.levels[i - 1].pass == true)
+                {
+                    txts[i].color = colors[i];
+                }
             }
         }
         OnDailyProgressChange();

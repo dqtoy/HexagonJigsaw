@@ -75,6 +75,11 @@ namespace lib
         public static string COMPLETE = "Complete";
 
         /// <summary>
+        /// 错误
+        /// </summary>
+        public static string ERROR = "error";
+
+        /// <summary>
         /// 对象池
         /// </summary>
         private static List<ThreadEvent> pools = new List<ThreadEvent>();

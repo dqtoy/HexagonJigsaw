@@ -86,6 +86,7 @@ public class ResultUIFade : UIFade {
 
     private void FadeIn6()
     {
+        ResourceManager.PlaySound("sound/gaizhang", false, GameVO.Instance.soundVolumn.value / 100.0f);
         root.DOShakePosition(0.3f,30).onUpdate = FadeIn6Update;
         shootCutX = MainData.Instance.showCutRoot.transform.position.x;
         shootCutY = MainData.Instance.showCutRoot.transform.position.y;

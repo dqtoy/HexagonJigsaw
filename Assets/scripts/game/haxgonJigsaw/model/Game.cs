@@ -27,7 +27,15 @@ namespace hexjig
 
         public GameObject stageRoot;
 
+        public GameObject changeOutRoot;
+
+        private List<GameObject> backgroundgrids = new List<GameObject>();
+
         public static Game Instance;
+
+        private GameObject outBackground;
+
+        private List<Tweener> outTweens;
 
         public Game(LevelConfig config)
         {
@@ -42,6 +50,8 @@ namespace hexjig
             MainData.Instance.dispatcher.AddListener(EventType.HIDE_GAME, OnHideGame);
             MainData.Instance.dispatcher.AddListener(EventType.SHOW_START_EFFECT, ShowStartEffect);
             MainData.Instance.dispatcher.AddListener(EventType.SHOW_CUT, ShowCut);
+            MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT, OnShowGameChangeOut);
+            MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT, OnShowGameChangeIn);
 
             //外面有 23 x 9 的大小
             HaxgonCoord<Coord> sys = new HaxgonCoord<Coord>();
@@ -123,6 +133,81 @@ namespace hexjig
             //计时
             MainData.Instance.time.value = 0;
             startTime = System.DateTime.Now;
+        }
+
+        private void OnShowGameChangeOut(lib.Event e)
+        {
+            for (int i = 0; i < backgroundgrids.Count; i++)
+            {
+                GameBufferPool.ReleaseGridBg(backgroundgrids[i]);
+            }
+            for (int i = 0, len = outBackground.transform.childCount; i < len; i++)
+            {
+                GameBufferPool.ReleaseGridBg(outBackground.transform.GetChild(0).gameObject);
+            }
+            changeOutRoot = new GameObject();
+            changeOutRoot.name = "GameChangeOut";
+            changeOutRoot.transform.parent = root.transform.parent;
+            for (int i = 0; i < this.pieces.length; i++)
+            {
+                pieces[i].ShowChangeOut();
+            }
+            root.SetActive(false);
+            outTweens = new List<Tweener>();
+            float maxTime = 0;
+            Tweener maxTween = null;
+            foreach (Transform child in changeOutRoot.transform)
+            {
+                foreach(Transform child2 in child)
+                {
+                    float time1 = UnityEngine.Random.Range(0.1f, 0.6f);
+                    float time2 = UnityEngine.Random.Range(0.0f, 0.3f);
+                    child2.GetComponent<SpriteRenderer>().DOColor(new Color(1,1,1,0), time1).SetDelay(time2);
+                    Tweener tween = child2.DOMove(new Vector3(UnityEngine.Random.Range(-7.2f, -8.0f), UnityEngine.Random.Range(child2.position.y - 3f, child2.position.y + 3f)), time1).SetDelay(time2).SetEase(Ease.InSine);
+                    outTweens.Add(tween);
+                    tween.onComplete = OnShowGameChangeOutComplete;
+                    if(time1 + time2 > maxTime)
+                    {
+                        maxTime = time1 + time2;
+                        maxTween = tween;
+                    }
+                }
+            }
+        }
+
+        private void OnShowGameChangeOutComplete()
+        {
+            for(int i = 0; i < outTweens.Count; i++)
+            {
+                if(outTweens[i].IsPlaying() == true)
+                {
+                    return;
+                }
+            }
+            for (int i = 0, len = changeOutRoot.transform.childCount; i < len; i++)
+            {
+                for (int j = 0, len2 = changeOutRoot.transform.GetChild(i).childCount; j < len2; j++)
+                {
+                    GameBufferPool.ReleaseGrid(changeOutRoot.transform.GetChild(i).GetChild(0).gameObject);
+                }
+            }
+            MainData.Instance.dispatcher.DispatchWith(EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE2, this);
+        }
+
+        private void OnShowGameChangeIn(lib.Event e)
+        {
+            foreach (Transform child in stageRoot.transform)
+            {
+                float x = child.localPosition.x;
+                float y = child.localPosition.y;
+                float z = child.localPosition.z;
+                child.localPosition = new Vector3(x + UnityEngine.Random.Range(7f, 10f), y + UnityEngine.Random.Range(-3, 3f), z);
+                float time1 = UnityEngine.Random.Range(0.1f, 0.5f);
+                float time2 = UnityEngine.Random.Range(0.0f, 0.3f);
+                child.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
+                child.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), time1).SetDelay(time2);
+                child.DOLocalMove(new Vector3(x,y,z), time1).SetDelay(time2).SetEase(Ease.InSine);
+            }
         }
 
         /// <summary>
@@ -209,7 +294,8 @@ namespace hexjig
             foreach (var item in coordSys.coords)
             {
                 Coord coord = item.Value;
-                GameObject image = ResourceManager.CreateImage("image/grid/gridBg");
+                GameObject image = GameBufferPool.CreateGridBg();
+                backgroundgrids.Add(image);
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coord.x, coord.y), 0.4f);
                 image.transform.position = new Vector3(position.x, position.y, 100);
                 image.transform.parent = p.transform;
@@ -237,7 +323,7 @@ namespace hexjig
             p.transform.position = new Vector3(offx, offy);
             stageRoot = p;
 
-            GameObject outBackground = new GameObject();
+            outBackground = new GameObject();
             outBackground.transform.parent = root.transform;
             
             //生成背景
@@ -518,6 +604,8 @@ namespace hexjig
             MainData.Instance.dispatcher.RemoveListener(EventType.HIDE_GAME, OnHideGame);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_START_EFFECT, ShowStartEffect);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_CUT, ShowCut);
+            MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_GAME_CHANGE_OUT_EFFECT, OnShowGameChangeOut);
+            MainData.Instance.dispatcher.RemoveListener(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT, OnShowGameChangeIn);
         }
     }
 }

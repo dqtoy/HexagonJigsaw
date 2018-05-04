@@ -24,7 +24,7 @@ public class UIStart : MonoBehaviour {
     void Start ()
     {
         //播放背景音乐
-        GameVO.Instance.bgm = ResourceManager.PlaySound("music/1", false, GameVO.Instance.musicVolumn.value / 100.0f);
+        GameVO.Instance.bgm = ResourceManager.PlaySound("music/1", true, GameVO.Instance.musicVolumn.value / 100.0f);
         GameVO.Instance.bgm.DOFade(GameVO.Instance.musicVolumn.value / 100.0f, 1f);
         GameVO.Instance.musicVolumn.AddListener(lib.Event.CHANGE, OnMusicVolumnChange);
 

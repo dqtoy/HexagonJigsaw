@@ -78,7 +78,15 @@ namespace hexjig
         /// </summary>
         public static string SHOW_CUT = "show_cut";
 
+        /// <summary>
+        /// 放置了一片在舞台上
+        /// </summary>
         public static string SET_PIECE = "set_piece";
+
+        public static string SHOW_GAME_CHANGE_OUT_EFFECT = "show_game_change_out_effect";
+        internal static string SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE2 = "show_game_change_out_effect_complete2";
+        public static string SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE = "show_game_change_out_effect_complete";
+        public static string SHOW_GAME_CHANGE_IN_EFFECT = "show_game_change_in_effect";
 
         /// <summary>
         /// 消除游戏
@@ -89,6 +97,7 @@ namespace hexjig
         /// 隐藏游戏
         /// </summary>
         internal static string HIDE_GAME = "hide_game";
+
 
 
         /// <summary>

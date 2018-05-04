@@ -10,4 +10,9 @@ public class DailyLevelVO
 
     //通关时间 秒
     public int time = 0;
+
+    /// <summary>
+    /// 通关是否检测过
+    /// </summary>
+    public bool hasCheck = false;
 }

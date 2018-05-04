@@ -17,6 +17,12 @@ public class MainUIFade : UIFade {
     public GameObject dailyBg;
     public GameObject setting;
 
+    public RectTransform dailyLevelTxt;
+    public Text dailyTimeTxt;
+    public GameObject effect6;
+    public GameObject effect9;
+    public GameObject effect10;
+
     private ModuleName moduleName;
 
     override public void FadeOut(ModuleName name)
@@ -64,6 +70,40 @@ public class MainUIFade : UIFade {
 
     override public void FadeIn(ModuleName name)
     {
+        if(GameVO.Instance.daily.levels[9].pass)
+        {
+            dailyIcon.gameObject.SetActive(false);
+            effect6.SetActive(false);
+            effect9.SetActive(false);
+            effect10.SetActive(true);
+            dailyLevelTxt.localPosition = new Vector3(2, -25);
+            dailyTimeTxt.gameObject.SetActive(true);
+            dailyTimeTxt.text = StringUtils.TimeToMS(GameVO.Instance.daily.levels[9].time);
+        }
+        else if (GameVO.Instance.daily.levels[8].pass)
+        {
+            dailyIcon.gameObject.SetActive(false);
+            effect6.SetActive(false);
+            effect9.SetActive(true);
+            effect10.SetActive(false);
+            dailyTimeTxt.gameObject.SetActive(false);
+        }
+        else if (GameVO.Instance.daily.levels[5].pass)
+        {
+            dailyIcon.gameObject.SetActive(true);
+            effect6.SetActive(true);
+            effect9.SetActive(false);
+            effect10.SetActive(false);
+            dailyTimeTxt.gameObject.SetActive(false);
+        }
+        else
+        {
+            dailyIcon.gameObject.SetActive(true);
+            effect6.SetActive(false);
+            effect9.SetActive(false);
+            effect10.SetActive(false);
+            dailyTimeTxt.gameObject.SetActive(false);
+        }
         if (name == ModuleName.Freedom || name == ModuleName.Result && GameVO.Instance.model == GameModel.Freedom)
         {
             line.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 9);

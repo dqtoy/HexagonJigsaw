@@ -14,10 +14,16 @@ namespace hexjig
         private void Awake()
         {
             MainData.Instance.dispatcher.AddListener(EventType.DISPOSE_GAME, OnDisposeGame);
-            MainData.Instance.dispatcher.AddListener(EventType.QUIT_LEVEL, OnDisposeGame);
+            MainData.Instance.dispatcher.AddListener(EventType.QUIT_LEVEL, OnDisposeGame); 
+            MainData.Instance.dispatcher.AddListener(EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE2, OnDisposeGameChangeOut);
 
             //创建背景
             background = new Background();
+        }
+
+        private void OnDisposeGameChangeOut(lib.Event e)
+        {
+            Destroy((e.Data as Game).changeOutRoot);
         }
 
         private void OnDisposeGame(lib.Event e)

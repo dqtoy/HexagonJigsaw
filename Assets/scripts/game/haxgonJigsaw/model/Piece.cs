@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using lib;
 using UnityEngine;
 
@@ -53,6 +54,7 @@ namespace hexjig
         //是否显示过提示
         public bool hasShowTip = false;
         private List<SpriteRenderer> tipGrids;
+        private List<GameObject> shaders = new List<GameObject>();
 
         public Piece()
         {
@@ -66,7 +68,7 @@ namespace hexjig
             float pmaxX = -1000;
             float pminY = 1000;
             float pmaxY = -1000;
-            for (int i = 1; i < coords.length; i++)
+            for (int i = 0; i < coords.length; i++)
             {
                 if (coords[i].x < minx || coords[i].x == minx && coords[i].y > maxy)
                 {
@@ -141,6 +143,17 @@ namespace hexjig
                     {
                         return true;
                     }
+                    else
+                    {
+                        Point2D posCoord = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.2f);
+                        posCoord.x = x - game.offx1 - posCoord.x;
+                        posCoord.y = y - game.offy1 - posCoord.y;
+                        posCoord = HaxgonCoord<Coord>.PositionToCoord(posCoord, 0.4f);
+                        if(posCoord.x == 0 && posCoord.y == 0)
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
             return false;
@@ -172,12 +185,40 @@ namespace hexjig
             }
         }
 
+        public void ShowChangeOut()
+        {
+            if (isInStage)
+            {
+                show.transform.parent = Game.Instance.changeOutRoot.transform;
+            }
+            else
+            {
+                for (int i = 0, len = show.transform.childCount; i < len; i++)
+                {
+                    GameBufferPool.ReleaseGrid(show.transform.GetChild(0).gameObject);
+                }
+            }
+            for (int i = 0, len = tip.transform.childCount; i < len; i++)
+            {
+                GameBufferPool.ReleaseGrid(tip.transform.GetChild(0).gameObject);
+            }
+            for (int i = 0, len = showOut.transform.childCount; i < len; i++)
+            {
+                GameBufferPool.ReleaseGrid(showOut.transform.GetChild(0).gameObject);
+            }
+            for (int i = 0, len = shader.transform.childCount; i < len; i++)
+            {
+                GameBufferPool.ReleaseGrid(shader.transform.GetChild(0).gameObject);
+            }
+        }
+        
+
         public void CreateDisplay()
         {
             //创建拖动显示
             for(int i = 0; i < coords.length; i++)
             {
-                GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
+                GameObject image = GameBufferPool.CreateGrid(coords[i].type);
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y),0.4f);
                 image.transform.localPosition = new Vector3(position.x,position.y,1);
                 image.transform.parent = show.transform;
@@ -190,7 +231,7 @@ namespace hexjig
                 tipGrids = new List<SpriteRenderer>();
                 for (int i = 0; i < coords.length; i++)
                 {
-                    GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
+                    GameObject image = GameBufferPool.CreateGrid(coords[i].type);
                     Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.4f);
                     image.transform.localPosition = new Vector3(position.x, position.y, 0);
                     image.transform.parent = tip.transform;
@@ -204,7 +245,8 @@ namespace hexjig
             //创建阴影
             for (int i = 0; i < coords.length; i++)
             {
-                GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
+                GameObject image = GameBufferPool.CreateGrid(coords[i].type);
+                shaders.Add(image);
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.4f);
                 image.transform.localPosition = new Vector3(position.x, position.y,3);
                 image.transform.parent = shader.transform;
@@ -220,12 +262,12 @@ namespace hexjig
                 position.x += position2.x;
                 position.y += position2.y;
 
-                GameObject image = ResourceManager.CreateImage("image/grid/" + coords[i].type);
+                GameObject image = GameBufferPool.CreateGrid(coords[i].type);
                 image.transform.localScale = new Vector3(0.5f, 0.5f);
                 image.transform.localPosition = new Vector3(position.x, position.y, 3);
                 image.transform.parent = showOut.transform;
 
-                image = ResourceManager.CreateImage("image/grid/gridBg");
+                image = GameBufferPool.CreateGridBg();
                 image.transform.localScale = new Vector3(0.5f, 0.5f);
                 image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f, 4);
                 image.transform.parent = background.transform;//*/
