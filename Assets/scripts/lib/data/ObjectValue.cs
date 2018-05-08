@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace lib
 {
@@ -7,14 +8,14 @@ namespace lib
         public string Value
         {
             get { return Encode(); }
-            set { Decode(value); }
+            set { Decode(JSON.Parse(value) as Dictionary<string, object>); }
         }
 
         /// <summary>
         /// 范序列化
         /// </summary>
         /// <param name="val"></param>
-        protected abstract void Decode(string val);
+        protected abstract void Decode(Dictionary<string, object> val);
 
         /// <summary>
         /// 序列化

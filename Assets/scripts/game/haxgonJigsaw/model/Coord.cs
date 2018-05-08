@@ -9,9 +9,9 @@ namespace hexjig
         /// </summary>
         public int type;
 
-        public int x;
+        new public int x;
 
-        public int y;
+        new public int y;
 
         public Piece piece;
     }

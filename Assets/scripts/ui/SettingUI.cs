@@ -33,8 +33,15 @@ public class SettingUI : MonoBehaviour {
     public Image musicProgress;
     public Image musicProgressLess;
 
+    public RectTransform line;
+    public RectTransform hex;
+    public RectTransform buttons;
+    public RectTransform quit;
+
     private void Awake()
     {
+        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+
         ButtonClick.dispatcher.AddListener("quitSetting", OnQuit);
         ButtonClick.dispatcher.AddListener("zh_cn", OnZhCn);
         ButtonClick.dispatcher.AddListener("en_us", OnEnUs);
@@ -279,7 +286,7 @@ public class SettingUI : MonoBehaviour {
         if(flag)
         {
             obj.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
-            obj.DOColor(new Color((float)(254.0 / 255.0), (float)(107.0 / 255.0), (float)(127.0 / 255.0)), 0.2f);
+            obj.DOColor(new Color((float)(255.0 / 255.0), (float)(103.0 / 255.0), (float)(102.0 / 255.0)), 0.2f);
         }
         else
         {
@@ -287,7 +294,7 @@ public class SettingUI : MonoBehaviour {
             {
                 obj.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
             }
-            obj.DOColor(new Color((float)(255.0 / 255.0), (float)(255.0 / 255.0), (float)(255.0 / 255.0)), 0.2f);
+            obj.DOColor(new Color((float)(254.0 / 255.0), (float)(250.0 / 255.0), (float)(203.0 / 255.0)), 0.2f);
         }
     }
 }

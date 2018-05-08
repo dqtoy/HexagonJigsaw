@@ -59,6 +59,11 @@ namespace hexjig
         public static string RESTART = "restart";
 
         /// <summary>
+        /// 退回
+        /// </summary>
+        public static string BACK_STEP = "back_step";
+
+        /// <summary>
         /// 完成关卡
         /// </summary>
         public static string FINISH_LEVEL = "finish_level";
@@ -79,10 +84,16 @@ namespace hexjig
         public static string SHOW_CUT = "show_cut";
 
         /// <summary>
+        /// 显示截图
+        /// </summary>
+        public static string SHOW_CUT_COMPLETE = "show_cut_complete";
+
+        /// <summary>
         /// 放置了一片在舞台上
         /// </summary>
         public static string SET_PIECE = "set_piece";
 
+        public static string SHOW_GAME_CHANGE_OUT_EFFECT0 = "show_game_change_out_effect0";
         public static string SHOW_GAME_CHANGE_OUT_EFFECT = "show_game_change_out_effect";
         internal static string SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE2 = "show_game_change_out_effect_complete2";
         public static string SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE = "show_game_change_out_effect_complete";

@@ -11,8 +11,8 @@ public class ResultUIFade : UIFade {
 
     public RectTransform time;
     public RectTransform model;
-    public RectTransform line1;
-    public RectTransform line2;
+    public Image line1;
+    public Image line2;
     public RectTransform hex;
     public RectTransform quit;
     public RectTransform home;
@@ -31,6 +31,21 @@ public class ResultUIFade : UIFade {
         hex.DOScaleX(0, 0.3f);
         hex.DOScaleY(0, 0.3f);
         quit.DOScaleX(0, 0.3f).onComplete = TweenComplete;
+        if(name == ModuleName.Main)
+        {
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.57f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -18, outTime + inTime);
+        }
+        else if(name == ModuleName.Daily)
+        {
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.58f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -127, outTime + inTime);
+        }
+        else if(name == ModuleName.Freedom)
+        {
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.6f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, 127, outTime + inTime);
+        }
     }
 
     private void TweenComplete()
@@ -44,8 +59,8 @@ public class ResultUIFade : UIFade {
     {
         time.localScale = new Vector3(0, 1);
         model.localScale = new Vector3(0, 1);
-        line1.localScale = new Vector3(0, 1);
-        line2.localScale = new Vector3(0, 1);
+        line1.fillAmount = 0;
+        line2.fillAmount = 0;
         hex.localScale = new Vector3(0, 0);
         quit.localScale = new Vector3(0, 1);
         home.localScale = new Vector3(0, 1);
@@ -64,8 +79,8 @@ public class ResultUIFade : UIFade {
 
     private void FadeIn3()
     {
-        line1.DOScaleX(1, 0.2f);
-        line2.DOScaleX(1, 0.2f).onComplete = FadeIn4;
+        line1.DOFillAmount(1, 0.2f);
+        line2.DOFillAmount(1, 0.2f).onComplete = FadeIn4;
     }
 
     private void FadeIn4()

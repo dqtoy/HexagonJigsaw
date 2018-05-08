@@ -120,6 +120,11 @@ namespace lib
             Event e = Event.Create(type, data);
             Dispatch(e);
         }
+
+        public void RemoveAll()
+        {
+            listeners = new Dictionary<string, ArrayList>();
+        }
     }
 }
 

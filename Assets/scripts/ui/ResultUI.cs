@@ -10,10 +10,13 @@ public class ResultUI : MonoBehaviour {
 
     public Text timeTxt;
     public Text modelTxt;
-    //public GameObject nextButton;
+
+    public RectTransform line;
 
     private void Awake()
     {
+        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+
         ButtonClick.dispatcher.AddListener("quitResult", OnQuit);
         ButtonClick.dispatcher.AddListener("home", OnShowHome);
         ButtonClick.dispatcher.AddListener("next", OnNext);

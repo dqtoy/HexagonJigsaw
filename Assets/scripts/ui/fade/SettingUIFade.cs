@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class SettingUIFade : UIFade
 {
-    public RectTransform line;
+    public Image line;
     public RectTransform hex;
     public RectTransform quit;
     public RectTransform button;
@@ -19,10 +19,12 @@ public class SettingUIFade : UIFade
     {
         if(name == ModuleName.Main)
         {
-            line.DOScaleX(0, inTime - offTime);
-            button.DOScale(0, inTime - offTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.57f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -18, outTime + inTime);
+            line.DOFillAmount(0, outTime - offTime);
+            button.DOScale(0, outTime - offTime);
             Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(hex.DOLocalMoveX(770, inTime - offTime));
+            mySequence.Append(hex.DOLocalMoveX(770, outTime - offTime));
             mySequence.Append(quit.DOScaleX(1,offTime)).onComplete = TweenComplete;
         }
     }
@@ -38,7 +40,7 @@ public class SettingUIFade : UIFade
         if(name == ModuleName.Main)
         {
             quit.localScale = new Vector3(0, 1);
-            line.localScale = new Vector3(0, 1);
+            line.fillAmount = 0;
             button.localScale = new Vector3(0, 0);
             hex.localPosition = new Vector3(770, -280);
 
@@ -52,7 +54,7 @@ public class SettingUIFade : UIFade
     {
         if (moduleName == ModuleName.Main)
         {
-            line.DOScaleX(1, inTime - offTime);
+            line.DOFillAmount(1, inTime - offTime);
             button.DOScale(1, inTime - offTime);
             hex.DOLocalMoveX(205, inTime - offTime);
         }

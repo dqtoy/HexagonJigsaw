@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using lib;
+using System;
 
 public class ButtonClick : MonoBehaviour, IPointerClickHandler
 {
@@ -17,6 +18,8 @@ public class ButtonClick : MonoBehaviour, IPointerClickHandler
     /// </summary>  
     public event UIEventProxy OnClick;
 
+    private DateTime lastTime;
+
     /*public void OnClick(GameObject obj)
     {
         Debug.Log("click");
@@ -24,6 +27,12 @@ public class ButtonClick : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        double time = System.DateTime.Now.Subtract(lastTime).TotalMilliseconds;
+        if(time < 500)
+        {
+            return;
+        }
+        lastTime = System.DateTime.Now;
         ResourceManager.PlaySound("sound/click", false, GameVO.Instance.soundVolumn.value / 100.0f);
         _dispatcher.DispatchWith(gameObject.name, gameObject);
     }

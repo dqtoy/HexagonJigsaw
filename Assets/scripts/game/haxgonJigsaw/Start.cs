@@ -11,6 +11,8 @@ namespace hexjig
     {
         private Background background;
 
+        public static Background backgroundInstance;
+
         private void Awake()
         {
             MainData.Instance.dispatcher.AddListener(EventType.DISPOSE_GAME, OnDisposeGame);
@@ -18,7 +20,9 @@ namespace hexjig
             MainData.Instance.dispatcher.AddListener(EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE2, OnDisposeGameChangeOut);
 
             //创建背景
-            background = new Background();
+            background = Background.Create();
+            background.bsize = GameVO.Instance.Height * 1.42f;
+            backgroundInstance = background;
         }
 
         private void OnDisposeGameChangeOut(lib.Event e)

@@ -21,6 +21,8 @@ namespace hexjig
         public float offx1;
         public float offy1;
 
+        private bool finish = false;
+
         private DateTime startTime;
 
         public GameObject root;
@@ -37,6 +39,9 @@ namespace hexjig
 
         private List<Tweener> outTweens;
 
+        public List<Piece> history = new List<Piece>();
+        public List<Point2D> history2 = new List<Point2D>();
+
         public Game(LevelConfig config)
         {
             Instance = this;
@@ -45,11 +50,13 @@ namespace hexjig
             root.name = "GameRoot";
             root.layer = 8;
 
-            MainData.Instance.dispatcher.AddListener(EventType.RESTART,OnRestart);
+            MainData.Instance.dispatcher.AddListener(EventType.BACK_STEP, BACK_STEP);
+            MainData.Instance.dispatcher.AddListener(EventType.RESTART, OnRestart);
             MainData.Instance.dispatcher.AddListener(EventType.SHOW_TIP, OnShowTip);
             MainData.Instance.dispatcher.AddListener(EventType.HIDE_GAME, OnHideGame);
             MainData.Instance.dispatcher.AddListener(EventType.SHOW_START_EFFECT, ShowStartEffect);
-            MainData.Instance.dispatcher.AddListener(EventType.SHOW_CUT, ShowCut);
+            MainData.Instance.dispatcher.AddListener(EventType.SHOW_CUT, ShowCut); 
+            MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT0, OnShowGameChangeOut0);
             MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT, OnShowGameChangeOut);
             MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT, OnShowGameChangeIn);
 
@@ -135,15 +142,26 @@ namespace hexjig
             startTime = System.DateTime.Now;
         }
 
+        private void OnShowGameChangeOut0(lib.Event e)
+        {
+            for (int i = 0, len = outBackground.transform.childCount; i < len; i++)
+            {
+                GameBufferPool.ReleaseGridBg(outBackground.transform.GetChild(0).gameObject);
+            }
+            for(int i = 0; i < pieces.length; i++)
+            {
+                if(pieces[i].isInStage == false)
+                {
+                    pieces[i].Hide();
+                }
+            }
+        }
+
         private void OnShowGameChangeOut(lib.Event e)
         {
             for (int i = 0; i < backgroundgrids.Count; i++)
             {
                 GameBufferPool.ReleaseGridBg(backgroundgrids[i]);
-            }
-            for (int i = 0, len = outBackground.transform.childCount; i < len; i++)
-            {
-                GameBufferPool.ReleaseGridBg(outBackground.transform.GetChild(0).gameObject);
             }
             changeOutRoot = new GameObject();
             changeOutRoot.name = "GameChangeOut";
@@ -205,7 +223,7 @@ namespace hexjig
                 float time1 = UnityEngine.Random.Range(0.1f, 0.5f);
                 float time2 = UnityEngine.Random.Range(0.0f, 0.3f);
                 child.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0);
-                child.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), time1).SetDelay(time2);
+                child.GetComponent<SpriteRenderer>().DOColor(new Color(1, 1, 1, 1), time1).SetDelay(time2 + 0.07f).SetEase(Ease.InSine);
                 child.DOLocalMove(new Vector3(x,y,z), time1).SetDelay(time2).SetEase(Ease.InSine);
             }
         }
@@ -218,25 +236,28 @@ namespace hexjig
         {
             //0.2 1.07 -17
             stageRoot.transform.parent = root.transform.parent;
-            GameObject image = ResourceManager.CreateImage("image/uiitem/rect");
-            image.transform.parent = stageRoot.transform;
-            image.transform.localPosition = new Vector3(-offx, -offy + GameVO.Instance.Height * 0.25f);
-            float size = 13 * 0.6f;
-            image.GetComponent<SpriteRenderer>().drawMode = SpriteDrawMode.Sliced;
-            image.GetComponent<SpriteRenderer>().size = new Vector2(size, size);
             for (int i = 0; i < this.pieces.length; i++)
             {
                 pieces[i].ShowCut();
             }
-            Background bk = new Background();
-            bk.Draw(1, 0, size - 0.4f);
-            bk.container.transform.parent = stageRoot.transform;
-            bk.container.transform.localPosition = new Vector3(-offx, -offy + GameVO.Instance.Height * 0.25f);
+            float size = GameVO.Instance.Width;
+            (new ScreenCut((int)((GameVO.Instance.Width * 0.5f - size * 0.5f) * 100), (int)((GameVO.Instance.Height * 0.5f + GameVO.Instance.Height * 0.2f - size * 0.5f) * 100), (int)((size) * 100), (int)((size) * 100),stageRoot.transform, -offx, -offy + GameVO.Instance.Height * 0.2f,1)).AddListener(lib.Event.COMPLETE,OnShowCut2);
             //添加一个缩放层，达到以中心为缩放点缩放的效果
             MainData.Instance.showCutRoot = new GameObject();
-            stageRoot.transform.localPosition = new Vector3(stageRoot.transform.localPosition.x, stageRoot.transform.localPosition.y - GameVO.Instance.Height * 0.25f, stageRoot.transform.localPosition.z);
+            stageRoot.transform.localPosition = new Vector3(stageRoot.transform.localPosition.x, stageRoot.transform.localPosition.y - GameVO.Instance.Height * 0.2f, stageRoot.transform.localPosition.z);
             stageRoot.transform.parent = MainData.Instance.showCutRoot.transform;
-            MainData.Instance.showCutRoot.transform.localPosition = new Vector3(0, GameVO.Instance.Height * 0.25f);
+            MainData.Instance.showCutRoot.transform.localPosition = new Vector3(0, GameVO.Instance.Height * 0.2f);
+        }
+
+        private void OnShowCut2(lib.Event e)
+        {
+            float size = GameVO.Instance.Width + 0.4f;
+            GameObject image = ResourceManager.CreateImage("image/uiitem/rect");
+            image.transform.parent = stageRoot.transform;
+            image.transform.localPosition = new Vector3(-offx, -offy + GameVO.Instance.Height * (float)0.2f);
+            image.GetComponent<SpriteRenderer>().drawMode = SpriteDrawMode.Sliced;
+            image.GetComponent<SpriteRenderer>().size = new Vector2(size, size);
+            MainData.Instance.dispatcher.DispatchWith(EventType.SHOW_CUT_COMPLETE);
         }
 
         private void ShowStartEffect(lib.Event e)
@@ -258,6 +279,20 @@ namespace hexjig
                     pieces[i].ShowTip();
                     return;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 退回一步
+        /// </summary>
+        /// <param name="e"></param>
+        private void BACK_STEP(lib.Event e)
+        {
+            if(history.Count > 0)
+            {
+                history[history.Count - 1].Check(history2[history2.Count - 1].x, history2[history2.Count - 1].y, true,false);
+                history.RemoveAt(history.Count - 1);
+                history2.RemoveAt(history2.Count - 1);
             }
         }
 
@@ -297,7 +332,7 @@ namespace hexjig
                 GameObject image = GameBufferPool.CreateGridBg();
                 backgroundgrids.Add(image);
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coord.x, coord.y), 0.4f);
-                image.transform.position = new Vector3(position.x, position.y, 100);
+                image.transform.position = new Vector3(position.x, position.y, 5);
                 image.transform.parent = p.transform;
                 if(position.x < minX)
                 {
@@ -319,7 +354,7 @@ namespace hexjig
             MainData.Instance.levelWidth = maxX - minX + 1.5f;
             MainData.Instance.levelHeight = maxY - minY + 1.5f;
             offx = -((maxX - minX) * 0.5f + minX);
-            offy = -((maxY - minY) * 0.5f + minY) + GameVO.Instance.Height * 0.25f;
+            offy = -((maxY - minY) * 0.5f + minY) + GameVO.Instance.Height * 0.2f;
             p.transform.position = new Vector3(offx, offy);
             stageRoot = p;
 
@@ -389,50 +424,53 @@ namespace hexjig
                 pieces[i].Update();
             }
 
-            double time = System.DateTime.Now.Subtract(startTime).TotalMilliseconds;
-            MainData.Instance.time.value = (int)time;
-
-            if (Input.GetAxis("Fire1") > 0 && lastClick == 0)
+            if(!finish)
             {
-                Vector3 pos = Input.mousePosition;
-                pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
-                pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
-                //Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(pos.x - offx1, pos.y - offy1), 0.2f);
-                //Point2D p1 = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(pos.x - offx, pos.y - offy), 0.4f);
-                for (int i = 0; i < pieces.length; i++)
+                double time = System.DateTime.Now.Subtract(startTime).TotalMilliseconds;
+                MainData.Instance.time.value = (int)time;
+
+                if (Input.GetAxis("Fire1") > 0 && lastClick == 0)
                 {
-                    if(pieces[i].IsTouchIn(pos.x,pos.y))
+                    Vector3 pos = Input.mousePosition;
+                    pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
+                    pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
+                    //Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(pos.x - offx1, pos.y - offy1), 0.2f);
+                    //Point2D p1 = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(pos.x - offx, pos.y - offy), 0.4f);
+                    for (int i = 0; i < pieces.length; i++)
                     {
-                        pieces[i].StartDrag(pos.x, pos.y);
-                        dragPiece = pieces[i];
-                        break;
+                        if (pieces[i].IsTouchIn(pos.x, pos.y))
+                        {
+                            pieces[i].StartDrag(pos.x, pos.y);
+                            dragPiece = pieces[i];
+                            break;
+                        }
+                    }
+                    isDragMove = true;
+                }
+                else if (lastClick > 0 && Input.GetAxis("Fire1") == 0)
+                {
+                    if (dragPiece != null)
+                    {
+                        Vector3 pos = Input.mousePosition;
+                        pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
+                        pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
+                        dragPiece.StopDrag(pos.x, pos.y);
+                    }
+                    dragPiece = null;
+                    isDragMove = false;
+                }
+                else if (isDragMove)
+                {
+                    if (dragPiece != null)
+                    {
+                        Vector3 pos = Input.mousePosition;
+                        pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
+                        pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
+                        dragPiece.DragMove(pos.x, pos.y);
                     }
                 }
-                isDragMove = true;
+                lastClick = Input.GetAxis("Fire1");
             }
-            else if(lastClick > 0 && Input.GetAxis("Fire1") == 0)
-            {
-                if(dragPiece != null)
-                {
-                    Vector3 pos = Input.mousePosition;
-                    pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
-                    pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
-                    dragPiece.StopDrag(pos.x, pos.y);
-                }
-                dragPiece = null;
-                isDragMove = false;
-            }
-            else if(isDragMove)
-            {
-                if (dragPiece != null)
-                {
-                    Vector3 pos = Input.mousePosition;
-                    pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
-                    pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
-                    dragPiece.DragMove(pos.x, pos.y);
-                }
-            }
-            lastClick = Input.GetAxis("Fire1");
         }
 
         private Point2D AutoSetPiece(Piece piece, HaxgonCoord<Coord> sys)
@@ -591,7 +629,8 @@ namespace hexjig
                     break;
                 }
             }
-            if(finish)
+            this.finish = finish;
+            if (finish)
             {
                 MainData.Instance.dispatcher.DispatchWith(EventType.FINISH_LEVEL, MainData.Instance.time.value);
             }
@@ -599,11 +638,13 @@ namespace hexjig
 
         public void Dispose()
         {
+            MainData.Instance.dispatcher.RemoveListener(EventType.RESTART, BACK_STEP);
             MainData.Instance.dispatcher.RemoveListener(EventType.RESTART, OnRestart);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_TIP, OnShowTip);
             MainData.Instance.dispatcher.RemoveListener(EventType.HIDE_GAME, OnHideGame);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_START_EFFECT, ShowStartEffect);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_CUT, ShowCut);
+            MainData.Instance.dispatcher.RemoveListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT0, OnShowGameChangeOut0);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_GAME_CHANGE_OUT_EFFECT, OnShowGameChangeOut);
             MainData.Instance.dispatcher.RemoveListener(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT, OnShowGameChangeIn);
         }

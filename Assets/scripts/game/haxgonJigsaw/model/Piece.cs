@@ -168,6 +168,12 @@ namespace hexjig
             isInStage = false;
         }
 
+        public void Hide()
+        {
+            show.SetActive(false);
+            showOut.SetActive(false);
+        }
+
         /// <summary>
         /// 显示提示
         /// </summary>
@@ -291,8 +297,12 @@ namespace hexjig
         private float startDragY;
         private float startDragTouchX;
         private float startDragTouchY;
+        private float lastx;
+        private float lasty;
         public void StartDrag(float x,float y)
         {
+            lastx = show.transform.position.x;
+            lasty = show.transform.position.y;
             show.transform.position = new Vector3(x + tipOffx, y + tipOffy);
             startDragTouchX = x;
             startDragTouchY = y;
@@ -312,7 +322,7 @@ namespace hexjig
             Check(x, y, true);
         }
 
-        private void Check(float x,float y,bool showResult = false)
+        public void Check(float x,float y,bool showResult = false,bool save = true)
         {
             HaxgonCoord<Coord> sys = game.coordSys;
             foreach (var item in sys.coords)
@@ -325,7 +335,14 @@ namespace hexjig
                 }
             }
             bool find = true;
-            show.transform.position = new Vector3(startDragX - startDragTouchX + x, startDragY - startDragTouchY + y, showResult ? 0 : -1);
+            if(save)
+            {
+                show.transform.position = new Vector3(startDragX - startDragTouchX + x, startDragY - startDragTouchY + y, showResult ? 0 : -1);
+            }
+            else
+            {
+                show.transform.position = new Vector3(x, y, showResult ? 0 : -1);
+            }
             for (int i = 0; i < this.coords.length; i++)
             {
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.4f);
@@ -341,7 +358,6 @@ namespace hexjig
             }
             if (find)
             {
-
                 Point2D position0 = new Point2D();
                 Point2D copy = new Point2D();
                 for (int i = 0; i < this.coords.length; i++)
@@ -365,6 +381,11 @@ namespace hexjig
                 }
                 if (showResult)
                 {
+                    if(save)
+                    {
+                        Game.Instance.history.Add(this);
+                        Game.Instance.history2.Add(new Point2D(lastx, lasty));
+                    }
                     MainData.Instance.dispatcher.DispatchWith(EventType.SET_PIECE);
                     show.transform.position = new Vector3(position0.x + game.offx - copy.x, position0.y + game.offy - copy.y);
                     show.SetActive(true);
@@ -383,6 +404,11 @@ namespace hexjig
             {
                 if (showResult)
                 {
+                    if (save)
+                    {
+                        Game.Instance.history.Add(this);
+                        Game.Instance.history2.Add(new Point2D(lastx, lasty));
+                    }
                     show.SetActive(false);
                     shader.SetActive(false);
                     showOut.SetActive(true);

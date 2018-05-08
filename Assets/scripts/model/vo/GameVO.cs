@@ -58,7 +58,7 @@ public class GameVO
     /// <summary>
     /// 每日挑战
     /// </summary>
-    public Daily daily = new Daily();
+    public Daily daily;
 
     public object moduleData;
 
@@ -76,62 +76,8 @@ public class GameVO
     {
         instance = this;
 
-
-        //临时代码 生成每日挑战数据
-        //随机10个关卡，1-999 6  1000-1999 3  2000 1
-        //levels = new List<LevelConfig>();
-        List<int> list = new List<int>();
-        List<int> list2 = new List<int>();
-        List<int> list3 = new List<int>();
-        for (int i = 0; i < LevelConfig.Configs.Count; i++)
-        {
-            if (LevelConfig.Configs[i].id < 1000)
-            {
-                list.Add(i);
-            }
-            else if (LevelConfig.Configs[i].id < 2000)
-            {
-                list2.Add(i);
-            }
-            else
-            {
-                list3.Add(i);
-            }
-        }
-        int len = 0;
-        while (len < 6)
-        {
-            int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list.Count);
-            int ind = list[index];
-            list.RemoveAt(index);
-            DailyLevelVO levelvo = new DailyLevelVO();
-            levelvo.config = LevelConfig.Configs[ind];
-            daily.levels.Add(levelvo);
-            len++;
-        }
-        len = 0;
-        while (len < 3)
-        {
-            int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list2.Count);
-            int ind = list2[index];
-            list2.RemoveAt(index);
-            DailyLevelVO levelvo = new DailyLevelVO();
-            levelvo.config = LevelConfig.Configs[ind];
-            daily.levels.Add(levelvo);
-            len++;
-        }
-        len = 0;
-        while (len < 1)
-        {
-            int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list3.Count);
-            int ind = list3[index];
-            list3.RemoveAt(index);
-            DailyLevelVO levelvo = new DailyLevelVO();
-            levelvo.config = LevelConfig.Configs[ind];
-            daily.levels.Add(levelvo);
-            len++;
-        }
-        daily.all.value = daily.levels.length;
+        GameObject obj = new GameObject();
+        daily = obj.AddComponent<Daily>();
     }
 
     /// <summary>

@@ -11,8 +11,18 @@ public class MainUI : MonoBehaviour {
     //public Text dailyProgressTxt;
     public Transform progressBg;
 
+    public RectTransform hex;
+    public RectTransform hex2;
+    public RectTransform line;
+    public RectTransform title;
+
     private void Awake()
     {
+        UIFix.SetDistanceToTop(title);
+        UIFix.SetDistanceToBottom(hex2);
+
+        hexjig.Start.backgroundInstance.bposition = 0.57f;
+        hexjig.Start.backgroundInstance.brotation = -18;
         ButtonClick.dispatcher.AddListener("daily", OnShowDaily);
         ButtonClick.dispatcher.AddListener("freedom", OnShowFreedom);
         ButtonClick.dispatcher.AddListener("setting", OnShowSetting);
@@ -27,6 +37,7 @@ public class MainUI : MonoBehaviour {
     {
         GameVO.Instance.ShowModule(ModuleName.Daily);
     }
+
 
     private void OnShowFreedom(lib.Event e)
     {

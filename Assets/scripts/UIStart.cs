@@ -16,6 +16,17 @@ public class UIStart : MonoBehaviour {
     public GameObject resultUI;
     public GameObject settingUI;
 
+    public GameObject bg1;
+    public GameObject bg2;
+    public GameObject bg3;
+    public GameObject bg4;
+    public GameObject bg5;
+
+    public RectTransform border1;
+    public RectTransform border2;
+    public RectTransform border3;
+    public RectTransform border4;
+
     private GameObject show;
     private ModuleName showModule;
     private ModuleName nextModule;
@@ -23,6 +34,13 @@ public class UIStart : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        border1.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight);
+        border2.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight);
+        UIFix.SetDistanceToBottom(border3);
+        UIFix.SetDistanceToTop(border4);
+
+        (Grammar.GetProperty(this, "bg" + UnityEngine.Random.Range(1, 6)) as GameObject).SetActive(true);
+
         //播放背景音乐
         GameVO.Instance.bgm = ResourceManager.PlaySound("music/1", true, GameVO.Instance.musicVolumn.value / 100.0f);
         GameVO.Instance.bgm.DOFade(GameVO.Instance.musicVolumn.value / 100.0f, 1f);

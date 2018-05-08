@@ -23,16 +23,35 @@ public class GameUIFade : UIFade
     private int restartEffectGap = 10;
     private int tipEffectGap = 10;
 
+    public GameObject result;
+    public GameObject effect1;
+    public GameObject effect2;
+    public GameObject effect3;
+    [HideInInspector]
+    public int effectCount = 0;
+
     private ModuleName moduleName;
 
     private void Awake()
     {
+        MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT0, OnShowGameChangeOut0);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT, OnShowGameChangeOut);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT, OnShowGameChangeIn);
     }
 
+    private void OnShowGameChangeOut0(lib.Event e)
+    {
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(operateBg.DOScaleY(0, 0.4f));
+        mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete0;
+        txt.DOScaleX(0, 0.4f);
+    }
+
     private void OnShowGameChangeOut(lib.Event e)
     {
+        tip.gameObject.SetActive(true);
+        restart.gameObject.SetActive(true);
+        result.SetActive(false);
         Sequence mySequence = DOTween.Sequence();
         mySequence.Append(operateBg.DOScaleY(0, 0.4f));
         mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete;
@@ -44,9 +63,36 @@ public class GameUIFade : UIFade
         txt.DOScaleX(1, 0.2f);
     }
 
+    private void OnShowGameChangeInComplete0()
+    {
+        tip.gameObject.SetActive(false);
+        restart.gameObject.SetActive(false);
+        result.SetActive(true);
+        effect2.SetActive(false);
+        effect3.SetActive(false);
+        if (effectCount > 1)
+        {
+            Invoke("playEffect2", 0.5f);
+        }
+        if (effectCount > 2)
+        {
+            Invoke("playEffect3", 1);
+        }
+    }
+
     private void OnShowGameChangeInComplete()
     {
         MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE);
+    }
+
+    private void playEffect2()
+    {
+        effect2.SetActive(true);
+    }
+
+    private void playEffect3()
+    {
+        effect3.SetActive(true);
     }
 
     override public void FadeOut(ModuleName name)
@@ -56,10 +102,23 @@ public class GameUIFade : UIFade
         {
             restart.DOLocalMoveX(274 + 459 + 325, outTime * 0.5f);
             tip.DOLocalMoveX(-700, outTime * 0.5f).onComplete = FadeOut2;
+            if (name == ModuleName.Daily)
+            {
+                DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.58f, outTime + inTime);
+                DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -127, outTime + inTime);
+            }
+            else if (name == ModuleName.Freedom)
+            {
+                DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.6f, outTime + inTime);
+                DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, 127, outTime + inTime);
+            }
         }
         else if(name == ModuleName.Result)
         {
-            MainData.Instance.showCutRoot.transform.DOScale(new Vector3(0.5f,0.5f,1.0f), 0.25f).onComplete = FadeOut2;
+            MainData.Instance.showCutRoot.transform.DOScale(new Vector3(0.5f,0.5f,1.0f), 0.26f).onComplete = FadeOut2;
+
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.62f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, 67, outTime + inTime);
         }
     }
 
@@ -69,13 +128,13 @@ public class GameUIFade : UIFade
         {
             txt.DOScaleX(0, outTime * 0.5f);
             operateBg.DOScaleY(0, outTime * 0.5f);
-            hex.DOLocalMoveX(-700, outTime * 0.5f).onComplete = TweenComplete;
+            hex.DOLocalMoveX(-500, outTime * 0.5f).onComplete = TweenComplete;
         }
         else if(moduleName == ModuleName.Result)
         {
             txt.DOScaleX(0, outTime  - 0.1f);
             operateBg.DOScaleY(0, outTime - 0.1f);
-            hex.DOLocalMoveX(-700, outTime - 0.1f).onComplete = TweenComplete;
+            hex.DOLocalMoveX(-500, outTime - 0.1f).onComplete = TweenComplete;
         }
     }
 
@@ -86,6 +145,9 @@ public class GameUIFade : UIFade
 
     override public void FadeIn(ModuleName name)
     {
+        tip.gameObject.SetActive(true);
+        restart.gameObject.SetActive(true);
+        result.SetActive(false);
         PlayTipEffect();
         PlayRestartEffect();
         moduleName = name;
@@ -97,11 +159,11 @@ public class GameUIFade : UIFade
             operateBg.localScale = new Vector3(1, 0);
             restart.localPosition = new Vector3(459, restart.localPosition.y);
             tip.localPosition = new Vector3(274 + 459 + 325, restart.localPosition.y);
-            hex.localPosition = new Vector3(-700, 723);
+            hex.localPosition = new Vector3(-500, hex.localPosition.y);
 
             txt.DOScaleX(1,inTime * 0.5f);
             operateBg.DOScaleY(1,inTime * 0.5f);
-            hex.DOLocalMoveX(-582, inTime * 0.5f).onComplete = FadeIn2;
+            hex.DOLocalMoveX(-335, inTime * 0.5f).onComplete = FadeIn2;
         }
     }
 

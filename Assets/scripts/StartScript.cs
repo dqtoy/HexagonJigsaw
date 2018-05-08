@@ -19,11 +19,10 @@ public class StartScript : MonoBehaviour {
 
     public GameObject EditorMain;
 
+    public A a;
+
     private void Awake()
     {
-        HttpRequest request = new HttpRequest();
-        request.AddListener(lib.Event.COMPLETE, OnNetComplete);
-        request.Get("http://hexfit.hundredcent.com/time");
 
         /*A a = new A();
         Type t = a.GetType();
@@ -97,7 +96,18 @@ public class StartScript : MonoBehaviour {
 
 public class A
 {
+    public lib.String name = new lib.String();
     public Int x = new Int();
     public Int y = new Int();
     public Int area = new Int();
+}
+
+public class B : A
+{
+    public Int b = new Int();
+}
+
+public class C : A
+{
+    public Int c = new Int();
 }

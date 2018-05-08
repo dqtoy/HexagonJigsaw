@@ -12,10 +12,10 @@ public class DailyUI : MonoBehaviour {
     private List<Text> times = new List<Text>();
     private List<Image> icons = new List<Image>();
     private Color[] colors = {
-        new Color(245/255.0f,108/255.0f,113/255.0f),
+        new Color(255/255.0f,103/255.0f,102/255.0f),
         new Color(250/255.0f,228/255.0f,103/255.0f),
-        new Color(186/255.0f,250/255.0f,103/255.0f),
-        new Color(118/255.0f,240/255.0f,112/255.0f),
+        new Color(250/255.0f,228/255.0f,103/255.0f),
+        new Color(250/255.0f,228/255.0f,103/255.0f),
         new Color(103/255.0f,235/255.0f,250/255.0f),
         new Color(103/255.0f,190/255.0f,250/255.0f),
         new Color(103/255.0f,141/255.0f,250/255.0f),
@@ -30,8 +30,15 @@ public class DailyUI : MonoBehaviour {
     public Image progress;
     public Image progressLess;
 
+    public RectTransform line;
+    public RectTransform hex;
+
     private void Awake()
     {
+        UIFix.SetDistanceToTop(hex);
+
+        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+
         ButtonClick.dispatcher.AddListener("quitDaily", OnQuit);
         foreach (Transform child in buttonsTransform)
         {
@@ -114,6 +121,8 @@ public class DailyUI : MonoBehaviour {
             else
             {
                 times[i].text = "";
+                txts[i].color = new Color((float)(254.0 / 255.0), (float)(250.0 / 255.0), (float)(203.0 / 255.0));
+                icons[i].color = new Color((float)(254.0 / 255.0), (float)(250.0 / 255.0), (float)(203.0 / 255.0));
                 if (i == 0 || GameVO.Instance.daily.levels[i - 1].pass == true)
                 {
                     txts[i].color = colors[i];

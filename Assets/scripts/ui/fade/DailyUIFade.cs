@@ -8,8 +8,8 @@ using System;
 
 public class DailyUIFade : UIFade
 {
-    public RectTransform line1;
-    public RectTransform line2;
+    public Image line1;
+    public Image line2;
     public RectTransform hex;
     public RectTransform daily;
     public RectTransform daily2;
@@ -45,8 +45,10 @@ public class DailyUIFade : UIFade
         moduleName = name;
         if (name == ModuleName.Main)
         {
-            line1.DOScaleX(0, outTime).onComplete = TweenComplete;
-            line2.DOScaleX(0, outTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.57f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -18, outTime + inTime);
+            line1.DOFillAmount(0, outTime).onComplete = TweenComplete;
+            line2.DOFillAmount(0, outTime);
             daily2.DOScaleX(0, 0.1f);
             quit.DOScaleX(0, 0.1f);
             //buttons.DOScale(new Vector3(0, 0),outTime);
@@ -55,6 +57,8 @@ public class DailyUIFade : UIFade
         {
             daily2.DOScaleX(0, 0.1f);
             quit.DOScaleX(0, 0.1f).onComplete = FadeOut2;
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.5f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -22, outTime + inTime);
         }
     }
 
@@ -62,8 +66,8 @@ public class DailyUIFade : UIFade
     {
         if(moduleName == ModuleName.Game)
         {
-            line1.DOScaleX(0, 0.1f);
-            line2.DOScaleX(0, 0.1f).onComplete = FadeOut3;
+            line1.DOFillAmount(0, 0.1f);
+            line2.DOFillAmount(0, 0.1f).onComplete = FadeOut3;
         }
     }
 
@@ -217,14 +221,14 @@ public class DailyUIFade : UIFade
         moduleName = name;
         if(name == ModuleName.Main)
         {
-            line1.localScale = new Vector3(0, 1);
-            line2.localScale = new Vector3(0, 1);
+            line1.fillAmount = 0;
+            line2.fillAmount = 0;
             daily2.localScale = new Vector3(0, 1);
             quit.localScale = new Vector3(0, 1);
             //buttons.localScale = new Vector3(0, 0);
 
-            line1.DOScaleX(1, inTime);
-            line2.DOScaleX(1, inTime).onComplete = CheckPassEffect;
+            line1.DOFillAmount(1, inTime);
+            line2.DOFillAmount(1, inTime).onComplete = CheckPassEffect;
             daily2.DOScaleX(1, 0.1f);
             quit.DOScaleX(1, 0.1f);
 
@@ -342,8 +346,8 @@ public class DailyUIFade : UIFade
     {
         if (moduleName == ModuleName.Game || moduleName == ModuleName.Result)
         {
-            line1.DOScaleX(1, 0.1f);
-            line2.DOScaleX(1, 0.1f).onComplete = FadeIn5;
+            line1.DOFillAmount(1, 0.1f);
+            line2.DOFillAmount(1, 0.1f).onComplete = FadeIn5;
         }
     }
 

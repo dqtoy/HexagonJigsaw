@@ -55,7 +55,7 @@ namespace lib
         /// 范序列化
         /// </summary>
         /// <param name="val"></param>
-        override protected void Decode(string val)
+        override protected void Decode(Dictionary<string,object> val)
         {
 
         }

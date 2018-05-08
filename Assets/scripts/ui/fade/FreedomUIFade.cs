@@ -18,10 +18,10 @@ public class FreedomUIFade : UIFade
     public float normalStart = 0.0f;
     public float hardStart = 0.0f;
 
-    public Image quitButton;
+    public RectTransform quitButton;
     public GameObject hex;
-    public GameObject line1;
-    public GameObject line2;
+    public Image line1;
+    public Image line2;
 
     public RectTransform easyTrans;
     public RectTransform normalTrans;
@@ -45,13 +45,19 @@ public class FreedomUIFade : UIFade
     {
         if(name == ModuleName.Main)
         {
-            line1.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 9), outTime);
-            line2.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 9), outTime).onComplete = TweenComplete;
+            line1.DOFillAmount(0, outTime);
+            line2.DOFillAmount(0, outTime).onComplete = TweenComplete;
+
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.57f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -18, outTime + inTime);
         }
         else if(name == ModuleName.Game)
         {
             moduleName = name;
-            quitButton.GetComponent<RectTransform>().DOScaleX(0, 0.1f).onComplete = FadeOut2;
+            quitButton.DOScaleX(0, 0.1f).onComplete = FadeOut2;
+
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.5f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -22, outTime + inTime);
         }
     }
 
@@ -59,8 +65,8 @@ public class FreedomUIFade : UIFade
     {
         if (moduleName == ModuleName.Game)
         {
-            line1.GetComponent<RectTransform>().DOScaleX(0, 0.1f);
-            line2.GetComponent<RectTransform>().DOScaleX(0, 0.1f).onComplete = FadeOut3;
+            line1.DOFillAmount(0, 0.1f);
+            line2.DOFillAmount(0, 0.1f).onComplete = FadeOut3;
         }
     }
 
@@ -68,7 +74,7 @@ public class FreedomUIFade : UIFade
     {
         if (moduleName == ModuleName.Game)
         {
-            hex.GetComponent<RectTransform>().DOLocalMoveY(1100, outTime - 0.2f);
+            hex.GetComponent<RectTransform>().DOLocalMoveY(1100 + UIFix.GetDistanceToTop(), outTime - 0.2f);
             if (GameVO.Instance.difficulty == DifficultyMode.Easy)
             {
                 easyTrans.DOLocalRotate(new Vector3(0, 0, 30), 0.1f).onComplete = FadeOut4;
@@ -120,12 +126,19 @@ public class FreedomUIFade : UIFade
         moduleName = name;
         if(name == ModuleName.Main)
         {
-            line1.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 9);
-            line2.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 9);
-            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(205, 773);
+            line1.fillAmount = 0;
+            line2.fillAmount = 0;
+            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(205, 807 + UIFix.GetDistanceToTop());
 
-            line1.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(400, 9), inTime);
-            line2.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(1016, 9), inTime);
+            line1.DOFillAmount(1, inTime);
+            line2.DOFillAmount(1, inTime);
+
+            easyTrans.localPosition = new Vector3(-188, easyTrans.localPosition.y, easyTrans.localPosition.z);
+            normalTrans.localPosition = new Vector3(-82, normalTrans.localPosition.y, normalTrans.localPosition.z);
+            hardTrans.localPosition = new Vector3(38, hardTrans.localPosition.y, hardTrans.localPosition.z);
+            easyTrans.localScale = new Vector3(1, 1);
+            normalTrans.localScale = new Vector3(1, 1);
+            hardTrans.localScale = new Vector3(1, 1);
 
             easyTxt.rectTransform.localScale = new Vector3(0, 0);
             easyTxt.rectTransform.DOScale(1, 0.6f).SetDelay(0.5f);
@@ -178,7 +191,7 @@ public class FreedomUIFade : UIFade
     {
         if (moduleName == ModuleName.Game || moduleName == ModuleName.Result)
         {
-            hex.GetComponent<RectTransform>().DOLocalMoveY(773, inTime - 0.2f);
+            hex.GetComponent<RectTransform>().DOLocalMoveY(807 + UIFix.GetDistanceToTop(), inTime - 0.2f);
             if (GameVO.Instance.difficulty == DifficultyMode.Easy)
             {
                 easyTrans.DOLocalRotate(new Vector3(0, 0, 0), 0.1f).onComplete = FadeIn3;
@@ -204,8 +217,8 @@ public class FreedomUIFade : UIFade
     {
         if (moduleName == ModuleName.Game || moduleName == ModuleName.Result)
         {
-            line1.GetComponent<RectTransform>().DOScaleX(1, 0.1f);
-            line2.GetComponent<RectTransform>().DOScaleX(1, 0.1f).onComplete = FadeIn4;
+            line1.DOFillAmount(1, 0.1f);
+            line2.DOFillAmount(1, 0.1f).onComplete = FadeIn4;
         }
     }
 
@@ -213,7 +226,7 @@ public class FreedomUIFade : UIFade
     {
         if (moduleName == ModuleName.Game || moduleName == ModuleName.Result)
         {
-            quitButton.GetComponent<RectTransform>().DOScaleX(1, 0.1f);
+            quitButton.DOScaleX(1, 0.1f);
         }
     }
 }

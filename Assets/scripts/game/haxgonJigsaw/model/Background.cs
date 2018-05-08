@@ -5,7 +5,7 @@ using lib;
 
 namespace hexjig
 {
-    public class Background
+    public class Background : MonoBehaviour
     {
         private GameObject bg1;
         private GameObject bg2;
@@ -13,36 +13,47 @@ namespace hexjig
         private float posSpeed = 0.00015f;
         private float rotation = 0;
         private float rotationSpeed = 0.020f;
+        [HideInInspector]
         public GameObject container;
 
-        public Background()
-        {
-            container = new GameObject();
+        public float bposition = 0;
+        public float brotation = 0;
+        public float bsize = 100;
 
+        void Awake()
+        {
+            container = gameObject;
+            container.name = "background";
             bg1 = ResourceManager.CreateImage("image/bg1");
             bg1.transform.parent = container.transform;
 
             bg2 = ResourceManager.CreateImage("image/bg2");
             bg2.transform.parent = container.transform;
 
-            posSpeed = (Random.Range(1,2) == 1? 1 : - 1) *(posSpeed + (Random.Range(0, posSpeed/2) - posSpeed / 4));
+            posSpeed = (Random.Range(1, 2) == 1 ? 1 : -1) * (posSpeed + (Random.Range(0, posSpeed / 2) - posSpeed / 4));
             rotationSpeed = (Random.Range(1, 2) == 1 ? 1 : -1) * (rotationSpeed + (Random.Range(0, rotationSpeed / 2) - rotationSpeed / 4));
             container.transform.Rotate(new Vector3(0, 0, 360 * Random.Range(0, 1.0f)));
         }
 
-        public void Draw(float pos,float rotation,float size)
+        private void Draw()
         {
+            float pos = bposition;
+            float rotation = brotation;
+            float size = bsize;
+
             bg1.transform.localScale = new Vector3(size * 1 * 100 * pos, size * 1 * 100);
-            bg1.transform.localPosition = new Vector3(size * 1 * (pos * 0.5f - 0.5f), 0, 101);
+            bg1.transform.localPosition = new Vector3(size * 1 * (pos * 0.5f - 0.5f), 0, 201);
 
             bg2.transform.localScale = new Vector3(size * 1 * 100 * (1.0f - pos), size * 1 * 100);
-            bg2.transform.localPosition = new Vector3(size * 1 * (0.5f - (1.0f - pos) * 0.5f), 0, 101);
+            bg2.transform.localPosition = new Vector3(size * 1 * (0.5f - (1.0f - pos) * 0.5f), 0, 201);
 
-            container.transform.localEulerAngles = new Vector3(0, 0, 0);
+            container.transform.localEulerAngles = new Vector3(0, 0, brotation);
         }
 
         public void Update()
         {
+            Draw();
+            return;
             pos += posSpeed;
 
             bool flag = false;
@@ -94,6 +105,12 @@ namespace hexjig
             bg2.transform.localPosition = new Vector3(GameVO.Instance.Height * 1.42f * (0.5f - (1.0f - pos) * 0.5f), 0, 210);
 
             container.transform.Rotate(new Vector3(0, 0, rotationSpeed));
+        }
+
+        public static Background Create()
+        {
+            GameObject obj = new GameObject();
+            return obj.AddComponent<Background>();
         }
     }
 }

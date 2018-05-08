@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MainUIFade : UIFade {
 
     public GameObject title;
-    public GameObject line;
+    public Image line;
     public GameObject hex;
     public GameObject hex2;
     public Image freedomIcon;
@@ -29,48 +29,54 @@ public class MainUIFade : UIFade {
     { 
         if(name == ModuleName.Freedom)
         {
-            line.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 9), outTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.6f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, 127, outTime + inTime);
+            line.DOFillAmount(0, outTime);
             title.transform.GetComponent<RectTransform>().DOLocalMoveX(-900, outTime);
             hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, -180), outTime);
             freedomIcon.DOColor(new Color(1, 1, 1, 0), outTime);
             freedomBg.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), outTime);
-            hex.transform.GetComponent<RectTransform>().DOLocalMoveY(773, outTime).onComplete = TweenComplete;
+            hex.transform.GetComponent<RectTransform>().DOLocalMoveY(807 + UIFix.GetDistanceToTop(), outTime).onComplete = TweenComplete;
         }
         else if (name == ModuleName.Setting)
         {
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.48f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, 158, outTime + inTime);
             setting.transform.parent = hex.transform.parent;
 
             float offTime = 0.1f;
-
-            line.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 9), outTime - offTime);
+            
+            line.DOFillAmount(0, outTime - offTime);
             title.transform.GetComponent<RectTransform>().DOLocalMoveX(-900, outTime - offTime);
             hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, -180), outTime - offTime);
             freedomIcon.DOColor(new Color(1, 1, 1, 0), outTime - offTime);
             freedomBg.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), outTime - offTime);
             hex.transform.GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, 270), outTime - offTime);
-            hex.transform.GetComponent<RectTransform>().DOLocalMoveY(1100, outTime - offTime);
+            hex.transform.GetComponent<RectTransform>().DOLocalMoveY(1100 + UIFix.GetDistanceToTop(), outTime - offTime);
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(setting.transform.GetComponent<RectTransform>().DOLocalMoveY(524,outTime - offTime));
             mySequence.Append(setting.transform.GetComponent<RectTransform>().DOScaleX(0, offTime)).onComplete = TweenComplete;
         }
         else if(name == ModuleName.Daily)
         {
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.58f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -127, outTime + inTime);
             //205,112   120
             //-223,653   30
             float offTime = outTime * 0.5f;
-            line.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 9), offTime);
+            line.DOFillAmount(0, offTime);
             title.transform.GetComponent<RectTransform>().DOLocalMoveX(-900, offTime);
             hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, -180), offTime);
             dailyIcon.DOColor(new Color(1, 1, 1, 0), outTime);
-            dailyBg.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), outTime);
-            hex.transform.GetComponent<RectTransform>().DOLocalMove(new Vector3(-223, 653), outTime);
+            //dailyBg.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), outTime);
+            hex.transform.GetComponent<RectTransform>().DOLocalMove(new Vector3(-253, 650 + UIFix.GetDistanceToTop()), outTime);
             hex.transform.GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, 120), outTime).onComplete = TweenComplete;
         }
     }
 
     override public void FadeIn(ModuleName name)
     {
-        if(GameVO.Instance.daily.levels[9].pass)
+        if (GameVO.Instance.daily.levels[9].pass)
         {
             dailyIcon.gameObject.SetActive(false);
             effect6.SetActive(false);
@@ -106,14 +112,14 @@ public class MainUIFade : UIFade {
         }
         if (name == ModuleName.Freedom || name == ModuleName.Result && GameVO.Instance.model == GameModel.Freedom)
         {
-            line.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 9);
-            title.transform.GetComponent<RectTransform>().localPosition = new Vector3(-900, 479);
+            line.fillAmount = 0;
+            title.transform.GetComponent<RectTransform>().localPosition = new Vector3(-900, 479 + UIFix.GetDistanceToTop());
             hex2.transform.GetComponent<RectTransform>().eulerAngles = new Vector3(0, 0, -180);
             freedomIcon.color = new Color(1, 1, 1, 0);
             freedomBg.GetComponent<RectTransform>().eulerAngles = new Vector3(0, 0, 30);
-            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(205, 773);
-
-            line.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(835, 9), inTime);
+            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(205, 807 + UIFix.GetDistanceToTop());
+            
+            line.DOFillAmount(1, inTime);
             title.transform.GetComponent<RectTransform>().DOLocalMoveX(-359, inTime);
             hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), inTime);
             freedomIcon.DOColor(new Color(1, 1, 1, 1), inTime);
@@ -124,12 +130,12 @@ public class MainUIFade : UIFade {
         {
             float offTime = 0.1f;
 
-            line.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 9);
-            title.transform.GetComponent<RectTransform>().localPosition = new Vector3(-900, 479);
+            line.fillAmount = 0;
+            title.transform.GetComponent<RectTransform>().localPosition = new Vector3(-900, 479 + UIFix.GetDistanceToTop());
             hex2.transform.GetComponent<RectTransform>().eulerAngles = new Vector3(0, 0, -180);
             freedomIcon.color = new Color(1, 1, 1, 0);
             freedomBg.GetComponent<RectTransform>().eulerAngles = new Vector3(0, 0, 30);
-            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(205, 1100);
+            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(205, 1100 + UIFix.GetDistanceToTop());
             setting.transform.GetComponent<RectTransform>().localPosition = new Vector3(setting.transform.GetComponent<RectTransform>().localPosition.x, 524);
 
             setting.transform.GetComponent<RectTransform>().DOScaleX(1, offTime).onComplete = FadeIn2;
@@ -137,15 +143,15 @@ public class MainUIFade : UIFade {
         }
         else if(name == ModuleName.Daily || name == ModuleName.Result && GameVO.Instance.model == GameModel.Daily)
         {
-            line.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 9);
-            title.transform.GetComponent<RectTransform>().localPosition = new Vector3(-900, 479);
+            line.fillAmount = 0;
+            title.transform.GetComponent<RectTransform>().localPosition = new Vector3(-900, 479 + UIFix.GetDistanceToTop());
             hex2.transform.GetComponent<RectTransform>().eulerAngles = new Vector3(0, 0, -180);
             dailyIcon.color = new Color(1, 1, 1, 0);
             dailyBg.GetComponent<RectTransform>().eulerAngles = new Vector3(0, 0, 30);
-            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(-223, 653);
+            hex.transform.GetComponent<RectTransform>().localPosition = new Vector3(-223, 653 + UIFix.GetDistanceToTop());
             hex.transform.GetComponent<RectTransform>().localEulerAngles = new Vector3(0, 0, 120);
 
-            line.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(835, 9), inTime);
+            line.DOFillAmount(1, inTime);
             title.transform.GetComponent<RectTransform>().DOLocalMoveX(-359, inTime);
             hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), inTime);
             dailyIcon.DOColor(new Color(1, 1, 1, 1), inTime);
@@ -161,14 +167,14 @@ public class MainUIFade : UIFade {
         {
             float offTime = 0.1f;
 
-            line.transform.GetComponent<RectTransform>().DOSizeDelta(new Vector2(835, 9), inTime - offTime);
+            line.DOFillAmount(1, inTime - offTime);
             title.transform.GetComponent<RectTransform>().DOLocalMoveX(-359, inTime - offTime);
             hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), inTime - offTime);
             freedomIcon.DOColor(new Color(1, 1, 1, 1), inTime - offTime);
             freedomBg.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), inTime - offTime);
             hex.transform.GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, 0), inTime - offTime);
             hex.transform.GetComponent<RectTransform>().DOLocalMoveY(112, inTime - offTime);
-            setting.transform.GetComponent<RectTransform>().DOLocalMove(new Vector3(-271.7311f, -508.8597f), inTime - offTime).onComplete = FadeIn3;
+            setting.transform.GetComponent<RectTransform>().DOLocalMove(new Vector3(-271.7311f, -508.8597f + UIFix.GetDistanceToBottom()), inTime - offTime).onComplete = FadeIn3;
         }
     }
 

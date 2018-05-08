@@ -25,53 +25,59 @@ public class SaveLevelCommand
             }
         }
         
-        LevelConfig levelConfig = new LevelConfig();
-        LevelConfig.Configs.Add(levelConfig);
-        levelConfig.id = level;
-
-        for(int i = 0; i < EditorVO.Instance.level.pieces.Count; i++)
+        if(EditorVO.Instance.level.pieces.Count > 0)
         {
-            EditorLevelPiece piece = EditorVO.Instance.level.pieces[i];
-            PieceConfig pieceConfig = new PieceConfig();
-            levelConfig.pieces.Add(pieceConfig);
-            pieceConfig.id = level * 100 + i;
-            for (int c = 0; c < piece.grids.Count; c++)
-            {
-                if(CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y) == null)
-                {
-                    CoordConfig coord = new CoordConfig();
-                    coord.x = piece.grids[c].x;
-                    coord.y = piece.grids[c].y;
-                    coord.id = piece.grids[c].x * 1000 + -piece.grids[c].y;
-                    CoordConfig.Configs.Add(coord);
-                }
-                pieceConfig.coords.Add(CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y));
-            }
-            PieceConfig.Configs.Add(pieceConfig);
-        }
+            LevelConfig levelConfig = new LevelConfig();
+            LevelConfig.Configs.Add(levelConfig);
+            levelConfig.id = level;
 
-        for (int i = 0; i < EditorVO.Instance.level.otherPieces.Count; i++)
-        {
-            EditorLevelPiece piece = EditorVO.Instance.level.otherPieces[i];
-            PieceConfig pieceConfig = new PieceConfig();
-            levelConfig.pieces2.Add(pieceConfig);
-            pieceConfig.id = level * 100 + EditorVO.Instance.level.pieces.Count + i;
-            for (int c = 0; c < piece.grids.Count; c++)
+            for (int i = 0; i < EditorVO.Instance.level.pieces.Count; i++)
             {
-                if (CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y) == null)
+                EditorLevelPiece piece = EditorVO.Instance.level.pieces[i];
+                PieceConfig pieceConfig = new PieceConfig();
+                levelConfig.pieces.Add(pieceConfig);
+                pieceConfig.id = level * 100 + i;
+                for (int c = 0; c < piece.grids.Count; c++)
                 {
-                    CoordConfig coord = new CoordConfig();
-                    coord.x = piece.grids[c].x;
-                    coord.y = piece.grids[c].y;
-                    coord.id = piece.grids[c].x * 1000 + -piece.grids[c].y;
-                    CoordConfig.Configs.Add(coord);
+                    if (CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y) == null)
+                    {
+                        CoordConfig coord = new CoordConfig();
+                        coord.x = piece.grids[c].x;
+                        coord.y = piece.grids[c].y;
+                        coord.id = piece.grids[c].x * 1000 + -piece.grids[c].y;
+                        CoordConfig.Configs.Add(coord);
+                    }
+                    pieceConfig.coords.Add(CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y));
                 }
-                pieceConfig.coords.Add(CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y));
+                PieceConfig.Configs.Add(pieceConfig);
             }
-            PieceConfig.Configs.Add(pieceConfig);
+
+            for (int i = 0; i < EditorVO.Instance.level.otherPieces.Count; i++)
+            {
+                EditorLevelPiece piece = EditorVO.Instance.level.otherPieces[i];
+                PieceConfig pieceConfig = new PieceConfig();
+                levelConfig.pieces2.Add(pieceConfig);
+                pieceConfig.id = level * 100 + EditorVO.Instance.level.pieces.Count + i;
+                for (int c = 0; c < piece.grids.Count; c++)
+                {
+                    if (CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y) == null)
+                    {
+                        CoordConfig coord = new CoordConfig();
+                        coord.x = piece.grids[c].x;
+                        coord.y = piece.grids[c].y;
+                        coord.id = piece.grids[c].x * 1000 + -piece.grids[c].y;
+                        CoordConfig.Configs.Add(coord);
+                    }
+                    pieceConfig.coords.Add(CoordConfig.GetConfig(piece.grids[c].x * 1000 + -piece.grids[c].y));
+                }
+                PieceConfig.Configs.Add(pieceConfig);
+            }
         }
+        
+
+
         Save();
-        CheckOut();
+        //CheckOut();
     }
 
     private void Save()

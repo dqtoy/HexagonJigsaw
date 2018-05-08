@@ -151,6 +151,10 @@ namespace lib
                 {
                     if (type == Step.WaitOutValue || type == Step.WaitObjectValue || type == Step.WaitArrayValueOrEnd)
                     {
+                        if (type == Step.WaitObjectValue)
+                        {
+                            keys.Add(key);
+                        }
                         values.Add(new List<object>());
                         parentValue = currentValue;
                         currentValue = values[values.Count - 1];
@@ -194,6 +198,8 @@ namespace lib
                                 }
                                 else //否则就是 object
                                 {
+                                    key = keys[keys.Count - 1];
+                                    keys.RemoveAt(keys.Count - 1);
                                     (parentValue as Dictionary<string, object>).Add(key, currentValue);
                                     type = Step.WaitObjectSplitOrEnd;
                                 }
