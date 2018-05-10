@@ -1,31 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using lib;
 
-public class BindingProperty : MonoBehaviour {
-
-    public static List<object> checks = new List<object>();
-
-    private void Awake()
+namespace lib
+{
+    public class BindingProperty : MonoBehaviour
     {
-        if (component != null && property != "" && content != "")
+
+        public static List<object> checks = new List<object>() { };
+
+        private void Awake()
         {
-            binding = new Binding(component, checks, property,content);
+            if (component != null && property != "" && content != "")
+            {
+                binding = new Binding(component, checks, property, content);
+            }
         }
+
+        private void OnDestroy()
+        {
+            if (binding != null)
+            {
+                binding.dispose();
+            }
+        }
+
+        private Binding binding;
+
+        public Component component;
+        public string property = "";
+        public string content = "";
     }
 
-    private void OnDestroy()
-    {
-        if(binding != null)
-        {
-            binding.dispose();
-        }
-    }
-
-    private Binding binding;
-
-    public Component component;
-    public string property = "";
-    public string content = "";
 }

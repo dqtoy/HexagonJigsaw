@@ -147,12 +147,92 @@ namespace lib
             return coords;
         }
 
-        private static float halfSqrt3 = 0.8660254037844386f;
+        /// <summary>
+        /// 获取相邻关系点的坐标
+        /// </summary>
+        /// <param name="coord"></param>
+        /// <param name="nextDirection"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static Point2D GetCoordNextTo(Point2D coord, HaxgonCoordNextDirection nextDirection, HaxgonCoordDirection direction = HaxgonCoordDirection.HORIZONTAL)
+        {
+            if (direction == HaxgonCoordDirection.HORIZONTAL)
+            {
+                if (coord.x % 2 == 0)
+                {
+                    if (nextDirection == HaxgonCoordNextDirection.RIGHT_UP)
+                    {
+                        return Point2D.Create(coord.x + 1, coord.y + 0);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.RIGHT_DOWN)
+                    {
+                        return Point2D.Create(coord.x + 1, coord.y -1);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.DOWN)
+                    {
+                        return Point2D.Create(coord.x + 0, coord.y -1);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.LEFT_DOWN)
+                    {
+                        return Point2D.Create(coord.x -1, coord.y -1);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.LEFT_UP)
+                    {
+                        return Point2D.Create(coord.x -1, coord.y + 0);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.UP)
+                    {
+                        return Point2D.Create(coord.x + 0, coord.y + 1);
+                    }
+                }
+                else
+                {
+                    if (nextDirection == HaxgonCoordNextDirection.RIGHT_DOWN)
+                    {
+                        return Point2D.Create(coord.x + 1, coord.y + 0);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.DOWN)
+                    {
+                        return Point2D.Create(coord.x + 0, coord.y -1);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.LEFT_DOWN)
+                    {
+                        return Point2D.Create(coord.x -1, coord.y + 0);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.LEFT_UP)
+                    {
+                        return Point2D.Create(coord.x -1, coord.y + 1);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.UP)
+                    {
+                        return Point2D.Create(coord.x + 0, coord.y + 1);
+                    }
+                    if (nextDirection == HaxgonCoordNextDirection.RIGHT_UP)
+                    {
+                        return Point2D.Create(coord.x + 1, coord.y + 1);
+                    }
+                }
+            }
+            return null;
+        }
+
+
+        public static float halfSqrt3 = 0.8660254037844386f;
     }
 
     public enum HaxgonCoordDirection
     {
         HORIZONTAL,
         VERTICAL
+    }
+
+    public enum HaxgonCoordNextDirection
+    {
+        UP,
+        DOWN,
+        LEFT_UP,
+        RIGHT_UP,
+        LEFT_DOWN,
+        RIGHT_DOWN
     }
 }

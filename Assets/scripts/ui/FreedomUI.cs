@@ -11,6 +11,8 @@ public class FreedomUI : MonoBehaviour
     public RectTransform line1;
     public RectTransform line2;
     public RectTransform quit;
+    public Transform hit1;
+    public Transform hit2;
 
     private void Awake()
     {
@@ -20,6 +22,8 @@ public class FreedomUI : MonoBehaviour
         UIFix.SetDistanceToTop(line2);
         line2.localPosition = new Vector3(line2.localPosition.x, line2.localPosition.y - GameVO.Instance.PixelHeight * 0.5f + 1280 * 0.5f);
         UIFix.SetDistanceToTop(quit);
+        UIFix.SetDistanceToTop(hit1);
+        UIFix.SetDistanceToBottom(hit2);
 
         ButtonClick.dispatcher.AddListener("quitFreedom", OnQuit);
         ButtonClick.dispatcher.AddListener("easy", OnEasy);

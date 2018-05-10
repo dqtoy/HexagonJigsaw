@@ -12,6 +12,9 @@ public class Daily : MonoBehaviour
 
     public Int all = new Int(10);
 
+    public Int allTime = new Int();
+    public lib.String allTimeString = new lib.String();
+
     public bool checkAll = false;
 
     private long createTime;
@@ -31,6 +34,7 @@ public class Daily : MonoBehaviour
     public void Finish(int levelId, int time)
     {
         int count = 0;
+        int passTime = 0;
         for(int i = 0;i < levels.length; i++)
         {
             if(levels[i].config.id == levelId)
@@ -38,18 +42,21 @@ public class Daily : MonoBehaviour
                 if(levels[i].pass == false)
                 {
                     levels[i].pass = true;
-                    levels[i].time = time;
+                    levels[i].time = (time%1000) * 1000;
                 }
                 else if(levels[i].time > time)
                 {
-                    levels[i].time = time;
+                    levels[i].time = (time % 1000) * 1000;
                 }
             }
             if(levels[i].pass)
             {
                 count++;
+                passTime += levels[i].time;
             }
         }
+        allTime.value = passTime;
+        allTimeString.value = StringUtils.TimeToMS(allTime.value);
         progress.value = count;
         Save();
     }
@@ -124,15 +131,15 @@ public class Daily : MonoBehaviour
         List<int> list3 = new List<int>();
         for (int i = 0; i < LevelConfig.Configs.Count; i++)
         {
-            if (LevelConfig.Configs[i].id < 1000)
+            if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 4 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 6)
             {
                 list.Add(i);
             }
-            else if (LevelConfig.Configs[i].id < 2000)
+            else if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 7 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 8)
             {
                 list2.Add(i);
             }
-            else
+            else if(LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 10)
             {
                 list3.Add(i);
             }
@@ -171,6 +178,7 @@ public class Daily : MonoBehaviour
             len++;
         }
         all.value = levels.length;
+        allTime.value = 0;
 
         //存储
         Save();
@@ -225,6 +233,8 @@ public class Daily : MonoBehaviour
             if(levelvo.pass)
             {
                 count++;
+                allTime.value += levelvo.time;
+                allTimeString.value = StringUtils.TimeToMS(allTime.value);
             }
             levels.Add(levelvo);
         }

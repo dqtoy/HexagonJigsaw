@@ -44,8 +44,9 @@ public class StartScript : MonoBehaviour {
         //读取配置
         ConfigDecode.Decode();
 
-        BindingProperty.checks.Add(GameVO.Instance); 
+        BindingProperty.checks.Add(GameVO.Instance);
         BindingProperty.checks.Add(Language.instance);
+        BindingProperty.checks.Add(StringUtils.instance);
 
         GameVO.Instance.editor = editor;
 

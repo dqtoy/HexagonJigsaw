@@ -218,6 +218,17 @@ namespace hexjig
             }
         }
         
+        public bool HasCoordAt(Point2D p)
+        {
+            for(int i = 0; i < coords.length; i++)
+            {
+                if(coords[i].x == p.x && coords[i].y == p.y)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public void CreateDisplay()
         {
@@ -268,15 +279,64 @@ namespace hexjig
                 position.x += position2.x;
                 position.y += position2.y;
 
-                GameObject image = GameBufferPool.CreateGrid(coords[i].type);
+                GameObject image;
+                image = GameBufferPool.CreateGrid(coords[i].type);
                 image.transform.localScale = new Vector3(0.5f, 0.5f);
                 image.transform.localPosition = new Vector3(position.x, position.y, 3);
                 image.transform.parent = showOut.transform;
 
-                image = GameBufferPool.CreateGridBg();
-                image.transform.localScale = new Vector3(0.5f, 0.5f);
-                image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f, 4);
-                image.transform.parent = background.transform;//*/
+
+                if (!HasCoordAt(HaxgonCoord<Coord>.GetCoordNextTo(Point2D.Create(coords[i].x, coords[i].y), HaxgonCoordNextDirection.UP)))
+                {
+                    image = GameBufferPool.CreateGridSide();
+                    image.transform.localScale = new Vector3(0.5f, 0.5f);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f + 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.parent = background.transform;
+                }
+
+                if (!HasCoordAt(HaxgonCoord<Coord>.GetCoordNextTo(Point2D.Create(coords[i].x, coords[i].y), HaxgonCoordNextDirection.RIGHT_UP)))
+                {
+                    image = GameBufferPool.CreateGridSide();
+                    image.transform.localScale = new Vector3(0.5f, 0.5f);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f + 0.19f * 0.75f, position.y + offy * 0.5f + 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.eulerAngles = new Vector3(0, 0, -60);
+                    image.transform.parent = background.transform;
+                }
+
+                if (!HasCoordAt(HaxgonCoord<Coord>.GetCoordNextTo(Point2D.Create(coords[i].x, coords[i].y), HaxgonCoordNextDirection.RIGHT_DOWN)))
+                {
+                    image = GameBufferPool.CreateGridSide();
+                    image.transform.localScale = new Vector3(0.5f, 0.5f);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f + 0.19f * 0.75f, position.y + offy * 0.5f - 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.eulerAngles = new Vector3(0, 0, 60);
+                    image.transform.parent = background.transform;
+                }
+
+                if (!HasCoordAt(HaxgonCoord<Coord>.GetCoordNextTo(Point2D.Create(coords[i].x, coords[i].y), HaxgonCoordNextDirection.DOWN)))
+                {
+                    image = GameBufferPool.CreateGridSide();
+                    image.transform.localScale = new Vector3(0.5f, 0.5f);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f - 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.parent = background.transform;
+                }
+
+                if (!HasCoordAt(HaxgonCoord<Coord>.GetCoordNextTo(Point2D.Create(coords[i].x, coords[i].y), HaxgonCoordNextDirection.LEFT_DOWN)))
+                {
+                    image = GameBufferPool.CreateGridSide();
+                    image.transform.localScale = new Vector3(0.5f, 0.5f);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f - 0.19f * 0.75f, position.y + offy * 0.5f - 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.eulerAngles = new Vector3(0, 0, -60);
+                    image.transform.parent = background.transform;
+                }
+
+                if (!HasCoordAt(HaxgonCoord<Coord>.GetCoordNextTo(Point2D.Create(coords[i].x, coords[i].y), HaxgonCoordNextDirection.LEFT_UP)))
+                {
+                    image = GameBufferPool.CreateGridSide();
+                    image.transform.localScale = new Vector3(0.5f, 0.5f);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f - 0.19f * 0.75f, position.y + offy * 0.5f + 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.eulerAngles = new Vector3(0, 0, 60);
+                    image.transform.parent = background.transform;
+                }
             }
             showOut.transform.localPosition = new Vector3(game.offx1 + offx * 0.5f, game.offy1 + offy * 0.5f);
         }

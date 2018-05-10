@@ -235,6 +235,7 @@ namespace hexjig
         private void ShowCut(lib.Event e)
         {
             //0.2 1.07 -17
+            root.transform.localPosition = new Vector3(root.transform.localPosition.x, root.transform.localPosition.y, 0);
             stageRoot.transform.parent = root.transform.parent;
             for (int i = 0; i < this.pieces.length; i++)
             {
@@ -632,6 +633,7 @@ namespace hexjig
             this.finish = finish;
             if (finish)
             {
+                root.transform.localPosition = new Vector3(root.transform.localPosition.x, root.transform.localPosition.y,100);
                 MainData.Instance.dispatcher.DispatchWith(EventType.FINISH_LEVEL, MainData.Instance.time.value);
             }
         }

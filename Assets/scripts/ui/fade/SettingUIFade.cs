@@ -4,6 +4,7 @@ using UnityEngine;
 using lib;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
 
 public class SettingUIFade : UIFade
 {
@@ -12,17 +13,21 @@ public class SettingUIFade : UIFade
     public RectTransform quit;
     public RectTransform button;
 
+    public GameObject hitEffect;
+
     private ModuleName moduleName;
     private float offTime = 0.1f;
 
     override public void FadeOut(ModuleName name)
     {
-        if(name == ModuleName.Main)
+        hitEffect.SetActive(false);
+        if (name == ModuleName.Main)
         {
             DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.57f, outTime + inTime);
             DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -18, outTime + inTime);
             line.DOFillAmount(0, outTime - offTime);
-            button.DOScale(0, outTime - offTime);
+            button.DOScale(1, outTime - offTime);
+            button.DOLocalMoveY(560, outTime - offTime);
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(hex.DOLocalMoveX(770, outTime - offTime));
             mySequence.Append(quit.DOScaleX(1,offTime)).onComplete = TweenComplete;
@@ -41,7 +46,8 @@ public class SettingUIFade : UIFade
         {
             quit.localScale = new Vector3(0, 1);
             line.fillAmount = 0;
-            button.localScale = new Vector3(0, 0);
+            //button.localScale = new Vector3(0, 0);
+            button.DOLocalMoveY(0, outTime - offTime);
             hex.localPosition = new Vector3(770, -280);
 
             moduleName = name;
@@ -54,9 +60,16 @@ public class SettingUIFade : UIFade
     {
         if (moduleName == ModuleName.Main)
         {
-            line.DOFillAmount(1, inTime - offTime);
+            line.DOFillAmount(1, inTime - offTime).onComplete = LineComplete;
             button.DOScale(1, inTime - offTime);
+            button.DOLocalMoveY(0, outTime - offTime);
             hex.DOLocalMoveX(205, inTime - offTime);
         }
     }
+
+    private void LineComplete()
+    {
+        hitEffect.SetActive(true);
+    }
+
 }

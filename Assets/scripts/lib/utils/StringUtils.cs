@@ -11,8 +11,17 @@ namespace lib
         object Value;
     }
 
+    public delegate string Slice(string str, int start, int end);
+    public delegate List<string> Split(string str, string split);
+    public delegate string TimeToMS(float time);
+
     public class StringUtils
     {
+        public static StringUtils instance = new StringUtils();
+
+        public Slice slice = Slice;
+        public Split split = Split;
+        public TimeToMS timeToMS = TimeToMS;
 
         /// <summary>
         /// 返回字符串从第 start 到 end (不包含) 的元素 ，比如 Slice("abcd",1,3) 会返回 "bc"

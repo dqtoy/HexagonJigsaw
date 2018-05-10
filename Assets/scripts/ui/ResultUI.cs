@@ -12,10 +12,12 @@ public class ResultUI : MonoBehaviour {
     public Text modelTxt;
 
     public RectTransform line;
+    public Transform hit1;
 
     private void Awake()
     {
         line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+        UIFix.SetDistanceToBottom(hit1);
 
         ButtonClick.dispatcher.AddListener("quitResult", OnQuit);
         ButtonClick.dispatcher.AddListener("home", OnShowHome);
@@ -62,7 +64,8 @@ public class ResultUI : MonoBehaviour {
                 nextButton.SetActive(false);
             }
         }*/
-        timeTxt.text = StringUtils.TimeToMS((int)GameVO.Instance.moduleData);
+
+        //timeTxt.text = StringUtils.TimeToMS((int)GameVO.Instance.moduleData);
         modelTxt.text = GameVO.Instance.model == GameModel.Daily ? "Challenge model" : "Freedom model";
     }
 }

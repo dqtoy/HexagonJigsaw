@@ -43,6 +43,7 @@ namespace hexjig
         private void Update()
         {
             background.Update();
+            GameBufferPool.CheckBuffPool();
             if (Game.Instance != null)
             {
                 Game.Instance.Update();

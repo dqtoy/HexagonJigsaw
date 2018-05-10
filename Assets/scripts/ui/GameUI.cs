@@ -20,6 +20,10 @@ public class GameUI : MonoBehaviour {
 
     public GameObject hex;
 
+    public GameObject quit;
+    public GameObject quitSelection;
+    private bool quitOpen = false;
+
     //临时测试
     public Text levelTxt;
 
@@ -30,16 +34,19 @@ public class GameUI : MonoBehaviour {
     private void Awake()
     {
         UIFix.SetDistanceToTop(hexTrans);
+        quitSelection.GetComponent<RectTransform>().sizeDelta = new Vector2(720,GameVO.Instance.PixelHeight);
 
         sure.localScale = new Vector3(0, 1);
         cancel.localScale = new Vector3(0, 1);
 
+        quitSelection.SetActive(false);
         flush.SetActive(false);
         ButtonClick.dispatcher.AddListener("quitGame", OnQuit);
         ButtonClick.dispatcher.AddListener("restart", OnRestart);
         ButtonClick.dispatcher.AddListener("nextGame", OnNextGame);
         ButtonClick.dispatcher.AddListener("gameSure", OnQuitSure);
         ButtonClick.dispatcher.AddListener("gameCancel", OnQuitCancel);
+        ButtonClick.dispatcher.AddListener("quitGameQuit", OnQuitCancel);
         ButtonClick.dispatcher.AddListener("tip", OnTip);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.FINISH_LEVEL, OnFinshLevel);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_CUT_COMPLETE, ShowFlush);
@@ -50,19 +57,43 @@ public class GameUI : MonoBehaviour {
 
     private void OnQuitCancel(lib.Event e)
     {
+        quitOpen = false;
+        GameObjectUtils.EnableComponentAllChildren<Shadow>(quit);
         sure.DOScaleX(0, 0.2f);
         cancel.DOScaleX(0, 0.2f);
+        quitSelection.SetActive(false);
     }
 
     private void OnQuitSure(lib.Event e)
     {
+        quitOpen = false;
+        GameObjectUtils.EnableComponentAllChildren<Shadow>(quit);
         sure.DOScaleX(0, 0.2f);
         cancel.DOScaleX(0, 0.2f);
-        ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
-        hex.SetActive(false);
-        MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
-        MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
-        GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
+        quitSelection.SetActive(false);
+        
+        if (GameVO.Instance.modelCount >= 10)
+        {
+            if(GameVO.Instance.model == GameModel.Daily)
+            {
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+                GameVO.Instance.ShowModule(ModuleName.Daily);
+            }
+            else if (GameVO.Instance.model == GameModel.Freedom)
+            {
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+                GameVO.Instance.ShowModule(ModuleName.Freedom);
+            }
+        }
+        else
+        {
+            ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
+            hex.SetActive(false);
+            MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
+            MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+            GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
+        }
+        GameVO.Instance.modelCount = 0;
     }
 
     private void OnNextGame(lib.Event e)
@@ -110,6 +141,7 @@ public class GameUI : MonoBehaviour {
     /// <param name="e"></param>
     private void OnFinshLevel(lib.Event e)
     {
+        GameVO.Instance.modelCount++;
         txt1.GetComponent<TextExd>().languageId = UnityEngine.Random.Range(1001, 1007);
         int score = UnityEngine.Random.Range(60, 101);
         if(score < 80)
@@ -167,8 +199,22 @@ public class GameUI : MonoBehaviour {
 
     private void OnQuit(lib.Event e)
     {
-        sure.DOScaleX(1, 0.2f);
-        cancel.DOScaleX(1, 0.2f);
+        if(quitOpen)
+        {
+            quitOpen = false;
+            sure.DOScaleX(0, 0.2f);
+            cancel.DOScaleX(0, 0.2f);
+            GameObjectUtils.EnableComponentAllChildren<Shadow>(quit);
+            quitSelection.SetActive(false);
+        }
+        else
+        {
+            quitOpen = true;
+            sure.DOScaleX(1, 0.2f);
+            cancel.DOScaleX(1, 0.2f);
+            GameObjectUtils.DisableComponentAllChildren<Shadow>(quit);
+            quitSelection.SetActive(true);
+        }
     }
 
     private void ShowFlush(lib.Event e)
@@ -188,6 +234,7 @@ public class GameUI : MonoBehaviour {
 
     private void OnEnable()
     {
+        GameVO.Instance.modelCount = 0;
         if (GameVO.Instance.model == GameModel.Daily)
         {
             int level = (int)GameVO.Instance.moduleData;
@@ -209,15 +256,15 @@ public class GameUI : MonoBehaviour {
         List<int> list3 = new List<int>();
         for (int i = 0; i < LevelConfig.Configs.Count; i++)
         {
-            if (LevelConfig.Configs[i].id < 1000)
+            if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 4 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 6)
             {
                 list.Add(LevelConfig.Configs[i].id);
             }
-            else if (LevelConfig.Configs[i].id < 2000)
+            if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 7 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 9)
             {
                 list2.Add(LevelConfig.Configs[i].id);
             }
-            else
+            else if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 10)
             {
                 list3.Add(LevelConfig.Configs[i].id);
             }

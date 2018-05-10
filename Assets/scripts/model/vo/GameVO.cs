@@ -67,6 +67,8 @@ public class GameVO
     /// </summary>
     public GameModel model;
 
+    public int modelCount = 0;
+
     /// <summary>
     /// 自由模式下的游戏难度
     /// </summary>

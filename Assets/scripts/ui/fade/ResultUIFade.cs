@@ -21,6 +21,9 @@ public class ResultUIFade : UIFade {
 
     private ModuleName moduleName;
 
+    public GameObject hit1;
+    public GameObject hit2;
+
     override public void FadeOut(ModuleName name)
     {
         moduleName = name;
@@ -57,6 +60,8 @@ public class ResultUIFade : UIFade {
 
     override public void FadeIn(ModuleName name)
     {
+        hit1.SetActive(false);
+        hit2.SetActive(false);
         time.localScale = new Vector3(0, 1);
         model.localScale = new Vector3(0, 1);
         line1.fillAmount = 0;
@@ -85,6 +90,8 @@ public class ResultUIFade : UIFade {
 
     private void FadeIn4()
     {
+        hit1.SetActive(true);
+        hit2.SetActive(true);
         time.DOScaleX(1, 0.2f);
         model.DOScaleX(1, 0.2f);
         hex.DOScaleX(1, 0.2f);

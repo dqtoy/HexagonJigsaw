@@ -35,6 +35,9 @@ public class DailyUIFade : UIFade
     public GameObject effect10;
     public GameObject effectAllPass;
 
+    public GameObject hit1;
+    public GameObject hit2;
+
     [HideInInspector]
     public static int dailyIndex;
 
@@ -182,7 +185,9 @@ public class DailyUIFade : UIFade
 
     override public void FadeIn(ModuleName name)
     {
-        if(GameVO.Instance.daily.levels[5].pass == false)
+        hit1.SetActive(false);
+        hit2.SetActive(false);
+        if (GameVO.Instance.daily.levels[5].pass == false)
         {
             effect6.SetActive(false);
         }
@@ -228,7 +233,7 @@ public class DailyUIFade : UIFade
             //buttons.localScale = new Vector3(0, 0);
 
             line1.DOFillAmount(1, inTime);
-            line2.DOFillAmount(1, inTime).onComplete = CheckPassEffect;
+            line2.DOFillAmount(0.63f, inTime).onComplete = CheckPassEffect;
             daily2.DOScaleX(1, 0.1f);
             quit.DOScaleX(1, 0.1f);
 
@@ -347,7 +352,7 @@ public class DailyUIFade : UIFade
         if (moduleName == ModuleName.Game || moduleName == ModuleName.Result)
         {
             line1.DOFillAmount(1, 0.1f);
-            line2.DOFillAmount(1, 0.1f).onComplete = FadeIn5;
+            line2.DOFillAmount(0.63f, 0.1f).onComplete = FadeIn5;
         }
     }
 
@@ -355,6 +360,8 @@ public class DailyUIFade : UIFade
     {
         if (moduleName == ModuleName.Game || moduleName == ModuleName.Result)
         {
+            hit1.SetActive(true);
+            hit2.SetActive(true);
             daily2.DOScaleX(1, 0.1f);
             quit.DOScaleX(1, 0.1f).onComplete = CheckPassEffect;
         }
@@ -362,6 +369,8 @@ public class DailyUIFade : UIFade
 
     private void CheckPassEffect()
     {
+        hit1.SetActive(true);
+        hit2.SetActive(true);
         if(GameVO.Instance.daily.levels[5].pass && !GameVO.Instance.daily.levels[5].hasCheck)
         {
             GameVO.Instance.daily.levels[5].hasCheck = true;

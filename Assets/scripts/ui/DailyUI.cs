@@ -13,9 +13,9 @@ public class DailyUI : MonoBehaviour {
     private List<Image> icons = new List<Image>();
     private Color[] colors = {
         new Color(255/255.0f,103/255.0f,102/255.0f),
-        new Color(250/255.0f,228/255.0f,103/255.0f),
-        new Color(250/255.0f,228/255.0f,103/255.0f),
-        new Color(250/255.0f,228/255.0f,103/255.0f),
+        new Color(250/255.0f,228/255.0f,108/255.0f),
+        new Color(186/255.0f,250/255.0f,103/255.0f),
+        new Color(127/255.0f,230/255.0f,108/255.0f),
         new Color(103/255.0f,235/255.0f,250/255.0f),
         new Color(103/255.0f,190/255.0f,250/255.0f),
         new Color(103/255.0f,141/255.0f,250/255.0f),
@@ -33,9 +33,12 @@ public class DailyUI : MonoBehaviour {
     public RectTransform line;
     public RectTransform hex;
 
+    public Transform hit1;
+
     private void Awake()
     {
         UIFix.SetDistanceToTop(hex);
+        UIFix.SetDistanceToBottom(hit1);
 
         line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
 

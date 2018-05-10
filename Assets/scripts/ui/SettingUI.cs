@@ -38,9 +38,12 @@ public class SettingUI : MonoBehaviour {
     public RectTransform buttons;
     public RectTransform quit;
 
+    public Transform hitEffect;
+
     private void Awake()
     {
         line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+        UIFix.SetDistanceToBottom(hitEffect);
 
         ButtonClick.dispatcher.AddListener("quitSetting", OnQuit);
         ButtonClick.dispatcher.AddListener("zh_cn", OnZhCn);
@@ -90,13 +93,13 @@ public class SettingUI : MonoBehaviour {
             GameVO.Instance.soundEditor.value = false;
             musicVolumn.SetActive(true);
             musicBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
-            //musicBg.DOColor(new Color((float)(201.0 / 255.0), (float)(251.0 / 255.0), (float)(130.0 / 255.0)), 0.2f);
+            GameObjectUtils.DisableComponentAllChildren<Shadow>(musicIcon.gameObject.GetComponent<RectTransform>().parent.gameObject);
         }
         else
         {
             musicVolumn.SetActive(false);
             musicBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
-            //musicBg.DOColor(new Color((float)(255.0 / 255.0), (float)(255.0 / 255.0), (float)(255.0 / 255.0)), 0.2f);
+            GameObjectUtils.EnableComponentAllChildren<Shadow>(musicIcon.gameObject.GetComponent<RectTransform>().parent.gameObject);
         }
     }
 
@@ -146,14 +149,14 @@ public class SettingUI : MonoBehaviour {
         {
             GameVO.Instance.musicEditor.value = false;
             soundVolumn.SetActive(true);
-            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
-            //soundBg.DOColor(new Color((float)(201.0 / 255.0), (float)(251.0 / 255.0), (float)(130.0 / 255.0)), 0.2f);
+            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
+            GameObjectUtils.DisableComponentAllChildren<Shadow>(soundIcon.gameObject.GetComponent<RectTransform>().parent.gameObject);
         }
         else
         {
             soundVolumn.SetActive(false);
-            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
-            //soundBg.DOColor(new Color((float)(255.0 / 255.0), (float)(255.0 / 255.0), (float)(255.0 / 255.0)), 0.2f);
+            soundBg.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
+            GameObjectUtils.EnableComponentAllChildren<Shadow>(soundIcon.gameObject.GetComponent<RectTransform>().parent.gameObject);
         }
     }
 
@@ -285,12 +288,14 @@ public class SettingUI : MonoBehaviour {
     {
         if(flag)
         {
+            GameObjectUtils.DisableComponentAllChildren<Shadow>(obj.gameObject.GetComponent<RectTransform>().parent.gameObject);
             obj.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
             obj.DOColor(new Color((float)(255.0 / 255.0), (float)(103.0 / 255.0), (float)(102.0 / 255.0)), 0.2f);
         }
         else
         {
-            if(obj.gameObject.GetComponent<RectTransform>().localEulerAngles.z != 0)
+            GameObjectUtils.EnableComponentAllChildren<Shadow>(obj.gameObject.GetComponent<RectTransform>().parent.gameObject);
+            if (obj.gameObject.GetComponent<RectTransform>().localEulerAngles.z != 0)
             {
                 obj.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), 0.2f);
             }
