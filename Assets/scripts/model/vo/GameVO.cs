@@ -38,6 +38,8 @@ public class GameVO
     /// </summary>
     public Int language = new Int();
 
+    public Bool hasBuyMusic = new Bool(false);
+
     /// <summary>
     /// 是否处于编辑模式
     /// </summary>
@@ -133,7 +135,8 @@ public enum ModuleName
     Freedom = 3,
     Game = 4,
     Result = 5,
-    Setting = 6
+    Setting = 6,
+    Shop = 7
 }
 
 public enum DifficultyMode

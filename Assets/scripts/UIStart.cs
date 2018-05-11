@@ -15,6 +15,7 @@ public class UIStart : MonoBehaviour {
     public GameObject gameUI;
     public GameObject resultUI;
     public GameObject settingUI;
+    public GameObject shopUI;
 
     public GameObject bg1;
     public GameObject bg2;
@@ -31,6 +32,8 @@ public class UIStart : MonoBehaviour {
     private ModuleName showModule;
     private ModuleName nextModule;
 
+    public Transform backgrodunEffect;
+
     // Use this for initialization
     void Start ()
     {
@@ -38,6 +41,7 @@ public class UIStart : MonoBehaviour {
         border2.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight);
         UIFix.SetDistanceToBottom(border3);
         UIFix.SetDistanceToTop(border4);
+        backgrodunEffect.transform.position = new Vector3(0, -GameVO.Instance.Height * 0.5f, 100);
 
         (Grammar.GetProperty(this, "bg" + UnityEngine.Random.Range(1, 6)) as GameObject).SetActive(true);
 
@@ -98,6 +102,10 @@ public class UIStart : MonoBehaviour {
             case ModuleName.Setting:
                 settingUI.SetActive(true);
                 show = settingUI;
+                break;
+            case ModuleName.Shop:
+                shopUI.SetActive(true);
+                show = shopUI;
                 break;
         }
         if(old == ModuleName.Result && showModule == ModuleName.Main)

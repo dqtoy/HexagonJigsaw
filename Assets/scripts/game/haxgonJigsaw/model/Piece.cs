@@ -290,7 +290,7 @@ namespace hexjig
                 {
                     image = GameBufferPool.CreateGridSide();
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
-                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f + 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f + 0.17f * HaxgonCoord<Coord>.halfSqrt3, 4);
                     image.transform.parent = background.transform;
                 }
 
@@ -298,7 +298,7 @@ namespace hexjig
                 {
                     image = GameBufferPool.CreateGridSide();
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
-                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f + 0.19f * 0.75f, position.y + offy * 0.5f + 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f + 0.17f * 0.75f, position.y + offy * 0.5f + 0.5f * 0.17f * HaxgonCoord<Coord>.halfSqrt3, 4);
                     image.transform.eulerAngles = new Vector3(0, 0, -60);
                     image.transform.parent = background.transform;
                 }
@@ -307,7 +307,7 @@ namespace hexjig
                 {
                     image = GameBufferPool.CreateGridSide();
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
-                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f + 0.19f * 0.75f, position.y + offy * 0.5f - 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f + 0.17f * 0.75f, position.y + offy * 0.5f - 0.5f * 0.17f * HaxgonCoord<Coord>.halfSqrt3, 4);
                     image.transform.eulerAngles = new Vector3(0, 0, 60);
                     image.transform.parent = background.transform;
                 }
@@ -316,7 +316,7 @@ namespace hexjig
                 {
                     image = GameBufferPool.CreateGridSide();
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
-                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f - 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f, position.y + offy * 0.5f - 0.17f * HaxgonCoord<Coord>.halfSqrt3, 4);
                     image.transform.parent = background.transform;
                 }
 
@@ -324,7 +324,7 @@ namespace hexjig
                 {
                     image = GameBufferPool.CreateGridSide();
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
-                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f - 0.19f * 0.75f, position.y + offy * 0.5f - 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f - 0.17f * 0.75f, position.y + offy * 0.5f - 0.5f * 0.17f * HaxgonCoord<Coord>.halfSqrt3, 4);
                     image.transform.eulerAngles = new Vector3(0, 0, -60);
                     image.transform.parent = background.transform;
                 }
@@ -333,7 +333,7 @@ namespace hexjig
                 {
                     image = GameBufferPool.CreateGridSide();
                     image.transform.localScale = new Vector3(0.5f, 0.5f);
-                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f - 0.19f * 0.75f, position.y + offy * 0.5f + 0.5f * 0.19f * HaxgonCoord<Coord>.halfSqrt3, 4);
+                    image.transform.localPosition = new Vector3(position.x + offx * 0.5f - 0.17f * 0.75f, position.y + offy * 0.5f + 0.5f * 0.17f * HaxgonCoord<Coord>.halfSqrt3, 4);
                     image.transform.eulerAngles = new Vector3(0, 0, 60);
                     image.transform.parent = background.transform;
                 }

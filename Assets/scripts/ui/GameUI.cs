@@ -72,7 +72,7 @@ public class GameUI : MonoBehaviour {
         cancel.DOScaleX(0, 0.2f);
         quitSelection.SetActive(false);
         
-        if (GameVO.Instance.modelCount >= 10)
+        if (GameVO.Instance.modelCount < 10)
         {
             if(GameVO.Instance.model == GameModel.Daily)
             {

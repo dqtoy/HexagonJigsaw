@@ -74,6 +74,25 @@ public class MainUIFade : UIFade {
             hex.transform.GetComponent<RectTransform>().DOLocalMove(new Vector3(-225, 652 + UIFix.GetDistanceToTop()), outTime);
             hex.transform.GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, 120), outTime).onComplete = TweenComplete;
         }
+        else if (name == ModuleName.Shop)
+        {
+            DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.48f, outTime + inTime);
+            DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -90, outTime + inTime);
+            setting.transform.parent = hex.transform.parent;
+
+            float offTime = 0.1f;
+
+            line.DOFillAmount(0, outTime - offTime);
+            title.transform.GetComponent<RectTransform>().DOLocalMoveX(-900, outTime - offTime);
+            hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, -180), outTime - offTime);
+            freedomIcon.DOColor(new Color(1, 1, 1, 0), outTime - offTime);
+            freedomBg.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), outTime - offTime);
+            hex.transform.GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, 270), outTime - offTime);
+            hex.transform.GetComponent<RectTransform>().DOLocalMoveY(1100 + UIFix.GetDistanceToTop(), outTime - offTime);
+            Sequence mySequence = DOTween.Sequence();
+            mySequence.Append(setting.transform.GetComponent<RectTransform>().DOLocalMoveY(524, outTime - offTime));
+            mySequence.Append(setting.transform.GetComponent<RectTransform>().DOScaleX(0, offTime)).onComplete = TweenComplete;
+        }
     }
 
     override public void FadeIn(ModuleName name)
@@ -129,7 +148,7 @@ public class MainUIFade : UIFade {
             freedomBg.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), inTime);
             hex.transform.GetComponent<RectTransform>().DOLocalMoveY(112, inTime);
         }
-        else if (name == ModuleName.Setting)
+        else if (name == ModuleName.Setting || name == ModuleName.Shop)
         {
             float offTime = 0.1f;
 
@@ -171,7 +190,7 @@ public class MainUIFade : UIFade {
 
     private void FadeIn2()
     {
-        if(moduleName == ModuleName.Setting)
+        if(moduleName == ModuleName.Setting || moduleName == ModuleName.Shop)
         {
             float offTime = 0.1f;
 

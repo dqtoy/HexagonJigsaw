@@ -36,7 +36,7 @@ namespace hexjig
                         return;
                     }
                 }
-                while (BufferPool.GetLength("gridBg") < 200)
+                while (BufferPool.GetLength("gridSide") < 200)
                 {
                     GameObject image;
                     image = ResourceManager.CreateImage("image/grid/gridSide");
@@ -65,6 +65,7 @@ namespace hexjig
             {
                 image = ResourceManager.CreateImage("image/grid/" + type);
                 image.name = type + "";
+                Debug.Log("创建 grid" + type);
             }
             return image;
         }
@@ -88,13 +89,21 @@ namespace hexjig
             {
                 image = ResourceManager.CreateImage("image/grid/gridBg");
                 image.name = "gridBg";
+                Debug.Log("创建 bg");
             }
             return image;
         }
 
         public static void ReleaseGridBg(GameObject grid)
         {
-            BufferPool.Add("gridBg", grid);
+            if(grid.name == "gridBg")
+            {
+                BufferPool.Add("gridBg", grid);
+            }
+            else if (grid.name == "gridSide")
+            {
+                ReleaseGridSide(grid);
+            }
         }
 
         public static GameObject CreateGridSide()
@@ -105,12 +114,14 @@ namespace hexjig
                 image = BufferPool.Get<GameObject>("gridSide");
                 image.transform.localScale = new Vector3(1, 1, 1);
                 image.transform.localPosition = new Vector3(0, 0, 0);
+                image.transform.eulerAngles = new Vector3(0, 0, 0);
                 image.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
             }
             else
             {
                 image = ResourceManager.CreateImage("image/grid/gridSide");
                 image.name = "gridSide";
+                Debug.Log("创建 gridSide");
             }
             return image;
         }

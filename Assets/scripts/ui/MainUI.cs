@@ -26,6 +26,12 @@ public class MainUI : MonoBehaviour {
         ButtonClick.dispatcher.AddListener("daily", OnShowDaily);
         ButtonClick.dispatcher.AddListener("freedom", OnShowFreedom);
         ButtonClick.dispatcher.AddListener("setting", OnShowSetting);
+        ButtonClick.dispatcher.AddListener("shop", OnShowShop);
+    }
+
+    private void OnShowShop(lib.Event e)
+    {
+        GameVO.Instance.ShowModule(ModuleName.Shop);
     }
 
     private void OnShowSetting(lib.Event e)

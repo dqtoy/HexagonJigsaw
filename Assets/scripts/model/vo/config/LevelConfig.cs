@@ -1,4 +1,4 @@
-//Make By CSVCommand. Time 2018.4.24 19:0:51
+//Make By CSVCommand. Time 2018.5.11 10:15:44
 using System;
 using System.Collections.Generic;
 using lib;
@@ -9,6 +9,7 @@ public class LevelConfig
 	public int id;
 	public List<PieceConfig> pieces = new List<PieceConfig>();
 	public List<PieceConfig> pieces2 = new List<PieceConfig>();
+	public List<CoordConfig> coords = new List<CoordConfig>();
 
 	public void Decode(List<string> list)
 	{
@@ -44,6 +45,16 @@ public class LevelConfig
 					if (itemList[n].Length == 0) continue;
 					int item = (int)StringUtils.ToNumber(itemList[n]);
 					pieces2.Add(PieceConfig.GetConfig(item));
+				}
+			}
+			if (i == 3)
+			{
+				List<string> itemList = StringUtils.Split(list[3],',');
+				for(int n = 0; n < itemList.Count; n++)
+				{
+					if (itemList[n].Length == 0) continue;
+					int item = (int)StringUtils.ToNumber(itemList[n]);
+					coords.Add(CoordConfig.GetConfig(item));
 				}
 			}
 		}
