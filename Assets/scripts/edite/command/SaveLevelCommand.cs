@@ -74,7 +74,7 @@ public class SaveLevelCommand
                 PieceConfig.Configs.Add(pieceConfig);
             }
 
-            CheckLevelPiecePosition(LevelConfig.GetConfig(level));
+            CheckLevelPiecePosition(levelConfig);
         }
 
         //CheckAllLevelPiecePosition();
