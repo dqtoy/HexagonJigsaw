@@ -3,13 +3,17 @@ using System;
 using System.Collections.Generic;
 using lib;
 
-public class LanguageTypeConfig
+public class PassScoreConfig
 {
 	private List<string> list;
 	public int id;
-	public string name;
-	public string font;
-	public string des;
+	public ModelConfig model;
+	public int minTime;
+	public int maxTime;
+	public LanguageConfig language;
+	public int scoreMin;
+	public int scoreMax;
+	public int effectCount;
 
 	public void Decode(List<string> list)
 	{
@@ -20,17 +24,25 @@ public class LanguageTypeConfig
 			{
 				id = (int)StringUtils.ToNumber(list[0]);
 			}
-			if(i == 1)
-			{
-				name = list[1];
-			}
 			if(i == 2)
 			{
-				font = list[2];
+				minTime = (int)StringUtils.ToNumber(list[2]);
 			}
 			if(i == 3)
 			{
-				des = list[3];
+				maxTime = (int)StringUtils.ToNumber(list[3]);
+			}
+			if(i == 5)
+			{
+				scoreMin = (int)StringUtils.ToNumber(list[5]);
+			}
+			if(i == 6)
+			{
+				scoreMax = (int)StringUtils.ToNumber(list[6]);
+			}
+			if(i == 7)
+			{
+				effectCount = (int)StringUtils.ToNumber(list[7]);
 			}
 		}
 	}
@@ -39,14 +51,22 @@ public class LanguageTypeConfig
 	{
 		for (int i = 0; i < list.Count; i++)
 		{
+			if (i == 1)
+			{
+				model = ModelConfig.GetConfig((int)StringUtils.ToNumber(list[i]));
+			}
+			if (i == 4)
+			{
+				language = LanguageConfig.GetConfig((int)StringUtils.ToNumber(list[i]));
+			}
 		}
 		list = null;
 	}
 
 
-	public static List<LanguageTypeConfig> Configs = new List<LanguageTypeConfig>();
+	public static List<PassScoreConfig> Configs = new List<PassScoreConfig>();
 
-	public static LanguageTypeConfig GetConfig(int key)
+	public static PassScoreConfig GetConfig(int key)
 	{
 		for(int i = 0; i < Configs.Count; i++)
 		{
@@ -66,15 +86,15 @@ public class LanguageTypeConfig
 		List<List<string>> list = CSV.Parse(str);
 		for(int i = 2,len = list.Count; i < len; i++)
 		{
-			LanguageTypeConfig item = new LanguageTypeConfig();
+			PassScoreConfig item = new PassScoreConfig();
 			item.Decode(list[i]);
 			Configs.Add(item);
 		}
 	}
 
-	public static LanguageTypeConfig GetConfigWidth(string paramName,object value)
+	public static PassScoreConfig GetConfigWidth(string paramName,object value)
 	{
-		Type t = typeof(LanguageTypeConfig);
+		Type t = typeof(PassScoreConfig);
 		for (int i = 0; i < Configs.Count; i++)
 		{
 			object val = t.GetField(paramName).GetValue(Configs[i]);

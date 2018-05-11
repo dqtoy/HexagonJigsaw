@@ -44,7 +44,8 @@ public class ResultUI : MonoBehaviour {
 
     private void OnQuit(lib.Event e)
     {
-        if(GameVO.Instance.model == GameModel.Daily)
+        GameVO.Instance.bgmId.value = bgmId;
+        if (GameVO.Instance.model == GameModel.Daily)
         {
             GameVO.Instance.ShowModule(ModuleName.Daily);
         }
@@ -54,8 +55,13 @@ public class ResultUI : MonoBehaviour {
         }
     }
 
+    private int bgmId;
+
+
     private void OnEnable()
     {
+        bgmId = GameVO.Instance.bgmId.value;
+        GameVO.Instance.bgmId.value = 1001;
         /*nextButton.SetActive(true);
         if (GameVO.Instance.model == GameModel.Daily)
         {

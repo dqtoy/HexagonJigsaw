@@ -17,6 +17,10 @@ public class Daily : MonoBehaviour
 
     public bool checkAll = false;
 
+    private bool isFirstPassAll = true;
+
+    public bool firstPassAll = false;
+
     private long createTime;
 
     public int GetCurrentLevel()
@@ -42,11 +46,11 @@ public class Daily : MonoBehaviour
                 if(levels[i].pass == false)
                 {
                     levels[i].pass = true;
-                    levels[i].time = (time%1000) * 1000;
+                    levels[i].time = time;
                 }
                 else if(levels[i].time > time)
                 {
-                    levels[i].time = (time % 1000) * 1000;
+                    levels[i].time = time;
                 }
             }
             if(levels[i].pass)
@@ -54,6 +58,11 @@ public class Daily : MonoBehaviour
                 count++;
                 passTime += levels[i].time;
             }
+        }
+        if(isFirstPassAll && HasAllPass())
+        {
+            isFirstPassAll = false;
+            firstPassAll = true;
         }
         allTime.value = passTime;
         allTimeString.value = StringUtils.TimeToMS(allTime.value);
@@ -98,7 +107,19 @@ public class Daily : MonoBehaviour
         }
         return 0;
     }
-    
+
+    public int GetLevelIndex(int levelId)
+    {
+        for (int i = 0; i < levels.length; i++)
+        {
+            if (levels[i].config.id == levelId)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     public void Awake()
     {
         HttpRequest request = new HttpRequest();
@@ -122,6 +143,8 @@ public class Daily : MonoBehaviour
 
     private void CreateNewLevels(long time)
     {
+        isFirstPassAll = true;
+        firstPassAll = false;
         createTime = time;
         //临时代码 生成每日挑战数据
         //随机10个关卡，1-999 6  1000-1999 3  2000 1
@@ -240,6 +263,14 @@ public class Daily : MonoBehaviour
         }
         all.value = levels.length;
         progress.value = count;
+
+        isFirstPassAll = true;
+        firstPassAll = false;
+
+        if (HasAllPass())
+        {
+            isFirstPassAll = false;
+        }
 
     }
 }

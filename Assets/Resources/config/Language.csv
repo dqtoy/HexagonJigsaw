@@ -1,14 +1,14 @@
 int,string,string,string,string,string,string,string,string,string,string
 id,uipanel,position,des,zh_cn,en_us,zh_tw,ja_jp,ko_kr,de_de,es_la
-1,main,左上游戏标题,游戏标题,六边形合体拼图,Hex fit puzzle,六邊形合体拼圖,HEXフィットパズル,6 각형 퍼즐,Sechskant-Puzzle,Hex fit puzzle
-2,main,每日挑战图标旁边,每日挑战,每日挑战,Daily challenge,每日的挑戰,毎日の挑戦,매일 도전,T?gliche Herausforderung,Reto diario
-3,main,自由挑战图标旁边,自由挑战,练习模式,Free mode,練習模式,練習モード,연습 모드,?bungsmodus,Modo de práctica
-4,freedomchallenge,title,自由挑战,练习模式,Free mode,練習模式,練習モード,연습 모드,?bungsmodus,Modo de práctica
-5,freedomchallenge,难度,简单,简单,easy,簡單,簡単,쉬운,einfach,fácil
-6,freedomchallenge,难度,普通,普通,common,普通,一般,공유지,verbreitet,común
-7,freedomchallenge,难度,困难,困难,difficult,困難,難しい,어려운,schwer,difícil
-8,dailychallenge,title,每日挑战,每日挑战,Daily challenge,每日的挑戰,毎日の挑戦,매일 도전,T?gliche Herausforderung,Reto diario
-9,gameUI,modedes,自由挑战,练习模式,Free mode,練習模式,練習モード,연습 모드,?bungsmodus,Modo de práctica
+1,mainUI,左上游戏标题,游戏标题,六边形合体拼图,Hex fit puzzle,六邊形合体拼圖,HEXフィットパズル,6 각형 퍼즐,Sechskant-Puzzle,Hex fit puzzle
+2,mainUI,每日挑战图标旁边,每日挑战,每日挑战,Daily challenge,每日的挑戰,毎日の挑戦,매일 도전,T?gliche Herausforderung,Reto diario
+3,mainUI,自由挑战图标旁边,自由挑战,练习模式,Free mode,練習模式,練習モード,연습 모드,?bungsmodus,Modo de práctica
+4,freedomchallengeUI,title,自由挑战,练习模式,Free mode,練習模式,練習モード,연습 모드,?bungsmodus,Modo de práctica
+5,freedomchallengeUI,难度,简单,简单,easy,簡單,簡単,쉬운,einfach,fácil
+6,freedomchallengeUI,难度,普通,普通,common,普通,一般,공유지,verbreitet,común
+7,freedomchallengeUI,难度,困难,困难,difficult,困難,難しい,어려운,schwer,difícil
+8,dailychallengeUI,title,每日挑战,每日挑战,Daily challenge,每日的挑戰,毎日の挑戦,매일 도전,T?gliche Herausforderung,Reto diario
+9,gameUI,modedes,自由挑战,练习模式,Free mode,練習模式,練習モード연습 모드,?bungsmodus,Modo de práctica
 10,gameUI,modedes,每日挑战,每日挑战,Daily challenge,每日的挑戰,毎日の挑戦,매일 도전,T?gliche Herausforderung,Reto diario
 11,gameUI,退出提示文字,是否退出,放弃？,give up?,放棄？,あきらめる？,포기?,Gib auf?,?rendirse?
 12,settingUI,右上,音乐,音乐,music,音樂,音楽,음악,Musik-,música
@@ -16,3 +16,19 @@ id,uipanel,position,des,zh_cn,en_us,zh_tw,ja_jp,ko_kr,de_de,es_la
 14,settingUI,反馈按钮,反馈文字,反馈,feedback,反饋,フィードバック,피드백,Feedback,realimentación
 15,settingUI,联系我们按钮,联系我们,联系我们,contactus,聯繫我們,お問い合わせ,문의하기,kontaktiere uns,Contáctenos
 16,settingUI,版权说明title,版权title,版权,copyright,版權,著作権,저작권,Urheberrechte ?,derechos de autor
+1001,gameUI,单关结算,结算语气,太厉害了,Great ,太厲害了,あまりにも,그레이트,Gro?,Estupendo
+1002,gameUI,单关结算,结算语气,难以置信,Incredible  ,難以置信,信じられない,놀라운,Unglaublich,Increíble
+1003,gameUI,单关结算,结算语气,太优秀了,Excellent  ,太優秀了,あまりにも良い,훌륭함,Ausgezeichnet,Excelente
+1004,gameUI,单关结算,结算语气,太神奇了,Fantastic   ,太神奇了,ファンタスティック,환상적,Fantastisch,Fantástico
+1005,gameUI,单关结算,结算语气,棒极了,Awesome  ,棒極了,とても良い,최고,Genial,Increíble
+1006,gameUI,单关结算,结算语气,太惊人了 ,Amazing  ,太驚人了,とても素晴らしい,놀랄 만한,Tolle,Asombroso
+2001,gameUI,单关结算,结算描述,你打败了全球,You beat,你擊敗了全球,あなたは世界中のユーザーの,전세계 사용자의,Sie schlagen,Venciste al
+2002,gameUI,单关结算,结算描述,的用户,of users worldwide,的用戶,を倒す,를 이겼습니다,der Benutzer weltweit,de los usuarios en todo el mundo
+17,shopUI,缎带上,白色缎带字,礼品包,Gift Pack,禮品包,ギフトパック,선물 팩,Geschenkpackung,Paquete de regalo
+22,dailychallengeUI,通关后显示,累计用时,用时：,time cost：,用時：,時間コスト：,시간 비용：,Zeitkosten：,costo de tiempo：
+23,shareUI,每日通关分享,恭喜通关,通关！,Clearance!,通關！,クリアランス！,정리!,Ausverkauf!,?Liquidación!
+24,shareUI,每日通关分享,累计用时,用时：,time cost：,用時：,時間コスト：,시간 비용：,Zeitkosten：,costo de tiempo：
+25,shareUI,每日通关分享,排名,排名：,Ranking:,排名：,ランキング：,랭킹：,Rang：,clasificación：
+26,shareUI,练习通关分享,累计通关,累计通关：,Cumulative clearance：,累計通關：,累積クリアランス：,누적 통관 :,Kumulative Freigabe:,Acumulación acumulativa:
+27,shareUI,练习通关分享,累计用时,用时：,time cost：,用時：,時間コスト：,시간 비용：,Zeitkosten：,costo de tiempo：
+28,shareUI,练习通关分享,,你真的很有天赋！,you‘re really talented！,你真的很有才華！,あなたは本当に才能があります！,당신은 정말 재능이 있어요!,Du bist wirklich talentiert!,?eres realmente talentoso!

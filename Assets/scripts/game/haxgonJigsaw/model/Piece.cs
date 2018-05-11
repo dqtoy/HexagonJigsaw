@@ -104,9 +104,9 @@ namespace hexjig
             if(game != null)
             {
                 show = new GameObject();
-                show.transform.parent = game.root.transform;
+                show.transform.parent = game.rootStage.transform;
                 tip = new GameObject();
-                tip.transform.parent = game.root.transform;
+                tip.transform.parent = game.rootStage.transform;
                 shader = new GameObject();
                 shader.transform.parent = game.root.transform;
                 showOut = new GameObject();
@@ -118,7 +118,7 @@ namespace hexjig
         {
             if (isInStage)
             {
-                Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(x - show.transform.position.x, y - show.transform.position.y), 0.4f);
+                Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(x - show.transform.position.x, y - show.transform.position.y + GameVO.Instance.Height * 0.2f), 0.4f);
                 for (int i = 0; i < coords.length; i++)
                 {
                     if (p.x == coords[i].x && p.y == coords[i].y)
@@ -397,17 +397,17 @@ namespace hexjig
             bool find = true;
             if(save)
             {
-                show.transform.position = new Vector3(startDragX - startDragTouchX + x, startDragY - startDragTouchY + y, showResult ? 0 : -1);
+                show.transform.position = new Vector3(startDragX - startDragTouchX + x, startDragY - startDragTouchY + y + GameVO.Instance.Height * 0.2f, showResult ? 0 : -1);
             }
             else
             {
-                show.transform.position = new Vector3(x, y, showResult ? 0 : -1);
+                show.transform.position = new Vector3(x, y + GameVO.Instance.Height * 0.2f, showResult ? 0 : -1);
             }
             for (int i = 0; i < this.coords.length; i++)
             {
                 Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.4f);
                 position.x += show.transform.position.x - game.offx;
-                position.y += show.transform.position.y - game.offy;
+                position.y += show.transform.position.y - game.offy - GameVO.Instance.Height * 0.2f;
                 Point2D pos = HaxgonCoord<Coord>.PositionToCoord(position, 0.4f);
                 Coord coord = sys.GetCoord(pos);
                 if (coord == null || coord.piece != null)
@@ -429,7 +429,7 @@ namespace hexjig
                         copy.y = position.y;
                     }
                     position.x += show.transform.position.x - game.offx;
-                    position.y += show.transform.position.y - game.offy;
+                    position.y += show.transform.position.y - game.offy - GameVO.Instance.Height * 0.2f;
                     Point2D pos = HaxgonCoord<Coord>.PositionToCoord(position, 0.4f);
                     if (i == 0)
                     {
@@ -447,7 +447,7 @@ namespace hexjig
                         Game.Instance.history2.Add(new Point2D(lastx, lasty));
                     }
                     MainData.Instance.dispatcher.DispatchWith(EventType.SET_PIECE);
-                    show.transform.position = new Vector3(position0.x + game.offx - copy.x, position0.y + game.offy - copy.y);
+                    show.transform.position = new Vector3(position0.x + game.offx - copy.x, position0.y + game.offy - copy.y + GameVO.Instance.Height * 0.2f);
                     show.SetActive(true);
                     shader.SetActive(false);
                     showOut.SetActive(false);

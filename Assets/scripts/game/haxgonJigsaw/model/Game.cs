@@ -29,6 +29,8 @@ namespace hexjig
 
         public GameObject stageRoot;
 
+        public GameObject rootStage;
+
         public GameObject changeOutRoot;
 
         private List<GameObject> backgroundgrids = new List<GameObject>();
@@ -49,6 +51,10 @@ namespace hexjig
             root = new GameObject();
             root.name = "GameRoot";
             root.layer = 8;
+
+            rootStage = new GameObject();
+            rootStage.transform.parent = root.transform;
+            rootStage.name = "rootStage";
 
             MainData.Instance.dispatcher.AddListener(EventType.BACK_STEP, BACK_STEP);
             MainData.Instance.dispatcher.AddListener(EventType.RESTART, OnRestart);
@@ -326,7 +332,7 @@ namespace hexjig
             float minY = 1000;
             float maxY = -1000;
             GameObject p = new GameObject();
-            p.transform.parent = root.transform;
+            p.transform.parent = rootStage.transform;
             foreach (var item in coordSys.coords)
             {
                 Coord coord = item.Value;
@@ -356,8 +362,10 @@ namespace hexjig
             MainData.Instance.levelHeight = maxY - minY + 1.5f;
             offx = -((maxX - minX) * 0.5f + minX);
             offy = -((maxY - minY) * 0.5f + minY) + GameVO.Instance.Height * 0.2f;
-            p.transform.position = new Vector3(offx, offy);
+            p.transform.position = new Vector3(offx, offy - GameVO.Instance.Height * 0.2f);
             stageRoot = p;
+
+            rootStage.transform.localPosition = new Vector3(0, GameVO.Instance.Height * 0.2f);
 
             outBackground = new GameObject();
             outBackground.transform.parent = root.transform;
@@ -492,6 +500,7 @@ namespace hexjig
             this.finish = finish;
             if (finish)
             {
+                MainData.Instance.time.value = ((int)(MainData.Instance.time.value / 1000)) * 1000;
                 root.transform.localPosition = new Vector3(root.transform.localPosition.x, root.transform.localPosition.y,100);
                 MainData.Instance.dispatcher.DispatchWith(EventType.FINISH_LEVEL, MainData.Instance.time.value);
             }

@@ -58,6 +58,7 @@ public class FreedomUIFade : UIFade
     {
         if(name == ModuleName.Main)
         {
+            quitButton.DOScaleX(0, 0.1f);
             line1.DOFillAmount(0, outTime);
             line2.DOFillAmount(0, outTime).onComplete = TweenComplete;
 
@@ -155,6 +156,9 @@ public class FreedomUIFade : UIFade
             normalTrans.localScale = new Vector3(1, 1);
             hardTrans.localScale = new Vector3(1, 1);
 
+            quitButton.localScale = new Vector3(0, 1);
+            quitButton.DOScaleX(1, 0.1f);
+
             easyTxt.rectTransform.localScale = new Vector3(0, 0);
             easyTxt.rectTransform.DOScale(1, 0.4f).SetDelay(0.3f);
             //easyTxt.DOText("Easy", 2f);
@@ -188,6 +192,7 @@ public class FreedomUIFade : UIFade
         }
         else if(name == ModuleName.Game || name == ModuleName.Result)
         {
+            quitButton.localScale = new Vector3(0, 1);
             if (GameVO.Instance.difficulty == DifficultyMode.Easy)
             {
                 easyTrans.DOLocalMoveX(easyX, inTime - 0.3f).onComplete = FadeIn2;

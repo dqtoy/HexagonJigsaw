@@ -11,6 +11,7 @@ public class GameVO
     public float PixelWidth;
     public float PixelHeight;
 
+    public Int bgmId = new Int(1);
     public AudioSource bgm;
 
     /// <summary>
@@ -72,17 +73,54 @@ public class GameVO
     public int modelCount = 0;
 
     /// <summary>
+    /// 过关评价
+    /// </summary>
+    public PassScoreConfig passScore;
+
+    public lib.Int totalTime = new lib.Int();
+
+    public lib.String totalTimeString = new lib.String();
+
+    /// <summary>
     /// 自由模式下的游戏难度
     /// </summary>
     public DifficultyMode difficulty;
+
+    public StorageVO storage;
 
     public GameVO()
     {
         instance = this;
 
+        storage = new StorageVO();
+
         GameObject obj = new GameObject();
         daily = obj.AddComponent<Daily>();
+
+        //播放背景音乐
+        bgm = ResourceManager.PlaySound("music/" + bgmId.value, true, musicVolumn.value / 100.0f);
+
+        bgmId.AddListener(lib.Event.CHANGE, OnBgmChange);
+        musicVolumn.AddListener(lib.Event.CHANGE, OnMusicVolumnChange);
     }
+
+    private void OnBgmChange(lib.Event e)
+    {
+        if(bgm)
+        {
+            bgm.Stop();
+            StartUp.Destroy(bgm.gameObject);
+        }
+
+        //播放背景音乐
+        bgm = ResourceManager.PlaySound("music/" + bgmId.value, true, GameVO.Instance.musicVolumn.value / 100.0f);
+    }
+
+    private void OnMusicVolumnChange(lib.Event e)
+    {
+        bgm.volume = musicVolumn.value / 100.0f;
+    }
+
 
     /// <summary>
     /// 显示模块

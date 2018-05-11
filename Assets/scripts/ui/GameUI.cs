@@ -34,7 +34,7 @@ public class GameUI : MonoBehaviour {
     private void Awake()
     {
         UIFix.SetDistanceToTop(hexTrans);
-        quitSelection.GetComponent<RectTransform>().sizeDelta = new Vector2(720,GameVO.Instance.PixelHeight);
+        quitSelection.GetComponent<RectTransform>().sizeDelta = new Vector2(720, GameVO.Instance.PixelHeight);
 
         sure.localScale = new Vector3(0, 1);
         cancel.localScale = new Vector3(0, 1);
@@ -62,6 +62,7 @@ public class GameUI : MonoBehaviour {
         sure.DOScaleX(0, 0.2f);
         cancel.DOScaleX(0, 0.2f);
         quitSelection.SetActive(false);
+        Game.Instance.rootStage.transform.DOScale(1, 0.5f).SetEase(Ease.OutCirc);
     }
 
     private void OnQuitSure(lib.Event e)
@@ -71,27 +72,43 @@ public class GameUI : MonoBehaviour {
         sure.DOScaleX(0, 0.2f);
         cancel.DOScaleX(0, 0.2f);
         quitSelection.SetActive(false);
-        
-        if (GameVO.Instance.modelCount < 10)
+        Game.Instance.rootStage.transform.DOScale(1, 0.5f).SetEase(Ease.OutCirc);
+
+        if (GameVO.Instance.model == GameModel.Freedom)
         {
-            if(GameVO.Instance.model == GameModel.Daily)
+            if(GameVO.Instance.modelCount < 10)
             {
-                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
-                GameVO.Instance.ShowModule(ModuleName.Daily);
-            }
-            else if (GameVO.Instance.model == GameModel.Freedom)
-            {
+                GameVO.Instance.bgmId.value = bgmId;
                 MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
                 GameVO.Instance.ShowModule(ModuleName.Freedom);
             }
+            else
+            {
+                ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
+                hex.SetActive(false);
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+                GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
+            }
         }
-        else
+        else if (GameVO.Instance.model == GameModel.Daily)
         {
-            ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
-            hex.SetActive(false);
-            MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
-            MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
-            GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
+            GameVO.Instance.totalTimeString.value = GameVO.Instance.daily.allTimeString.value;
+            if (GameVO.Instance.daily.firstPassAll)
+            {
+                GameVO.Instance.daily.firstPassAll = false;
+                ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
+                hex.SetActive(false);
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+                GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
+            }
+            else
+            {
+                GameVO.Instance.bgmId.value = bgmId;
+                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+                GameVO.Instance.ShowModule(ModuleName.Daily);
+            }
         }
         GameVO.Instance.modelCount = 0;
     }
@@ -106,11 +123,21 @@ public class GameUI : MonoBehaviour {
             }
             else
             {
-                ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
-                hex.SetActive(false);
-                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
-                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
-                GameVO.Instance.ShowModule(ModuleName.Result, e.Data);
+                GameVO.Instance.totalTimeString.value = GameVO.Instance.daily.allTimeString.value;
+                if (GameVO.Instance.daily.firstPassAll)
+                {
+                    GameVO.Instance.daily.firstPassAll = false;
+                    ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
+                    hex.SetActive(false);
+                    MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
+                    MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+                    GameVO.Instance.ShowModule(ModuleName.Result, e.Data);
+                }
+                else
+                {
+                    MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+                    GameVO.Instance.ShowModule(ModuleName.Daily);
+                }
             }
         }
         else
@@ -142,21 +169,33 @@ public class GameUI : MonoBehaviour {
     private void OnFinshLevel(lib.Event e)
     {
         GameVO.Instance.modelCount++;
-        txt1.GetComponent<TextExd>().languageId = UnityEngine.Random.Range(1001, 1007);
-        int score = UnityEngine.Random.Range(60, 101);
-        if(score < 80)
+        GameVO.Instance.totalTime.value += MainData.Instance.time.value;
+        GameVO.Instance.totalTimeString.value = StringUtils.TimeToMS(GameVO.Instance.totalTime.value);
+
+        int time = (int)(MainData.Instance.time.value / 1000.0f);
+        int modelId = 0;
+        for(int i = 0; i < ModelConfig.Configs.Count; i++)
         {
-            GetComponent<GameUIFade>().effectCount = 1;
+            if(MainData.Instance.config.pieces.Count + MainData.Instance.config.pieces2.Count >= ModelConfig.Configs[i].min &&
+                MainData.Instance.config.pieces.Count + MainData.Instance.config.pieces2.Count <= ModelConfig.Configs[i].max)
+            {
+                modelId = ModelConfig.Configs[i].id;
+                break;
+            }
         }
-        else if(score < 90)
+        for(int i = 0; i < PassScoreConfig.Configs.Count; i++)
         {
-            GetComponent<GameUIFade>().effectCount = 2;
+            if(modelId == PassScoreConfig.Configs[i].model.id && time >= PassScoreConfig.Configs[i].minTime && time <= PassScoreConfig.Configs[i].maxTime)
+            {
+                GameVO.Instance.passScore = PassScoreConfig.Configs[i];
+                break;
+            }
         }
-        else
-        {
-            GetComponent<GameUIFade>().effectCount = 3;
-        }
-        txt3.text = score + "%";
+        float score = GameVO.Instance.passScore.scoreMin + 1.0f * (GameVO.Instance.passScore.scoreMax - GameVO.Instance.passScore.scoreMin) * (time - GameVO.Instance.passScore.minTime) / (GameVO.Instance.passScore.maxTime - GameVO.Instance.passScore.minTime);
+        txt3.text = ((int)score) + (score > 0 ? ((int)(UnityEngine.Random.Range(0, 1.0f) * 10))/10.0f : 0) + "%";
+
+        txt1.GetComponent<TextExd>().languageId = GameVO.Instance.passScore.language.id;
+
         if (GameVO.Instance.model == GameModel.Daily)
         {
             //修改记录
@@ -206,6 +245,7 @@ public class GameUI : MonoBehaviour {
             cancel.DOScaleX(0, 0.2f);
             GameObjectUtils.EnableComponentAllChildren<Shadow>(quit);
             quitSelection.SetActive(false);
+            Game.Instance.rootStage.transform.DOScale(1, 0.5f).SetEase(Ease.OutCirc);
         }
         else
         {
@@ -214,6 +254,7 @@ public class GameUI : MonoBehaviour {
             cancel.DOScaleX(1, 0.2f);
             GameObjectUtils.DisableComponentAllChildren<Shadow>(quit);
             quitSelection.SetActive(true);
+            Game.Instance.rootStage.transform.DOScale(0.6f, 0.5f).SetEase(Ease.OutCirc);
         }
     }
 
@@ -232,9 +273,11 @@ public class GameUI : MonoBehaviour {
         flush.SetActive(false);
     }
 
+    private int bgmId;
     private void OnEnable()
     {
         GameVO.Instance.modelCount = 0;
+        GameVO.Instance.totalTime.value = 0;
         if (GameVO.Instance.model == GameModel.Daily)
         {
             int level = (int)GameVO.Instance.moduleData;
@@ -246,6 +289,8 @@ public class GameUI : MonoBehaviour {
             StartFreedomLevel();
         }
         modelTxt.languageId = GameVO.Instance.model == GameModel.Daily ? 10 : 9;
+        bgmId = GameVO.Instance.bgmId.value;
+        GameVO.Instance.bgmId.value = 1000;
     }
 
     private void StartFreedomLevel()
@@ -284,4 +329,5 @@ public class GameUI : MonoBehaviour {
         new StartGameCommand(level);
         levelTxt.text = level + "";
     }
+
 }

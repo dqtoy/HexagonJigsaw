@@ -72,7 +72,7 @@ public class ResultUIFade : UIFade {
         share.localScale = new Vector3(0, 0);
 
         MainData.Instance.showCutRoot.transform.localPosition = new Vector3(MainData.Instance.showCutRoot.transform.localPosition.x, MainData.Instance.showCutRoot.transform.localPosition.y,100);
-        MainData.Instance.showCutRoot.transform.DOMove(new Vector3(1.03f, -0.4f,100), 0.4f);
+        MainData.Instance.showCutRoot.transform.DOMove(new Vector3(0.8f, 2.26f,100), 0.4f);
         MainData.Instance.showCutRoot.transform.DOLocalRotate(new Vector3(0, 0, -17), 0.4f).onComplete = FadeIn2;
     }
 

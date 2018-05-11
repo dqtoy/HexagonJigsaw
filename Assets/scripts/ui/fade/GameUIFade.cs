@@ -25,10 +25,7 @@ public class GameUIFade : UIFade
 
     public GameObject result;
     public GameObject effect1;
-    public GameObject effect2;
-    public GameObject effect3;
     [HideInInspector]
-    public int effectCount = 0;
 
     private ModuleName moduleName;
 
@@ -41,6 +38,7 @@ public class GameUIFade : UIFade
 
     private void OnShowGameChangeOut0(lib.Event e)
     {
+        ResourceManager.PlaySound("sound/gameui1", false, GameVO.Instance.soundVolumn.value / 100.0f);
         Sequence mySequence = DOTween.Sequence();
         mySequence.Append(operateBg.DOScaleY(0, 0.4f));
         mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete0;
@@ -52,6 +50,7 @@ public class GameUIFade : UIFade
         tip.gameObject.SetActive(true);
         restart.gameObject.SetActive(true);
         result.SetActive(false);
+        loopEffect = false;
         Sequence mySequence = DOTween.Sequence();
         mySequence.Append(operateBg.DOScaleY(0, 0.4f));
         mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete;
@@ -63,20 +62,27 @@ public class GameUIFade : UIFade
         txt.DOScaleX(1, 0.2f);
     }
 
+
     private void OnShowGameChangeInComplete0()
     {
+        ResourceManager.PlaySound("sound/gamepassboom", false, GameVO.Instance.soundVolumn.value / 100.0f);
         tip.gameObject.SetActive(false);
         restart.gameObject.SetActive(false);
         result.SetActive(true);
-        effect2.SetActive(false);
-        effect3.SetActive(false);
-        if (effectCount > 1)
+        effect1.SetActive(false);
+        if(GameVO.Instance.passScore.effectCount < 100)
         {
-            Invoke("playEffect2", 0.5f);
+            for(int i = 0; i < GameVO.Instance.passScore.effectCount; i++)
+            {
+                Invoke("playEffect1" , 0.8f * i + UnityEngine.Random.Range(0f,0.5f));
+            }
         }
-        if (effectCount > 2)
+        else
         {
-            Invoke("playEffect3", 1);
+            playEffect1();
+            lastEffectPlayTime = DateTime.Now;
+            loopEffect = true;
+            effectGap = 800 + UnityEngine.Random.Range(0, 500);
         }
     }
 
@@ -85,18 +91,21 @@ public class GameUIFade : UIFade
         MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE);
     }
 
-    private void playEffect2()
+    private void playEffect1()
     {
-        effect2.SetActive(true);
-    }
-
-    private void playEffect3()
-    {
-        effect3.SetActive(true);
+        ResourceManager.PlaySound("sound/gamepassboom", false, GameVO.Instance.soundVolumn.value / 100.0f);
+        effect1.SetActive(true);
+        //effect1.GetComponent<RectTransform>().localPosition = new Vector3(172 + UnityEngine.Random.Range(-100,100), 123 + +UnityEngine.Random.Range(-100, 100));
+        ParticleSystem[] ps = effect1.gameObject.GetComponentsInChildren<ParticleSystem>();
+        for (int i = 0; i < ps.Length; i++)
+        {
+            ps[i].Play();
+        }
     }
 
     override public void FadeOut(ModuleName name)
     {
+        loopEffect = false;
         moduleName = name;
         if (name == ModuleName.Freedom || name == ModuleName.Daily)
         {
@@ -167,8 +176,22 @@ public class GameUIFade : UIFade
         }
     }
 
+    private DateTime lastEffectPlayTime;
+    private bool loopEffect;
+    private int effectGap;
+
     private void Update()
     {
+        if(loopEffect)
+        {
+            if (System.DateTime.Now.Subtract(lastEffectPlayTime).TotalMilliseconds > effectGap)
+            {
+                Invoke("playEffect1", 0);
+                lastEffectPlayTime = System.DateTime.Now;
+                effectGap = 800 + UnityEngine.Random.Range(0, 500);
+            }
+        }
+
         tipEffectGap--;
         if(tipEffectGap == 0)
         {

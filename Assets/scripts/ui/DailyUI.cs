@@ -11,6 +11,7 @@ public class DailyUI : MonoBehaviour {
     private List<Text> txts = new List<Text>();
     private List<Text> times = new List<Text>();
     private List<Image> icons = new List<Image>();
+    private List<GameObject> locks = new List<GameObject>();
     private Color[] colors = {
         new Color(255/255.0f,103/255.0f,102/255.0f),
         new Color(250/255.0f,228/255.0f,108/255.0f),
@@ -62,12 +63,17 @@ public class DailyUI : MonoBehaviour {
                     {
                         icons.Add(child2.gameObject.GetComponent<Image>());
                     }
+                    if(child2.gameObject.name == "lock")
+                    {
+                        locks.Add(child2.gameObject);
+                    }
                 }
             }
         }
         txts.Reverse();
         times.Reverse();
         icons.Reverse();
+        locks.Reverse();
 
         GameVO.Instance.daily.progress.AddListener(lib.Event.CHANGE, OnDailyProgressChange);
     }
@@ -115,11 +121,13 @@ public class DailyUI : MonoBehaviour {
         for(int i = 0; i < GameVO.Instance.daily.levels.length; i++)
         {
             DailyLevelVO vo = GameVO.Instance.daily.levels[i];
-            if(vo.pass)
+            if (vo.pass)
             {
                 times[i].text = StringUtils.TimeToMS(vo.time);
                 txts[i].color = colors[i];
                 icons[i].color = colors[i];
+                txts[i].gameObject.SetActive(true);
+                locks[i].SetActive(false);
             }
             else
             {
@@ -129,6 +137,13 @@ public class DailyUI : MonoBehaviour {
                 if (i == 0 || GameVO.Instance.daily.levels[i - 1].pass == true)
                 {
                     txts[i].color = colors[i];
+                    txts[i].gameObject.SetActive(true);
+                    locks[i].SetActive(false);
+                }
+                else
+                {
+                    txts[i].gameObject.SetActive(false);
+                    locks[i].SetActive(true);
                 }
             }
         }

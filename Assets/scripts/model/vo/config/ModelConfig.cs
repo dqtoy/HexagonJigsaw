@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using lib;
 
-public class LanguageTypeConfig
+public class ModelConfig
 {
 	private List<string> list;
 	public int id;
-	public string name;
-	public string font;
-	public string des;
+	public int min;
+	public int max;
 
 	public void Decode(List<string> list)
 	{
@@ -22,15 +21,11 @@ public class LanguageTypeConfig
 			}
 			if(i == 1)
 			{
-				name = list[1];
+				min = (int)StringUtils.ToNumber(list[1]);
 			}
 			if(i == 2)
 			{
-				font = list[2];
-			}
-			if(i == 3)
-			{
-				des = list[3];
+				max = (int)StringUtils.ToNumber(list[2]);
 			}
 		}
 	}
@@ -44,9 +39,9 @@ public class LanguageTypeConfig
 	}
 
 
-	public static List<LanguageTypeConfig> Configs = new List<LanguageTypeConfig>();
+	public static List<ModelConfig> Configs = new List<ModelConfig>();
 
-	public static LanguageTypeConfig GetConfig(int key)
+	public static ModelConfig GetConfig(int key)
 	{
 		for(int i = 0; i < Configs.Count; i++)
 		{
@@ -66,15 +61,15 @@ public class LanguageTypeConfig
 		List<List<string>> list = CSV.Parse(str);
 		for(int i = 2,len = list.Count; i < len; i++)
 		{
-			LanguageTypeConfig item = new LanguageTypeConfig();
+			ModelConfig item = new ModelConfig();
 			item.Decode(list[i]);
 			Configs.Add(item);
 		}
 	}
 
-	public static LanguageTypeConfig GetConfigWidth(string paramName,object value)
+	public static ModelConfig GetConfigWidth(string paramName,object value)
 	{
-		Type t = typeof(LanguageTypeConfig);
+		Type t = typeof(ModelConfig);
 		for (int i = 0; i < Configs.Count; i++)
 		{
 			object val = t.GetField(paramName).GetValue(Configs[i]);

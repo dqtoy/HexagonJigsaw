@@ -290,7 +290,7 @@ public class SettingUI : MonoBehaviour {
         {
             GameObjectUtils.DisableComponentAllChildren<Shadow>(obj.gameObject.GetComponent<RectTransform>().parent.gameObject);
             obj.gameObject.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 30), 0.2f);
-            obj.DOColor(new Color((float)(255.0 / 255.0), (float)(103.0 / 255.0), (float)(102.0 / 255.0)), 0.2f);
+            obj.DOColor(new Color((float)(246.0 / 255.0), (float)(120.0 / 255.0), (float)(119.0 / 255.0)), 0.2f);
         }
         else
         {
