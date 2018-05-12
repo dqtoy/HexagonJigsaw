@@ -10,6 +10,7 @@ public class GameVO
     public float Height;
     public float PixelWidth;
     public float PixelHeight;
+    public float scale;
 
     public Int bgmId = new Int(1);
     public AudioSource bgm;
@@ -70,7 +71,7 @@ public class GameVO
     /// </summary>
     public GameModel model;
 
-    public int modelCount = 0;
+    public lib.Int modelCount = new lib.Int();
 
     /// <summary>
     /// 过关评价

@@ -8,11 +8,11 @@ id,uipanel,position,des,zh_cn,en_us,zh_tw,ja_jp,ko_kr,de_de,es_la
 6,freedomchallengeUI,难度,普通,普通,common,普通,一般,공유지,verbreitet,común
 7,freedomchallengeUI,难度,困难,困难,difficult,困難,難しい,어려운,schwer,difícil
 8,dailychallengeUI,title,每日挑战,每日挑战,Daily challenge,每日的挑戰,毎日の挑戦,매일 도전,T?gliche Herausforderung,Reto diario
-9,gameUI,modedes,自由挑战,练习模式,Free mode,練習模式,練習モード연습 모드,?bungsmodus,Modo de práctica
+9,gameUI,modedes,自由挑战,练习模式,Free mode,練習模式,練習モード,연습 모드,?bungsmodus,Modo de práctica
 10,gameUI,modedes,每日挑战,每日挑战,Daily challenge,每日的挑戰,毎日の挑戦,매일 도전,T?gliche Herausforderung,Reto diario
 11,gameUI,退出提示文字,是否退出,放弃？,give up?,放棄？,あきらめる？,포기?,Gib auf?,?rendirse?
 12,settingUI,右上,音乐,音乐,music,音樂,音楽,음악,Musik-,música
-13,settingUI,右上,音效,音效,sound effect,音效,効果音,음향 효과,Sound-Effekt,efecto de sonido
+13,settingUI,右上,音效,音效,sound,音效,効果音,음향 효과,Sound-Effekt,efecto de sonido
 14,settingUI,反馈按钮,反馈文字,反馈,feedback,反饋,フィードバック,피드백,Feedback,realimentación
 15,settingUI,联系我们按钮,联系我们,联系我们,contactus,聯繫我們,お問い合わせ,문의하기,kontaktiere uns,Contáctenos
 16,settingUI,版权说明title,版权title,版权,copyright,版權,著作権,저작권,Urheberrechte ?,derechos de autor

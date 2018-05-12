@@ -7,7 +7,11 @@ namespace lib
     {
         public String(object value = null)
         {
-            this.val = value ?? 0;
+            if (!(value is string))
+            {
+                value = Convert.ToString(val);
+            }
+            this.val = value;
         }
 
         /// <summary>

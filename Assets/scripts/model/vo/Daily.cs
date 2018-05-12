@@ -122,14 +122,18 @@ public class Daily : MonoBehaviour
 
     public void Awake()
     {
-        HttpRequest request = new HttpRequest();
-        request.AddListener(lib.Event.COMPLETE, Init2);
-        StartCoroutine(request.Get("http://hexfit.hundredcent.com/time"));
+        DateTime d = DateTime.Now;
+        DateTime d2 = new DateTime(1970, 1, 1);
+        double t = d.Subtract(d2).TotalMilliseconds;
+        Init2((long)t);
+        //HttpRequest request = new HttpRequest();
+        //request.AddListener(lib.Event.COMPLETE, Init2);
+        //StartCoroutine(request.Get("http://hexfit.hundredcent.com/time"));
     }
 
-    private void Init2(lib.Event e)
+    private void Init2(long time)
     {
-        long time = Convert.ToInt64((string)e.Data);
+        //long time = Convert.ToInt64((string)e.Data);
         //读取缓存
         if (PlayerPrefs.HasKey("daily"))
         {
@@ -226,7 +230,6 @@ public class Daily : MonoBehaviour
 
     public void ReadLevels(long time)
     {
-        int count = 0;
         string content = PlayerPrefs.GetString("daily");
         //Debug.Log(content);
         Dictionary<string, object> data;
@@ -245,15 +248,16 @@ public class Daily : MonoBehaviour
             CreateNewLevels(time);
             return;
         }
+        int count = 0;
         List<object> list = data["levels"] as List<object>;
-        for(int i = 0; i < list.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
             Dictionary<string, object> item = list[i] as Dictionary<string, object>;
             DailyLevelVO levelvo = new DailyLevelVO();
             levelvo.config = LevelConfig.GetConfig((int)item["id"]);
             levelvo.pass = (bool)item["pass"];
             levelvo.time = (int)item["time"];
-            if(levelvo.pass)
+            if (levelvo.pass)
             {
                 count++;
                 allTime.value += levelvo.time;
@@ -271,6 +275,5 @@ public class Daily : MonoBehaviour
         {
             isFirstPassAll = false;
         }
-
     }
 }

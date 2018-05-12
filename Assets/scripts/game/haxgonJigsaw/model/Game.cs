@@ -248,7 +248,15 @@ namespace hexjig
                 pieces[i].ShowCut();
             }
             float size = GameVO.Instance.Width;
-            (new ScreenCut((int)((GameVO.Instance.Width * 0.5f - size * 0.5f) * 100), (int)((GameVO.Instance.Height * 0.5f + GameVO.Instance.Height * 0.2f - size * 0.5f) * 100), (int)((size) * 100), (int)((size) * 100),stageRoot.transform, -offx, -offy + GameVO.Instance.Height * 0.2f,1)).AddListener(lib.Event.COMPLETE,OnShowCut2);
+            (new ScreenCut((int)((GameVO.Instance.Width * 0.5f - size * 0.5f) * 100 / GameVO.Instance.scale), 
+                (int)((GameVO.Instance.Height * 0.5f + GameVO.Instance.Height * 0.2f - size * 0.5f) * 100 / GameVO.Instance.scale), 
+                (int)((size) * 100 / GameVO.Instance.scale),
+                (int)((size) * 100 / GameVO.Instance.scale),
+                stageRoot.transform, 
+                -offx, 
+                -offy + GameVO.Instance.Height * 0.2f,
+                1,
+                GameVO.Instance.scale)).AddListener(lib.Event.COMPLETE,OnShowCut2);
             //添加一个缩放层，达到以中心为缩放点缩放的效果
             MainData.Instance.showCutRoot = new GameObject();
             stageRoot.transform.localPosition = new Vector3(stageRoot.transform.localPosition.x, stageRoot.transform.localPosition.y - GameVO.Instance.Height * 0.2f, stageRoot.transform.localPosition.z);
@@ -281,7 +289,7 @@ namespace hexjig
         {
             for (int i = 0; i < pieces.length; i++)
             {
-                if(pieces[i].isAnswer && pieces[i].hasShowTip == false)
+                if(pieces[i].isAnswer && pieces[i].hasShowTip == false && pieces[i].isRightPosition == false)
                 {
                     pieces[i].ShowTip();
                     return;
@@ -508,7 +516,7 @@ namespace hexjig
 
         public void Dispose()
         {
-            MainData.Instance.dispatcher.RemoveListener(EventType.RESTART, BACK_STEP);
+            MainData.Instance.dispatcher.RemoveListener(EventType.BACK_STEP, BACK_STEP);
             MainData.Instance.dispatcher.RemoveListener(EventType.RESTART, OnRestart);
             MainData.Instance.dispatcher.RemoveListener(EventType.SHOW_TIP, OnShowTip);
             MainData.Instance.dispatcher.RemoveListener(EventType.HIDE_GAME, OnHideGame);

@@ -7,7 +7,15 @@ namespace lib
     {
         public Bool(object value = null)
         {
-            this.val = value ?? 0;
+            if(value is string)
+            {
+                value = true;
+                if (value == "false")
+                {
+                    value = false;
+                }
+            }
+            this.val = value;
         }
 
         /// <summary>

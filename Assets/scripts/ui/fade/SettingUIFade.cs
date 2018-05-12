@@ -18,6 +18,11 @@ public class SettingUIFade : UIFade
     private ModuleName moduleName;
     private float offTime = 0.1f;
 
+    private void Awake()
+    {
+        UIFix.SetDistanceToTop(quit);
+    }
+
     override public void FadeOut(ModuleName name)
     {
         hitEffect.SetActive(false);
@@ -30,7 +35,7 @@ public class SettingUIFade : UIFade
             button.DOLocalMoveY(560, outTime - offTime);
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(hex.DOLocalMoveX(770, outTime - offTime));
-            mySequence.Append(quit.DOScaleX(1,offTime)).onComplete = TweenComplete;
+            mySequence.Append(quit.DOScaleX(0,offTime)).onComplete = TweenComplete;
         }
     }
 

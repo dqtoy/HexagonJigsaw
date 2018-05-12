@@ -87,6 +87,7 @@ public class StartScript : MonoBehaviour {
         GameVO.Instance.Height = Mathf.Abs(size.y * 2);
         GameVO.Instance.PixelWidth = mainCamera.pixelWidth;
         GameVO.Instance.PixelHeight = mainCamera.pixelHeight;
+        GameVO.Instance.scale = 720.0f / GameVO.Instance.PixelWidth;
 
         if (!editor)
         {

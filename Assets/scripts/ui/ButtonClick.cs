@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using lib;
 using System;
 
-public class ButtonClick : MonoBehaviour, IPointerClickHandler
+public class ButtonClick : MonoBehaviour, IPointerClickHandler, IPointerDownHandler
 {
     /// <summary>  
     /// 定义事件代理  
@@ -25,10 +25,16 @@ public class ButtonClick : MonoBehaviour, IPointerClickHandler
         Debug.Log("click");
     }*/
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        //ResourceManager.PlaySound("sound/click", false, GameVO.Instance.soundVolumn.value / 100.0f);
+        _dispatcher.DispatchWith(gameObject.name + "_Down", gameObject);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         double time = System.DateTime.Now.Subtract(lastTime).TotalMilliseconds;
-        if(time < 500)
+        if(time < 250)
         {
             return;
         }

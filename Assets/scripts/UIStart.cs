@@ -37,8 +37,8 @@ public class UIStart : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        border1.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight);
-        border2.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight);
+        border1.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight * GameVO.Instance.scale);
+        border2.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight * GameVO.Instance.scale);
         UIFix.SetDistanceToBottom(border3);
         UIFix.SetDistanceToTop(border4);
         backgrodunEffect.transform.position = new Vector3(0, -GameVO.Instance.Height * 0.5f, 100);
@@ -152,6 +152,7 @@ public class UIStart : MonoBehaviour {
                 show = settingUI;
                 break;
         }
+        show.GetComponent<UIFade>().FadeIn(ModuleName.None);
     }
 
     private void OnRestartHandler(lib.Event e)

@@ -46,13 +46,20 @@ public class GameUI : MonoBehaviour {
         ButtonClick.dispatcher.AddListener("nextGame", OnNextGame);
         ButtonClick.dispatcher.AddListener("gameSure", OnQuitSure);
         ButtonClick.dispatcher.AddListener("gameCancel", OnQuitCancel);
-        ButtonClick.dispatcher.AddListener("quitGameQuit", OnQuitCancel);
+        ButtonClick.dispatcher.AddListener("quitGameQuit_Down", OnQuitCancel);
         ButtonClick.dispatcher.AddListener("tip", OnTip);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.FINISH_LEVEL, OnFinshLevel);
-        MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_CUT_COMPLETE, ShowFlush);
+        MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_CUT_COMPLETE, OnShowCutComplete);
         MainData.Instance.time.AddListener(lib.Event.CHANGE, OnTimeChange);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.SET_PIECE, OnSetPiece);
         MainData.Instance.dispatcher.AddListener(hexjig.EventType.SHOW_GAME_CHANGE_OUT_EFFECT_COMPLETE, OnFinshLevel2);
+    }
+
+    private void OnShowCutComplete(lib.Event e)
+    {
+        MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
+        GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
+        ShowFlush();
     }
 
     private void OnQuitCancel(lib.Event e)
@@ -72,11 +79,11 @@ public class GameUI : MonoBehaviour {
         sure.DOScaleX(0, 0.2f);
         cancel.DOScaleX(0, 0.2f);
         quitSelection.SetActive(false);
-        Game.Instance.rootStage.transform.DOScale(1, 0.5f).SetEase(Ease.OutCirc);
+        Game.Instance.rootStage.transform.localScale = new Vector3(1, 1);
 
         if (GameVO.Instance.model == GameModel.Freedom)
         {
-            if(GameVO.Instance.modelCount < 10)
+            if(GameVO.Instance.modelCount.value < 10)
             {
                 GameVO.Instance.bgmId.value = bgmId;
                 MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
@@ -87,8 +94,6 @@ public class GameUI : MonoBehaviour {
                 ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
                 hex.SetActive(false);
                 MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
-                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
-                GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
             }
         }
         else if (GameVO.Instance.model == GameModel.Daily)
@@ -100,8 +105,6 @@ public class GameUI : MonoBehaviour {
                 ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
                 hex.SetActive(false);
                 MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
-                MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
-                GameVO.Instance.ShowModule(ModuleName.Result, MainData.Instance.time.value);
             }
             else
             {
@@ -110,7 +113,6 @@ public class GameUI : MonoBehaviour {
                 GameVO.Instance.ShowModule(ModuleName.Daily);
             }
         }
-        GameVO.Instance.modelCount = 0;
     }
 
     private void OnNextGame(lib.Event e)
@@ -130,8 +132,6 @@ public class GameUI : MonoBehaviour {
                     ResourceManager.PlaySound("sound/camera", false, GameVO.Instance.soundVolumn.value / 100.0f);
                     hex.SetActive(false);
                     MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
-                    MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.QUIT_LEVEL);
-                    GameVO.Instance.ShowModule(ModuleName.Result, e.Data);
                 }
                 else
                 {
@@ -168,7 +168,7 @@ public class GameUI : MonoBehaviour {
     /// <param name="e"></param>
     private void OnFinshLevel(lib.Event e)
     {
-        GameVO.Instance.modelCount++;
+        GameVO.Instance.modelCount.value++;
         GameVO.Instance.totalTime.value += MainData.Instance.time.value;
         GameVO.Instance.totalTimeString.value = StringUtils.TimeToMS(GameVO.Instance.totalTime.value);
 
@@ -258,7 +258,7 @@ public class GameUI : MonoBehaviour {
         }
     }
 
-    private void ShowFlush(lib.Event e)
+    private void ShowFlush()
     {
         hex.SetActive(true);
         flush.SetActive(true);
@@ -276,7 +276,7 @@ public class GameUI : MonoBehaviour {
     private int bgmId;
     private void OnEnable()
     {
-        GameVO.Instance.modelCount = 0;
+        GameVO.Instance.modelCount.value = 0;
         GameVO.Instance.totalTime.value = 0;
         if (GameVO.Instance.model == GameModel.Daily)
         {

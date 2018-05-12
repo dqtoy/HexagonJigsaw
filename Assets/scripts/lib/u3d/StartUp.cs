@@ -18,6 +18,11 @@ namespace lib
             BufferPool.bufferRoot.SetActive(false);
         }
 
+        public void Print(string val)
+        {
+            Debug.Log(val);
+        }
+
 
         // Update is called once per frame
         void Update()

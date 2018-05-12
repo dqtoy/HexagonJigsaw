@@ -42,7 +42,7 @@ public class SettingUI : MonoBehaviour {
 
     private void Awake()
     {
-        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight * GameVO.Instance.scale);
         UIFix.SetDistanceToBottom(hitEffect);
 
         ButtonClick.dispatcher.AddListener("quitSetting", OnQuit);

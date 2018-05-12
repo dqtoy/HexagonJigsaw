@@ -12,6 +12,8 @@ public class DailyUI : MonoBehaviour {
     private List<Text> times = new List<Text>();
     private List<Image> icons = new List<Image>();
     private List<GameObject> locks = new List<GameObject>();
+    private List<DOTweenAnimation> animations = new List<DOTweenAnimation>();
+
     private Color[] colors = {
         new Color(255/255.0f,103/255.0f,102/255.0f),
         new Color(250/255.0f,228/255.0f,108/255.0f),
@@ -27,29 +29,29 @@ public class DailyUI : MonoBehaviour {
 
     public Text dailyProgressTxt;
 
-    public Transform buttonsTransform;
+    public RectTransform buttonsTransform;
     public Image progress;
     public Image progressLess;
 
     public RectTransform line;
     public RectTransform hex;
 
-    public Transform hit1;
+    public RectTransform hit1;
 
     private void Awake()
     {
         UIFix.SetDistanceToTop(hex);
         UIFix.SetDistanceToBottom(hit1);
 
-        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight * GameVO.Instance.scale);
 
         ButtonClick.dispatcher.AddListener("quitDaily", OnQuit);
-        foreach (Transform child in buttonsTransform)
+        foreach (RectTransform child in buttonsTransform)
         {
             if(StringUtils.Slice(child.gameObject.name,0,"level".Length) == "level")
             {
                 ButtonClick.dispatcher.AddListener(child.gameObject.name, OnClickLevel);
-                foreach (Transform child2 in child.transform)
+                foreach (RectTransform child2 in child.transform)
                 {
                     if (child2.gameObject.name == "txt")
                     {
@@ -68,12 +70,14 @@ public class DailyUI : MonoBehaviour {
                         locks.Add(child2.gameObject);
                     }
                 }
+                animations.Add(child.GetComponent<DOTweenAnimation>());
             }
         }
         txts.Reverse();
         times.Reverse();
         icons.Reverse();
         locks.Reverse();
+        animations.Reverse();
 
         GameVO.Instance.daily.progress.AddListener(lib.Event.CHANGE, OnDailyProgressChange);
     }
@@ -103,6 +107,8 @@ public class DailyUI : MonoBehaviour {
                 mySequence.Append(txts[GameVO.Instance.daily.GetCurrentLevel()].DOColor(new Color(c.r, c.g, c.b, 1), 0.2f));
                 mySequence.Append(txts[GameVO.Instance.daily.GetCurrentLevel()].DOColor(new Color(c.r, c.g, c.b, 0), 0.2f));
                 mySequence.Append(txts[GameVO.Instance.daily.GetCurrentLevel()].DOColor(new Color(c.r, c.g, c.b, 1), 0.2f));
+
+                animations[index].DORestart();
                 return;
             }
         }

@@ -230,6 +230,18 @@ namespace hexjig
             return false;
         }
 
+        public bool isRightPosition
+        {
+            get
+            {
+                if (!isAnswer) return false;
+                Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(show.transform.localPosition.x, show.transform.localPosition.y),0.4f);
+                Point2D p2 = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(tip.transform.localPosition.x, tip.transform.localPosition.y), 0.4f);
+                if (p.x == p2.x && p.y == p2.y) return true;
+                return false;
+            }
+        }
+
         public void CreateDisplay()
         {
             //创建拖动显示
@@ -250,7 +262,7 @@ namespace hexjig
                 {
                     GameObject image = GameBufferPool.CreateGrid(coords[i].type);
                     Point2D position = HaxgonCoord<Coord>.CoordToPosition(Point2D.Create(coords[i].x, coords[i].y), 0.4f);
-                    image.transform.localPosition = new Vector3(position.x, position.y, 0);
+                    image.transform.localPosition = new Vector3(position.x, position.y, 3);
                     image.transform.parent = tip.transform;
                     tipGrids.Add(image.GetComponent<SpriteRenderer>());
                     image.GetComponent<SpriteRenderer>().color = new Color(image.GetComponent<SpriteRenderer>().color.r, image.GetComponent<SpriteRenderer>().color.g, image.GetComponent<SpriteRenderer>().color.b, shaderAlpha);

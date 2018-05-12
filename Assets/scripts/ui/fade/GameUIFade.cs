@@ -38,8 +38,8 @@ public class GameUIFade : UIFade
 
     private void OnShowGameChangeOut0(lib.Event e)
     {
-        ResourceManager.PlaySound("sound/gameui1", false, GameVO.Instance.soundVolumn.value / 100.0f);
         Sequence mySequence = DOTween.Sequence();
+        ResourceManager.PlaySound("sound/gameui1", false, GameVO.Instance.soundVolumn.value / 100.0f);
         mySequence.Append(operateBg.DOScaleY(0, 0.4f));
         mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete0;
         txt.DOScaleX(0, 0.4f);
@@ -52,6 +52,7 @@ public class GameUIFade : UIFade
         result.SetActive(false);
         loopEffect = false;
         Sequence mySequence = DOTween.Sequence();
+        ResourceManager.PlaySound("sound/gameui1", false, GameVO.Instance.soundVolumn.value / 100.0f);
         mySequence.Append(operateBg.DOScaleY(0, 0.4f));
         mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete;
         txt.DOScaleX(0, 0.4f);
@@ -70,20 +71,12 @@ public class GameUIFade : UIFade
         restart.gameObject.SetActive(false);
         result.SetActive(true);
         effect1.SetActive(false);
-        if(GameVO.Instance.passScore.effectCount < 100)
-        {
-            for(int i = 0; i < GameVO.Instance.passScore.effectCount; i++)
-            {
-                Invoke("playEffect1" , 0.8f * i + UnityEngine.Random.Range(0f,0.5f));
-            }
-        }
-        else
-        {
-            playEffect1();
-            lastEffectPlayTime = DateTime.Now;
-            loopEffect = true;
-            effectGap = 800 + UnityEngine.Random.Range(0, 500);
-        }
+
+        playEffect1();
+        lastEffectPlayTime = DateTime.Now;
+        loopEffect = true;
+        loopTime = GameVO.Instance.passScore.effectCount;
+        effectGap = 800 + UnityEngine.Random.Range(0, 500);
     }
 
     private void OnShowGameChangeInComplete()
@@ -124,7 +117,7 @@ public class GameUIFade : UIFade
         }
         else if(name == ModuleName.Result)
         {
-            MainData.Instance.showCutRoot.transform.DOScale(new Vector3(0.5f,0.5f,1.0f), 0.26f).onComplete = FadeOut2;
+            MainData.Instance.showCutRoot.transform.DOScale(new Vector3(0.5f, 0.5f, 1.0f), 0.26f).onComplete = FadeOut2;
 
             DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.62f, outTime + inTime);
             DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, 67, outTime + inTime);
@@ -178,6 +171,7 @@ public class GameUIFade : UIFade
 
     private DateTime lastEffectPlayTime;
     private bool loopEffect;
+    private int loopTime;
     private int effectGap;
 
     private void Update()
@@ -188,7 +182,12 @@ public class GameUIFade : UIFade
             {
                 Invoke("playEffect1", 0);
                 lastEffectPlayTime = System.DateTime.Now;
-                effectGap = 800 + UnityEngine.Random.Range(0, 500);
+                effectGap = 1500 + UnityEngine.Random.Range(0, 100);
+                loopTime--;
+                if(loopTime == 0)
+                {
+                    loopEffect = false;
+                }
             }
         }
 

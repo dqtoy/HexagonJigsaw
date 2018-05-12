@@ -8,15 +8,17 @@ using UnityEngine.UI;
 
 public class ResultUI : MonoBehaviour {
 
-    public Text timeTxt;
-    public Text modelTxt;
 
     public RectTransform line;
     public Transform hit1;
 
+    public GameObject daily;
+    public GameObject freedom;
+
     private void Awake()
     {
-        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight);
+        line.sizeDelta = new Vector2(line.sizeDelta.x, GameVO.Instance.PixelHeight * GameVO.Instance.scale);
+        UIFix.SetDistanceToBottom(line);
         UIFix.SetDistanceToBottom(hit1);
 
         ButtonClick.dispatcher.AddListener("quitResult", OnQuit);
@@ -72,6 +74,7 @@ public class ResultUI : MonoBehaviour {
         }*/
 
         //timeTxt.text = StringUtils.TimeToMS((int)GameVO.Instance.moduleData);
-        modelTxt.text = GameVO.Instance.model == GameModel.Daily ? "Challenge model" : "Freedom model";
+        daily.SetActive(GameVO.Instance.model == GameModel.Daily ? true : false);
+        freedom.SetActive(GameVO.Instance.model == GameModel.Freedom ? true : false);
     }
 }
