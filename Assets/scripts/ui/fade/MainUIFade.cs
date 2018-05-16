@@ -134,6 +134,9 @@ public class MainUIFade : UIFade {
             effect10.SetActive(false);
             dailyTimeTxt.gameObject.SetActive(false);
         }
+
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.READY_SHOW_MODULE);
+
         if (name == ModuleName.Freedom || name == ModuleName.Result && GameVO.Instance.model == GameModel.Freedom)
         {
             line.fillAmount = 0;
@@ -199,6 +202,12 @@ public class MainUIFade : UIFade {
     private void LineComplete()
     {
         hitEffect.SetActive(true);
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE,ModuleName.Main);
+    }
+
+    private void LineComplete2()
+    {
+        hitEffect.SetActive(true);
     }
 
     private void FadeIn2()
@@ -207,7 +216,6 @@ public class MainUIFade : UIFade {
         {
             float offTime = 0.1f;
 
-            line.DOFillAmount(0.64f, inTime - offTime).onComplete = LineComplete;
             title.transform.GetComponent<RectTransform>().DOLocalMoveX(-359, inTime - offTime);
             hex2.transform.GetComponent<RectTransform>().DORotate(new Vector3(0, 0, 0), inTime - offTime);
             freedomIcon.DOColor(new Color(1, 1, 1, 1), inTime - offTime);
@@ -216,11 +224,17 @@ public class MainUIFade : UIFade {
             hex.transform.GetComponent<RectTransform>().DOLocalMoveY(112, inTime - offTime);
             if (moduleName == ModuleName.Setting)
             {
+                line.DOFillAmount(0.64f, inTime - offTime).onComplete = LineComplete2;
                 setting.transform.GetComponent<RectTransform>().DOLocalMove(new Vector3(-271.7311f, -508.8597f + UIFix.GetDistanceToBottom()), inTime - offTime).onComplete = FadeIn3;
             }
             else if(moduleName == ModuleName.Shop)
             {
+                line.DOFillAmount(0.64f, inTime - offTime).onComplete = LineComplete2;
                 shop.transform.GetComponent<RectTransform>().DOLocalMove(new Vector3(-128.9411f, -552.4307f + UIFix.GetDistanceToBottom()), inTime - offTime).onComplete = FadeIn3;
+            }
+            else
+            {
+                line.DOFillAmount(0.64f, inTime - offTime).onComplete = LineComplete;
             }
         }
     }
@@ -235,6 +249,7 @@ public class MainUIFade : UIFade {
         {
             shop.transform.parent = hex2.transform;
         }
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Main);
     }
 
     private void TweenComplete()

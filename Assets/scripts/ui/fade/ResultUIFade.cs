@@ -109,7 +109,9 @@ public class ResultUIFade : UIFade {
     private void FadeIn6()
     {
         ResourceManager.PlaySound("sound/gaizhang", false, GameVO.Instance.soundVolumn.value / 100.0f);
-        root.DOShakePosition(0.3f,30).onUpdate = FadeIn6Update;
+        Tweener tween = root.DOShakePosition(0.3f, 30);
+        tween.onUpdate = FadeIn6Update;
+        tween.onComplete = FadeInComplete;
         shootCutX = MainData.Instance.showCutRoot.transform.position.x;
         shootCutY = MainData.Instance.showCutRoot.transform.position.y;
     }
@@ -119,5 +121,10 @@ public class ResultUIFade : UIFade {
     private void FadeIn6Update()
     {
         MainData.Instance.showCutRoot.transform.position = new Vector3(shootCutX + root.position.x, shootCutY + root.position.y,100);
+    }
+
+    private void FadeInComplete()
+    {
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Result);
     }
 }

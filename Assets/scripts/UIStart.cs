@@ -9,6 +9,9 @@ using DG.Tweening;
 
 public class UIStart : MonoBehaviour {
 
+    public Transform uicamera;
+
+    public GameObject loading;
     public GameObject mainUI;
     public GameObject dailyUI;
     public GameObject freedomUI;
@@ -34,6 +37,10 @@ public class UIStart : MonoBehaviour {
 
     public Transform backgrodunEffect;
 
+    private int loadingStep = 0;
+
+    public bool needLoading = true;
+
     // Use this for initialization
     void Start ()
     {
@@ -41,7 +48,7 @@ public class UIStart : MonoBehaviour {
         border2.sizeDelta = new Vector2(border1.sizeDelta.x, GameVO.Instance.PixelHeight * GameVO.Instance.scale);
         UIFix.SetDistanceToBottom(border3);
         UIFix.SetDistanceToTop(border4);
-        backgrodunEffect.transform.position = new Vector3(0, -GameVO.Instance.Height * 0.5f, 100);
+        backgrodunEffect.transform.localPosition = new Vector3(0, -GameVO.Instance.Height * 0.5f, backgrodunEffect.transform.localPosition.z);
 
         (Grammar.GetProperty(this, "bg" + UnityEngine.Random.Range(1, 6)) as GameObject).SetActive(true);
 
@@ -54,11 +61,110 @@ public class UIStart : MonoBehaviour {
             GameVO.Instance.dispatcher.AddListener(GameEvent.SHOW_MODULE,OnShowModule);
 
             GameVO.Instance.ShowModule(ModuleName.Main);
+
+            loadingStep = 5;
+            if (needLoading)
+            {
+                uicamera.localPosition = new Vector3(0, 0, -1000);
+                loading.SetActive(true);
+                GameVO.Instance.dispatcher.AddListener(GameEvent.SHOW_MODULE_COMPLETE, OnLoadingStep);
+                GameVO.Instance.dispatcher.AddListener(GameEvent.READY_SHOW_MODULE, OnReadyShowStep);
+            }
+            else
+            {
+                uicamera.localPosition = new Vector3(0, 0, -50);
+                GameVO.Instance.LoadingComplete();
+                loading.SetActive(false);
+            }
         }
         else
         {
             gameObject.SetActive(false);
         }
+    }
+
+    private void OnReadyShowStep(lib.Event e)
+    {
+        if (loadingStep == 11)
+        {
+            LoadingComplete();
+        }
+    }
+
+    private void OnLoadingStep(lib.Event e)
+    {
+        if(loadingStep == 1)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Setting);
+            loadingStep = 2;
+        }
+        else if(loadingStep == 2)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Main);
+            loadingStep = 3;
+        }
+        else if(loadingStep == 3)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Shop);
+            loadingStep = 4;
+        }
+        else if (loadingStep == 4)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Main);
+            loadingStep = 5;
+        }
+        else if (loadingStep == 5)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Daily);
+            loadingStep = 6;
+        }
+        else if (loadingStep == 6)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Main);
+            loadingStep = 7;
+        }
+        else if(loadingStep == 7)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Freedom);
+            loadingStep = 8;
+        }
+        else if(loadingStep == 8)
+        {
+            GameVO.Instance.model = GameModel.Freedom;
+            GameVO.Instance.difficulty = DifficultyMode.Easy;
+            GameVO.Instance.ShowModule(ModuleName.Game);
+            loadingStep = 9;
+        }
+        else if(loadingStep == 9)
+        {
+            Invoke("LoadingGameStep", 0.1f);
+        }
+        else if(loadingStep == 10)
+        {
+            GameVO.Instance.ShowModule(ModuleName.Main);
+            loadingStep = 11;
+        }
+
+    }
+
+    public void LoadingGameStep()
+    {
+        gameUI.GetComponent<GameUI>().LoadingChangeOut();
+        loadingStep = 10;
+    }
+
+    private void LoadingComplete()
+    {
+        uicamera.localPosition = new Vector3(0, 0, -50);
+        GameVO.Instance.dispatcher.RemoveListener(GameEvent.SHOW_MODULE_COMPLETE, OnLoadingStep);
+        GameVO.Instance.dispatcher.RemoveListener(GameEvent.READY_SHOW_MODULE, OnReadyShowStep);
+        GameVO.Instance.LoadingComplete();
+        MainData.Instance.isLoading = false;
+        loading.SetActive(false);
+
+        GameVO.Instance.achievement.LoginIn();
+        //show = null;
+        //GameVO.Instance.ShowModule(ModuleName.Main);
     }
 
     private void OnFadeOut(lib.Event e)

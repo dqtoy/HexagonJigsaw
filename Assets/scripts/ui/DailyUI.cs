@@ -38,6 +38,8 @@ public class DailyUI : MonoBehaviour {
 
     public RectTransform hit1;
 
+    public GameObject share;
+
     private void Awake()
     {
         UIFix.SetDistanceToTop(hex);
@@ -124,7 +126,8 @@ public class DailyUI : MonoBehaviour {
 
     private void OnEnable()
     {
-        for(int i = 0; i < GameVO.Instance.daily.levels.length; i++)
+        share.SetActive(GameVO.Instance.daily.HasAllPass());
+        for (int i = 0; i < GameVO.Instance.daily.levels.length; i++)
         {
             DailyLevelVO vo = GameVO.Instance.daily.levels[i];
             if (vo.pass)

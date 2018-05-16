@@ -50,7 +50,8 @@ public class Daily : MonoBehaviour
                 }
                 else if(levels[i].time > time)
                 {
-                    levels[i].time = time;
+                    //战绩不覆盖
+                    //levels[i].time = time;
                 }
             }
             if(levels[i].pass)
@@ -63,6 +64,9 @@ public class Daily : MonoBehaviour
         {
             isFirstPassAll = false;
             firstPassAll = true;
+
+            GameVO.Instance.rank.FinishDaily((int)(passTime / 1000.0f));
+            GameVO.Instance.achievement.FinishDaily((int)(passTime / 1000.0f));
         }
         allTime.value = passTime;
         allTimeString.value = StringUtils.TimeToMS(allTime.value);

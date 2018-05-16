@@ -15,6 +15,7 @@ public class DailyUIFade : UIFade
     public RectTransform daily2;
     public RectTransform quit;
     public RectTransform buttons;
+    public RectTransform share;
 
     public RectTransform level1;
     public RectTransform level2;
@@ -38,27 +39,50 @@ public class DailyUIFade : UIFade
     public GameObject hit1;
     public GameObject hit2;
 
+    public DOTweenAnimation[] animations;
+
+
     [HideInInspector]
     public static int dailyIndex;
 
     private ModuleName moduleName;
 
+    private bool changeBgm = false;
+    private int bgmId;
+
+    private void Awake()
+    {
+        animations = hex.gameObject.GetComponentsInChildren<DOTweenAnimation>();
+    }
+
     override public void FadeOut(ModuleName name)
     {
+        if(changeBgm)
+        {
+            GameVO.Instance.bgmId.value = bgmId;
+            changeBgm = false;
+        }
         moduleName = name;
         if (name == ModuleName.Main)
         {
+            for (int i = 0; i < animations.Length; i++)
+            {
+                animations[i].DOPlayBackwards();
+            }
+
             DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.57f, outTime + inTime);
             DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -18, outTime + inTime);
             line1.DOFillAmount(0, outTime).onComplete = TweenComplete;
             line2.DOFillAmount(0, outTime);
             daily2.DOScaleX(0, 0.1f);
             quit.DOScaleX(0, 0.1f);
+            share.DOScaleX(0, 0.1f);
             //buttons.DOScale(new Vector3(0, 0),outTime);
         }
         else if(name == ModuleName.Game)
         {
             daily2.DOScaleX(0, 0.1f);
+            share.DOScaleX(0, 0.1f);
             quit.DOScaleX(0, 0.1f).onComplete = FadeOut2;
             DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.5f, outTime + inTime);
             DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -22, outTime + inTime);
@@ -214,9 +238,16 @@ public class DailyUIFade : UIFade
             level10Txt.SetActive(false);
             effect10.SetActive(true);
         }
+        if(GameVO.Instance.daily.HasAllPass())
+        {
+            changeBgm = true;
+            bgmId = GameVO.Instance.bgmId.value;
+            GameVO.Instance.bgmId.value = 1001;
+        }
         if(GameVO.Instance.daily.HasAllPass() == false)
         {
             effectAllPass.SetActive(false);
+
         }
         else if(GameVO.Instance.daily.HasAllPass() == true && GameVO.Instance.daily.checkAll == true)
         {
@@ -226,16 +257,23 @@ public class DailyUIFade : UIFade
         moduleName = name;
         if(name == ModuleName.Main)
         {
+            for (int i = 0; i < animations.Length; i++)
+            {
+                animations[i].DOPlayForward();
+            }
+
             line1.fillAmount = 0;
             line2.fillAmount = 0;
             daily2.localScale = new Vector3(0, 1);
             quit.localScale = new Vector3(0, 1);
+            share.localScale = new Vector3(0, 1);
             //buttons.localScale = new Vector3(0, 0);
 
             line1.DOFillAmount(1, inTime);
             line2.DOFillAmount(0.63f, inTime).onComplete = CheckPassEffect;
             daily2.DOScaleX(1, 0.1f);
             quit.DOScaleX(1, 0.1f);
+            share.DOScaleX(1, 0.1f);
 
             //buttons.DOScale(new Vector3(1, 1),inTime);
         }
@@ -363,12 +401,14 @@ public class DailyUIFade : UIFade
             hit1.SetActive(true);
             hit2.SetActive(true);
             daily2.DOScaleX(1, 0.1f);
+            share.DOScaleX(1, 0.1f);
             quit.DOScaleX(1, 0.1f).onComplete = CheckPassEffect;
         }
     }
 
     private void CheckPassEffect()
     {
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Daily);
         hit1.SetActive(true);
         hit2.SetActive(true);
         if(GameVO.Instance.daily.levels[5].pass && !GameVO.Instance.daily.levels[5].hasCheck)

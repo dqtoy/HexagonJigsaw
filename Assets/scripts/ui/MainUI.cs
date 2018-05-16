@@ -27,6 +27,18 @@ public class MainUI : MonoBehaviour {
         ButtonClick.dispatcher.AddListener("freedom", OnShowFreedom);
         ButtonClick.dispatcher.AddListener("setting", OnShowSetting);
         ButtonClick.dispatcher.AddListener("shop", OnShowShop);
+        ButtonClick.dispatcher.AddListener("favriate", OnLoginTest);
+        ButtonClick.dispatcher.AddListener("honor", OnShowHonor);
+    }
+
+    private void OnLoginTest(lib.Event e)
+    {
+        GameVO.Instance.rank.ShowRankView(UnityEngine.Random.Range(0, 1.0f) < 0.5f ? GooglePlay.TotalTimeRankId : GooglePlay.DailyTimeRankId);
+    }
+
+    private void OnShowHonor(lib.Event e)
+    {
+        GameVO.Instance.achievement.ShowAchievementView();
     }
 
     private void OnShowShop(lib.Event e)

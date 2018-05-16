@@ -50,7 +50,14 @@ public class StartScript : MonoBehaviour {
 
         GameVO.Instance.editor = editor;
 
-        GameVO.Instance.language.value = LanguageTypeConfig.GetConfigWidth("name", "en_us").id;
+        if (PlayerPrefs.HasKey("language"))
+        {
+            GameVO.Instance.language.value = PlayerPrefs.GetInt("language");
+        }
+        else
+        {
+            GameVO.Instance.language.value = LanguageTypeConfig.GetConfigWidth("name", "en_us").id;
+        }
 
         //是否开启编辑器
         if (editor)

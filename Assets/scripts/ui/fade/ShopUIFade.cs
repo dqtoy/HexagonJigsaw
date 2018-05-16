@@ -19,6 +19,9 @@ public class ShopUIFade : UIFade
     public Transform hit1;
     public Transform hit2;
 
+    private DOTweenAnimation coinAnimation;
+    private int shopEffectGap;
+
     private void Awake()
     {
         UIFix.SetDistanceToTop(line2.rectTransform);
@@ -29,12 +32,27 @@ public class ShopUIFade : UIFade
 
 
         animations = GetComponentsInChildren<DOTweenAnimation>();
+        for(int i = 0; i < animations.Length; i++)
+        {
+            if(animations[i].id == "coin")
+            {
+                coinAnimation = animations[i];
+                shopEffectGap = 120;
+                break;
+            }
+        }
     }
 
 
     override public void FadeIn(ModuleName name)
     {
-        if(first)
+        hit1.gameObject.SetActive(false);
+        hit2.gameObject.SetActive(false);
+        line1.fillAmount = 0;
+        line2.fillAmount = 0;
+        quit.localScale = new Vector3(0, 1);
+        quit.DOScaleX(1, 0.1f).onComplete = FadeIn2;
+        if (first)
         {
             first = false;
             return;
@@ -43,13 +61,6 @@ public class ShopUIFade : UIFade
         {
             animations[i].DOPlayForward();
         }
-
-        hit1.gameObject.SetActive(false);
-        hit2.gameObject.SetActive(false);
-        line1.fillAmount = 0;
-        line2.fillAmount = 0;
-        quit.localScale = new Vector3(0, 1);
-        quit.DOScaleX(1, 0.1f).onComplete = FadeIn2;
     }
 
     private void FadeIn2()
@@ -62,6 +73,7 @@ public class ShopUIFade : UIFade
     {
         hit1.gameObject.SetActive(true);
         hit2.gameObject.SetActive(true);
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Shop);
     }
 
     override public void FadeOut(ModuleName name)
@@ -69,16 +81,19 @@ public class ShopUIFade : UIFade
         DOTween.To(() => hexjig.Start.backgroundInstance.bposition, x => hexjig.Start.backgroundInstance.bposition = x, 0.57f, outTime + inTime);
         DOTween.To(() => hexjig.Start.backgroundInstance.brotation, x => hexjig.Start.backgroundInstance.brotation = x, -18, outTime + inTime);
 
-        line1.DOFillAmount(0, 0.3f);
-        line2.DOFillAmount(0, 0.3f);
-        quit.DOScaleX(0, 0.1f);
-
         fadeOutFlag = true;
         fadeOutTime = System.DateTime.Now;
         for (int i = 0; i < animations.Length; i++)
         {
             animations[i].DOPlayBackwards();
         }
+    }
+
+    private void FadeOut2()
+    {
+        line1.DOFillAmount(0, 0.3f);
+        line2.DOFillAmount(0, 0.3f);
+        quit.DOScaleX(0, 0.1f).onComplete = TweenComplete;
     }
 
     private void TweenComplete()
@@ -92,7 +107,14 @@ public class ShopUIFade : UIFade
         if (fadeOutFlag && System.DateTime.Now.Subtract(fadeOutTime).TotalMilliseconds > time)
         {
             fadeOutFlag = false;
-            TweenComplete();
+            FadeOut2();
+        }
+
+        shopEffectGap--;
+        if (shopEffectGap == 0)
+        {
+            coinAnimation.DORestart();
+            shopEffectGap = 30 * 60;
         }
     }
 }

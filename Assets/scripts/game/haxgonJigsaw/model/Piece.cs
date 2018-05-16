@@ -267,7 +267,7 @@ namespace hexjig
                     tipGrids.Add(image.GetComponent<SpriteRenderer>());
                     image.GetComponent<SpriteRenderer>().color = new Color(image.GetComponent<SpriteRenderer>().color.r, image.GetComponent<SpriteRenderer>().color.g, image.GetComponent<SpriteRenderer>().color.b, shaderAlpha);
                 }
-                tip.transform.localPosition = new Vector3(Game.Instance.offx, Game.Instance.offy);
+                tip.transform.localPosition = new Vector3(Game.Instance.offx, Game.Instance.offy,-3);
                 tip.SetActive(false);
             }
 
@@ -413,7 +413,7 @@ namespace hexjig
             }
             else
             {
-                show.transform.position = new Vector3(x, y + GameVO.Instance.Height * 0.2f, showResult ? 0 : -1);
+                show.transform.position = new Vector3(x, y, showResult ? 0 : -1);
             }
             for (int i = 0; i < this.coords.length; i++)
             {
@@ -453,10 +453,10 @@ namespace hexjig
                 }
                 if (showResult)
                 {
-                    if(save)
+                    if(save && !isInStage)
                     {
                         Game.Instance.history.Add(this);
-                        Game.Instance.history2.Add(new Point2D(lastx, lasty));
+                        Game.Instance.history2.Add(new Point2D(0, 0));
                     }
                     MainData.Instance.dispatcher.DispatchWith(EventType.SET_PIECE);
                     show.transform.position = new Vector3(position0.x + game.offx - copy.x, position0.y + game.offy - copy.y + GameVO.Instance.Height * 0.2f);
@@ -465,6 +465,10 @@ namespace hexjig
                     showOut.SetActive(false);
                     isInStage = true;
                     game.CheckFinish();
+                    if(isRightPosition && hasShowTip)
+                    {
+                        tip.transform.localPosition = new Vector3(tip.transform.localPosition.x, tip.transform.localPosition.y, 1);
+                    }
                 }
                 else
                 {
@@ -476,7 +480,7 @@ namespace hexjig
             {
                 if (showResult)
                 {
-                    if (save)
+                    if (save && isInStage)
                     {
                         Game.Instance.history.Add(this);
                         Game.Instance.history2.Add(new Point2D(lastx, lasty));

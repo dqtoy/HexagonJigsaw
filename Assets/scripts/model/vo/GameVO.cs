@@ -89,6 +89,14 @@ public class GameVO
 
     public StorageVO storage;
 
+    public GooglePlay googlePlatform =  new GooglePlay();
+
+    public Achievement achievement = new Achievement();
+
+    public Rank rank = new Rank();
+
+    public bool isLoading = true;
+
     public GameVO()
     {
         instance = this;
@@ -98,15 +106,42 @@ public class GameVO
         GameObject obj = new GameObject();
         daily = obj.AddComponent<Daily>();
 
+        musicVolumn.value = 0;
+        soundVolumn.value = 0;
+
+
         //播放背景音乐
         bgm = ResourceManager.PlaySound("music/" + bgmId.value, true, musicVolumn.value / 100.0f);
 
         bgmId.AddListener(lib.Event.CHANGE, OnBgmChange);
+        soundVolumn.AddListener(lib.Event.CHANGE, OnSoundVolumnChange);
         musicVolumn.AddListener(lib.Event.CHANGE, OnMusicVolumnChange);
+
+        language.AddListener(lib.Event.CHANGE, OnLanguageChange);
+    }
+
+    public void LoadingComplete()
+    {
+        isLoading = false;
+        musicVolumn.value = PlayerPrefs.HasKey("musicVolumn")? PlayerPrefs.GetInt("musicVolumn") : 60;
+        soundVolumn.value = PlayerPrefs.HasKey("soundVolumn") ? PlayerPrefs.GetInt("soundVolumn") : 60;
+        bgmId.value = 1;
+    }
+
+    private void OnLanguageChange(lib.Event e)
+    {
+        PlayerPrefs.SetInt("language", language.value);
     }
 
     private void OnBgmChange(lib.Event e)
     {
+        if(isLoading)
+        {
+            return;
+        }
+
+        //Debug.Log("bgm:" + bgmId.value);
+
         if(bgm)
         {
             bgm.Stop();
@@ -117,8 +152,23 @@ public class GameVO
         bgm = ResourceManager.PlaySound("music/" + bgmId.value, true, GameVO.Instance.musicVolumn.value / 100.0f);
     }
 
+
+    private void OnSoundVolumnChange(lib.Event e)
+    {
+        if (isLoading)
+        {
+            return;
+        }
+        PlayerPrefs.SetInt("soundVolumn", soundVolumn.value);
+    }
+
     private void OnMusicVolumnChange(lib.Event e)
     {
+        if(isLoading)
+        {
+            return;
+        }
+        PlayerPrefs.SetInt("musicVolumn", musicVolumn.value);
         bgm.volume = musicVolumn.value / 100.0f;
     }
 
@@ -157,6 +207,8 @@ public class GameVO
 public class GameEvent
 {
     public static string SHOW_MODULE = "show_module";
+    public static string READY_SHOW_MODULE = "ready_show_module";
+    public static string SHOW_MODULE_COMPLETE = "show_module_complete";
 
 }
 

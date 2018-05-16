@@ -39,8 +39,8 @@ public class ButtonClick : MonoBehaviour, IPointerClickHandler, IPointerDownHand
             return;
         }
         lastTime = System.DateTime.Now;
-        ResourceManager.PlaySound("sound/click", false, GameVO.Instance.soundVolumn.value / 100.0f);
         _dispatcher.DispatchWith(gameObject.name, gameObject);
+        ResourceManager.PlaySound("sound/click", false, GameVO.Instance.soundVolumn.value / 100.0f);
     }
 
 

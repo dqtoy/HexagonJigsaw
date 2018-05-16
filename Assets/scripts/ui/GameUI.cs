@@ -62,6 +62,19 @@ public class GameUI : MonoBehaviour {
         ShowFlush();
     }
 
+    public void LoadingChangeOut()
+    {
+        quitOpen = false;
+        GameObjectUtils.EnableComponentAllChildren<Shadow>(quit);
+        sure.DOScaleX(0, 0.2f);
+        cancel.DOScaleX(0, 0.2f);
+        quitSelection.SetActive(false);
+        Game.Instance.rootStage.transform.localScale = new Vector3(1, 1);
+
+        hex.SetActive(false);
+        MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_CUT);
+    }
+
     private void OnQuitCancel(lib.Event e)
     {
         quitOpen = false;
@@ -172,6 +185,7 @@ public class GameUI : MonoBehaviour {
         GameVO.Instance.totalTime.value += MainData.Instance.time.value;
         GameVO.Instance.totalTimeString.value = StringUtils.TimeToMS(GameVO.Instance.totalTime.value);
 
+
         int time = (int)(MainData.Instance.time.value / 1000.0f);
         int modelId = 0;
         for(int i = 0; i < ModelConfig.Configs.Count; i++)
@@ -193,6 +207,9 @@ public class GameUI : MonoBehaviour {
         }
         float score = GameVO.Instance.passScore.scoreMin + 1.0f * (GameVO.Instance.passScore.scoreMax - GameVO.Instance.passScore.scoreMin) * (time - GameVO.Instance.passScore.minTime) / (GameVO.Instance.passScore.maxTime - GameVO.Instance.passScore.minTime);
         txt3.text = ((int)score) + (score > 0 ? ((int)(UnityEngine.Random.Range(0, 1.0f) * 10))/10.0f : 0) + "%";
+
+        GameVO.Instance.rank.FinishLevel(MainData.Instance.config, (int)(MainData.Instance.time.value / 1000.0f), score);
+        GameVO.Instance.achievement.FinishLevel(MainData.Instance.config, (int)(MainData.Instance.time.value / 1000.0f), score);
 
         txt1.GetComponent<TextExd>().languageId = GameVO.Instance.passScore.language.id;
 
@@ -286,14 +303,14 @@ public class GameUI : MonoBehaviour {
         }
         else if (GameVO.Instance.model == GameModel.Freedom)
         {
-            StartFreedomLevel();
+            StartFreedomLevel(true);
         }
         modelTxt.languageId = GameVO.Instance.model == GameModel.Daily ? 10 : 9;
         bgmId = GameVO.Instance.bgmId.value;
         GameVO.Instance.bgmId.value = 1000;
     }
 
-    private void StartFreedomLevel()
+    private void StartFreedomLevel(bool first = false)
     {
         int level = 0;
         List<int> list = new List<int>();
@@ -301,17 +318,35 @@ public class GameUI : MonoBehaviour {
         List<int> list3 = new List<int>();
         for (int i = 0; i < LevelConfig.Configs.Count; i++)
         {
-            if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 4 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 6)
+            if(first)
             {
-                list.Add(LevelConfig.Configs[i].id);
+                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count == 4)
+                {
+                    list.Add(LevelConfig.Configs[i].id);
+                }
+                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count == 7)
+                {
+                    list2.Add(LevelConfig.Configs[i].id);
+                }
+                else if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count == 10)
+                {
+                    list3.Add(LevelConfig.Configs[i].id);
+                }
             }
-            if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 7 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 9)
+            else
             {
-                list2.Add(LevelConfig.Configs[i].id);
-            }
-            else if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 10)
-            {
-                list3.Add(LevelConfig.Configs[i].id);
+                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 4 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 6)
+                {
+                    list.Add(LevelConfig.Configs[i].id);
+                }
+                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 7 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 9)
+                {
+                    list2.Add(LevelConfig.Configs[i].id);
+                }
+                else if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 10)
+                {
+                    list3.Add(LevelConfig.Configs[i].id);
+                }
             }
         }
         if (GameVO.Instance.difficulty == DifficultyMode.Easy)

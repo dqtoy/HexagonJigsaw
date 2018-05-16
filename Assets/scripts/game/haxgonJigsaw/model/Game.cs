@@ -51,7 +51,6 @@ namespace hexjig
             root = new GameObject();
             root.name = "GameRoot";
             root.layer = 8;
-
             rootStage = new GameObject();
             rootStage.transform.parent = root.transform;
             rootStage.name = "rootStage";
@@ -377,7 +376,8 @@ namespace hexjig
 
             outBackground = new GameObject();
             outBackground.transform.parent = root.transform;
-            
+            //outBackground.SetActive(!MainData.Instance.isLoading);
+
             //生成背景
             minX = 1000;
             maxX = -1000;
@@ -449,6 +449,10 @@ namespace hexjig
                 if (Input.GetAxis("Fire1") > 0 && lastClick == 0)
                 {
                     Vector3 pos = Input.mousePosition;
+                    if(Input.touchCount > 0)
+                    {
+                        pos = Input.GetTouch(0).position;
+                    }
                     pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
                     pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
                     //Point2D p = HaxgonCoord<Coord>.PositionToCoord(Point2D.Create(pos.x - offx1, pos.y - offy1), 0.2f);
@@ -469,6 +473,10 @@ namespace hexjig
                     if (dragPiece != null)
                     {
                         Vector3 pos = Input.mousePosition;
+                        if (Input.touchCount > 0)
+                        {
+                            pos = Input.GetTouch(0).position;
+                        }
                         pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
                         pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
                         dragPiece.StopDrag(pos.x, pos.y);
@@ -481,6 +489,10 @@ namespace hexjig
                     if (dragPiece != null)
                     {
                         Vector3 pos = Input.mousePosition;
+                        if (Input.touchCount > 0)
+                        {
+                            pos = Input.GetTouch(0).position;
+                        }
                         pos.x = (pos.x / GameVO.Instance.PixelWidth - 0.5f) * GameVO.Instance.Width;
                         pos.y = (pos.y / GameVO.Instance.PixelHeight - 0.5f) * GameVO.Instance.Height;
                         dragPiece.DragMove(pos.x, pos.y);

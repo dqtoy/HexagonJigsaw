@@ -23,6 +23,7 @@ namespace hexjig
         //关卡尺寸大小
         public float levelWidth;
         public float levelHeight;
+        public bool isLoading = true;
 
         public GameObject showCutRoot; 
 

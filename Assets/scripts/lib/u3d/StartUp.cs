@@ -27,6 +27,10 @@ namespace lib
         // Update is called once per frame
         void Update()
         {
+            LibData.instance.timeMiniSecond.value = (int)(Time.time * 1000);
+            LibData.instance.timeSecond.value = (int)Time.time;
+            LibData.instance.timeSecondF.value = Time.time;
+            DelayCall.Update();
         }
         
         public GameObject Create(UnityEngine.Object obj)

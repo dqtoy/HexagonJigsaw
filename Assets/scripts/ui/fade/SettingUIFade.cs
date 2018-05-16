@@ -75,6 +75,7 @@ public class SettingUIFade : UIFade
     private void LineComplete()
     {
         hitEffect.SetActive(true);
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Setting);
     }
 
 }

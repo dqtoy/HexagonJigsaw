@@ -74,7 +74,7 @@ public class GameUIFade : UIFade
 
         playEffect1();
         lastEffectPlayTime = DateTime.Now;
-        loopEffect = true;
+        loopEffect = GameVO.Instance.passScore.effectCount > 0 ? true : false;
         loopTime = GameVO.Instance.passScore.effectCount;
         effectGap = 800 + UnityEngine.Random.Range(0, 500);
     }
@@ -208,11 +208,16 @@ public class GameUIFade : UIFade
         if(moduleName == ModuleName.Freedom || moduleName == ModuleName.Daily)
         {
             restart.DOLocalMoveX(-325, inTime * 0.5f);
-            tip.DOLocalMoveX(274, inTime * 0.5f);
+            tip.DOLocalMoveX(274, inTime * 0.5f).onComplete = FadeInComplete;
 
             MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_START_EFFECT);
             
         }
+    }
+
+    private void FadeInComplete()
+    {
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Game);
     }
 
     private void PlayTipEffect()

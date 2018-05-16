@@ -176,7 +176,7 @@ public class FreedomUIFade : UIFade
             normalIcon.rectTransform.DOScale(1, 0.4f).SetDelay(0.2f);
 
             hardIcon.rectTransform.localScale = new Vector3(0, 0);
-            hardIcon.rectTransform.DOScale(1, 0.4f).SetDelay(0.5f);
+            hardIcon.rectTransform.DOScale(1, 0.4f).SetDelay(0.5f).onComplete = OnFadeInComplete;
 
             easyBg.rectTransform.localScale = new Vector3(0, 0);
             easyBg.rectTransform.DOScale(1, 0.4f).SetDelay(0.2f);
@@ -206,6 +206,11 @@ public class FreedomUIFade : UIFade
                 hardTrans.DOLocalMoveX(hardX, inTime - 0.3f).onComplete = FadeIn2;
             }
         }
+    }
+
+    private void OnFadeInComplete()
+    {
+        GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Freedom);
     }
 
     private void LineComplete()

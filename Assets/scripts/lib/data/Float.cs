@@ -5,9 +5,13 @@ namespace lib
 {
     public class Float : SimpleValue
     {
-        public Float(object value = null)
+        public Float(object val = null)
         {
-            this.val = value ?? 0;
+            if (!(val is float))
+            {
+                val = (float)Convert.ToDouble(val);
+            }
+            this.val = val;
         }
 
         /// <summary>
