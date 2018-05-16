@@ -94,6 +94,14 @@ public class GooglePlay : EventDispatcher {
         return PlayGamesPlatform.Instance.GetAchievement(id).IsUnlocked;
     }
 
+    public void Buy(string buykey)
+    {
+        AndroidJavaClass m_unityPlayer = new AndroidJavaClass("com.BailiGame.HexagonJigsaw.UnityPlayerActivity");
+        AndroidJavaObject m_curActivity = m_unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        m_curActivity.Call("Pay", buykey);
+
+    }
+
     public static string LOGIN_SUCCESS = "login_success";
     public static string LOGIN_FAIL = "login_fail";
 

@@ -11,6 +11,16 @@ public class UIStart : MonoBehaviour {
 
     public Transform uicamera;
 
+    public Text log;
+
+    void Messgae(string message)
+
+    {
+
+        log.text += message + "\n";
+
+    }
+
     public GameObject loading;
     public GameObject mainUI;
     public GameObject dailyUI;
