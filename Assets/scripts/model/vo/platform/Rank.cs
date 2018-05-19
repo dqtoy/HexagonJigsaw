@@ -55,7 +55,7 @@ public class Rank
         {
             PlayerPrefs.SetInt("TotalTime", timeSecond + PlayerPrefs.GetInt("TotalTime"));
         }
-        UploadRank(PlayerPrefs.GetInt("TotalTime"), GooglePlay.TotalTimeRankId);
+        UploadRank(PlayerPrefs.GetInt("TotalTime"), GPGSIds.leaderboard_totaltime);
     }
 
     /// <summary>
@@ -72,6 +72,6 @@ public class Rank
         {
             PlayerPrefs.SetInt("DailyTime", timeSecond + PlayerPrefs.GetInt("DailyTime"));
         }
-        UploadRank(PlayerPrefs.GetInt("DailyTime"), GooglePlay.DailyTimeRankId);
+        UploadRank(PlayerPrefs.GetInt("DailyTime"), GPGSIds.leaderboard_dailytime);
     }
 }

@@ -33,7 +33,16 @@ public class MainUI : MonoBehaviour {
 
     private void OnLoginTest(lib.Event e)
     {
-        GameVO.Instance.rank.ShowRankView(UnityEngine.Random.Range(0, 1.0f) < 0.5f ? GooglePlay.TotalTimeRankId : GooglePlay.DailyTimeRankId);
+        /*Admob ad = Admob.Instance();
+        if (ad.isRewardedVideoReady())
+        {
+            ad.showRewardedVideo();
+        }
+        else
+        {
+            ad.loadRewardedVideo("ca-app-pub-6319110362714674/4277070482");
+        }*/
+        GameVO.Instance.rank.ShowRankView(UnityEngine.Random.Range(0, 1.0f) < 0.5f ? GPGSIds.leaderboard_totaltime : GPGSIds.leaderboard_dailytime);
     }
 
     private void OnShowHonor(lib.Event e)

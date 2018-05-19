@@ -23,6 +23,8 @@ public class Daily : MonoBehaviour
 
     private long createTime;
 
+    public Int currentLevelIndex = new Int();
+
     public int GetCurrentLevel()
     {
         for (int i = 0; i < levels.length; i++)
@@ -149,6 +151,8 @@ public class Daily : MonoBehaviour
         }
     }
 
+    private bool firstGame = true;
+
     private void CreateNewLevels(long time)
     {
         isFirstPassAll = true;
@@ -160,8 +164,33 @@ public class Daily : MonoBehaviour
         List<int> list = new List<int>();
         List<int> list2 = new List<int>();
         List<int> list3 = new List<int>();
+        List<int> firstLevels = new List<int>() {};
+        if(GameVO.Instance.isFirstGame && firstGame)
+        {
+            firstGame = false;
+            firstLevels.Add(1);
+            firstLevels.Add(2);
+            firstLevels.Add(3);
+            firstLevels.Add(4);
+            firstLevels.Add(5);
+            for(int i = 0; i < firstLevels.Count; i++)
+            {
+                DailyLevelVO levelvo = new DailyLevelVO();
+                levelvo.config = LevelConfig.GetConfig(firstLevels[i]);
+                levels.Add(levelvo);
+            }
+        }
         for (int i = 0; i < LevelConfig.Configs.Count; i++)
         {
+            bool find = false;
+            for(int j = 0; j < firstLevels.Count; j++)
+            {
+                if(firstLevels[j] == LevelConfig.Configs[i].id)
+                {
+                    find = true;
+                    break;
+                }
+            }
             if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 4 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 6)
             {
                 list.Add(i);
@@ -175,8 +204,7 @@ public class Daily : MonoBehaviour
                 list3.Add(i);
             }
         }
-        int len = 0;
-        while (len < 6)
+        while (levels.length < 6)
         {
             int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list.Count);
             int ind = list[index];
@@ -184,10 +212,8 @@ public class Daily : MonoBehaviour
             DailyLevelVO levelvo = new DailyLevelVO();
             levelvo.config = LevelConfig.Configs[ind];
             levels.Add(levelvo);
-            len++;
         }
-        len = 0;
-        while (len < 3)
+        while (levels.length < 9)
         {
             int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list2.Count);
             int ind = list2[index];
@@ -195,10 +221,8 @@ public class Daily : MonoBehaviour
             DailyLevelVO levelvo = new DailyLevelVO();
             levelvo.config = LevelConfig.Configs[ind];
             levels.Add(levelvo);
-            len++;
         }
-        len = 0;
-        while (len < 1)
+        while (levels.length < 10)
         {
             int index = (int)Math.Floor(UnityEngine.Random.Range(0, 1f) * list3.Count);
             int ind = list3[index];
@@ -206,7 +230,6 @@ public class Daily : MonoBehaviour
             DailyLevelVO levelvo = new DailyLevelVO();
             levelvo.config = LevelConfig.Configs[ind];
             levels.Add(levelvo);
-            len++;
         }
         all.value = levels.length;
         allTime.value = 0;

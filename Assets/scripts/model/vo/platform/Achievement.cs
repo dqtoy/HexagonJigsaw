@@ -1,4 +1,5 @@
 ﻿using lib;
+using UnityEngine;
 
 public class Achievement
 {
@@ -54,7 +55,29 @@ public class Achievement
     /// <param name="score">获得分数</param>
     public void FinishLevel(LevelConfig config,int timeSecond,float score)
     {
+        if (config.id == 23 && IsUnlockAchievement("CgkInbOFtb4REAIQDg") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQDg");
 
+        if (config.id == 28 && IsUnlockAchievement("CgkInbOFtb4REAIQDw") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQDw");
+
+        if (config.id == 42 && IsUnlockAchievement("CgkInbOFtb4REAIQEA") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQEA");
+
+        if (config.id == 47 && IsUnlockAchievement("CgkInbOFtb4REAIQEQ") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQEQ");
+
+        if (config.id == 56 && IsUnlockAchievement("CgkInbOFtb4REAIQEg") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQEg");
+
+        if (config.id == 68 && IsUnlockAchievement("CgkInbOFtb4REAIQEw") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQEw");
+
+        if (config.id == 65 && IsUnlockAchievement("CgkInbOFtb4REAIQFA") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQFA");
+
+        if (config.id == 82 && IsUnlockAchievement("CgkInbOFtb4REAIQFQ") == false)//love
+            UnlockAchievement("CgkInbOFtb4REAIQFQ");
     }
 
     /// <summary>
@@ -63,14 +86,38 @@ public class Achievement
     /// <param name="timeSecond">耗时(秒)</param>
     public void FinishDaily(int timeSecond)
     {
+        if (timeSecond < 1200 && IsUnlockAchievement("CgkInbOFtb4REAIQCw") == false)
+            UnlockAchievement("CgkInbOFtb4REAIQCw");
 
+        if (timeSecond < 900 && IsUnlockAchievement("CgkInbOFtb4REAIQDA") == false)
+            UnlockAchievement("CgkInbOFtb4REAIQDA");
+
+        if (timeSecond < 600 && IsUnlockAchievement("CgkInbOFtb4REAIQDQ") == false)
+            UnlockAchievement("CgkInbOFtb4REAIQDQ");
     }
 
     /// <summary>
-    /// 玩家进入游戏
+    /// 登入游戏
     /// </summary>
-    public void LoginIn()
+    /// <param name="isDayFirstLogin">是否为当天第一次登录游戏</param>
+    /// <param name="autoLoginDay">连续登录天数</param>
+    public void LoginIn(bool isDayFirstLogin,int autoLoginDay)
     {
-
+        if (!PlayerPrefs.HasKey("LoginCounter"))
+        {
+            PlayerPrefs.SetInt("LoginCounter", 1);
+            UnlockAchievement("CgkInbOFtb4REAIQCA");//首次登陆
+        }
+        else {
+            PlayerPrefs.SetInt("LoginCounter", PlayerPrefs.GetInt("LoginCounter") + 1);
+            if (PlayerPrefs.GetInt("LoginCounter") == 2 && IsUnlockAchievement("CgkInbOFtb4REAIQCQ") == false)
+                UnlockAchievement("CgkInbOFtb4REAIQCQ");//登陆2天
+            if (PlayerPrefs.GetInt("LoginCounter") == 3 && IsUnlockAchievement("CgkInbOFtb4REAIQCg") == false)
+                UnlockAchievement("CgkInbOFtb4REAIQCg");//登陆3天
+            //if (PlayerPrefs.GetInt("LoginCounter") == 5)
+            //    UnlockAchievement("XXXXXXXXXXX");//登陆5天
+            //if (PlayerPrefs.GetInt("LoginCounter") == 7)
+            //    UnlockAchievement("XXXXXXXXXXX");//登陆7天
+        }
     }
 }

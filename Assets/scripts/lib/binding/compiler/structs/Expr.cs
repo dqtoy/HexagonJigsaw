@@ -103,7 +103,17 @@ namespace lib
             }
             if (this.type == "+")
             {
-                return (float)Convert.ToDouble(Grammar.Call(this.expr1, "getValue", new object[] { param })) + (float)Convert.ToDouble(Grammar.Call(this.expr2, "getValue", new object[] { param }));
+                object val1 = Grammar.Call(this.expr1, "getValue", new object[] { param });
+                object val2 = Grammar.Call(this.expr2, "getValue", new object[] { param });
+                if(val1 is string)
+                {
+                    return (string)val1 + val2;
+                }
+                else if(val2 is string)
+                {
+                    return val1 + (string)val2;
+                }
+                return (float)Convert.ToDouble(val1) + (float)Convert.ToDouble(val2);
             }
             if (this.type == "-")
             {

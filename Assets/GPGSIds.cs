@@ -24,12 +24,26 @@
 
 public static class GPGSIds
 {
+        public const string achievement_daily_challenge_monster = "CgkInbOFtb4REAIQDA"; // <GPGSID>
+        public const string achievement_love_the_world = "CgkInbOFtb4REAIQEQ"; // <GPGSID>
         public const string achievement_daily_challenge_1 = "CgkInbOFtb4REAIQAw"; // <GPGSID>
         public const string achievement_daily_challenge_2 = "CgkInbOFtb4REAIQBA"; // <GPGSID>
-        public const string leaderboard_dailytime = "CgkInbOFtb4REAIQBg"; // <GPGSID>
-        public const string leaderboard_totaltime = "CgkInbOFtb4REAIQBw"; // <GPGSID>
-        public const string achievement_with_us_2 = "CgkInbOFtb4REAIQAg"; // <GPGSID>
         public const string achievement_with_us = "CgkInbOFtb4REAIQAQ"; // <GPGSID>
+        public const string achievement_bananananana = "CgkInbOFtb4REAIQEA"; // <GPGSID>
+        public const string achievement_daily_challenge_master = "CgkInbOFtb4REAIQCw"; // <GPGSID>
+        public const string achievement_this_is_a = "CgkInbOFtb4REAIQFA"; // <GPGSID>
+        public const string leaderboard_dailytime = "CgkInbOFtb4REAIQBg"; // <GPGSID>
+        public const string achievement_hipacman = "CgkInbOFtb4REAIQDw"; // <GPGSID>
+        public const string achievement_daily_challenge_badass = "CgkInbOFtb4REAIQDQ"; // <GPGSID>
+        public const string achievement_do_re_mi = "CgkInbOFtb4REAIQEw"; // <GPGSID>
+        public const string leaderboard_totaltime = "CgkInbOFtb4REAIQBw"; // <GPGSID>
+        public const string achievement_fly_in_the_sky = "CgkInbOFtb4REAIQFQ"; // <GPGSID>
+        public const string achievement_find_turtle = "CgkInbOFtb4REAIQEg"; // <GPGSID>
+        public const string achievement_with_us_2 = "CgkInbOFtb4REAIQAg"; // <GPGSID>
+        public const string achievement_love__love = "CgkInbOFtb4REAIQDg"; // <GPGSID>
+        public const string achievement_login_game_1 = "CgkInbOFtb4REAIQCA"; // <GPGSID>
+        public const string achievement_login_game_2 = "CgkInbOFtb4REAIQCQ"; // <GPGSID>
+        public const string achievement_login_game_3 = "CgkInbOFtb4REAIQCg"; // <GPGSID>
 
 }
 

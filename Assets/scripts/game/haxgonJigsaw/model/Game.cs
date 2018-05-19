@@ -76,7 +76,15 @@ namespace hexjig
                 }
             }
             //颜色信息
-            int type = 1;
+            List<int> types1 = new List<int>() { 1,2,3,4,5,6,7,8,9,10,11,12 };
+            Array<int> types2 = new Array<int>();
+            while(types1.Count > 0)
+            {
+                int index = UnityEngine.Random.Range(0, types1.Count);
+                types2.Add(types1[index]);
+                types1.RemoveAt(index);
+            }
+            int type = types2.Pop();
             //生成片信息
             for (int i = 0; i < config.pieces.Count; i++)
             {
@@ -95,7 +103,7 @@ namespace hexjig
                     };
                     piece.coords.Add(coord);
                 }
-                type++;
+                type = types2.Pop();
                 piece.Init();
             }
             for (int i = 0; i < config.pieces2.Count; i++)
@@ -115,7 +123,7 @@ namespace hexjig
                     };
                     piece.coords.Add(coord);
                 }
-                type++;
+                type = types2.Pop();
                 piece.Init();
             }
 

@@ -238,6 +238,7 @@ public class GameUI : MonoBehaviour {
                 new StartGameCommand(GameVO.Instance.daily.GetNextLevel(MainData.Instance.levelId.value));
                 levelTxt.text = GameVO.Instance.daily.GetNextLevel(MainData.Instance.levelId.value) + "";
                 MainData.Instance.dispatcher.DispatchWith(hexjig.EventType.SHOW_GAME_CHANGE_IN_EFFECT);
+                GameVO.Instance.daily.currentLevelIndex.value = GameVO.Instance.daily.GetLevelIndex(MainData.Instance.levelId.value);
             }
         }
         else
@@ -300,9 +301,11 @@ public class GameUI : MonoBehaviour {
             int level = (int)GameVO.Instance.moduleData;
             new StartGameCommand(level);
             levelTxt.text = level + "";
+            GameVO.Instance.daily.currentLevelIndex.value = GameVO.Instance.daily.GetLevelIndex(level);
         }
         else if (GameVO.Instance.model == GameModel.Freedom)
         {
+            GameVO.Instance.daily.currentLevelIndex.value = -1;
             StartFreedomLevel(true);
         }
         modelTxt.languageId = GameVO.Instance.model == GameModel.Daily ? 10 : 9;
@@ -313,53 +316,17 @@ public class GameUI : MonoBehaviour {
     private void StartFreedomLevel(bool first = false)
     {
         int level = 0;
-        List<int> list = new List<int>();
-        List<int> list2 = new List<int>();
-        List<int> list3 = new List<int>();
-        for (int i = 0; i < LevelConfig.Configs.Count; i++)
-        {
-            if(first)
-            {
-                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count == 4)
-                {
-                    list.Add(LevelConfig.Configs[i].id);
-                }
-                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count == 7)
-                {
-                    list2.Add(LevelConfig.Configs[i].id);
-                }
-                else if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count == 10)
-                {
-                    list3.Add(LevelConfig.Configs[i].id);
-                }
-            }
-            else
-            {
-                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 4 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 6)
-                {
-                    list.Add(LevelConfig.Configs[i].id);
-                }
-                if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 7 && LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count <= 9)
-                {
-                    list2.Add(LevelConfig.Configs[i].id);
-                }
-                else if (LevelConfig.Configs[i].pieces.Count + LevelConfig.Configs[i].pieces2.Count >= 10)
-                {
-                    list3.Add(LevelConfig.Configs[i].id);
-                }
-            }
-        }
         if (GameVO.Instance.difficulty == DifficultyMode.Easy)
         {
-            level = list[(int)(UnityEngine.Random.Range(0, 1.0f) * list.Count)];
+            level = GameVO.Instance.levelList.GetEasyLevelId(first);
         }
         else if (GameVO.Instance.difficulty == DifficultyMode.Normal)
         {
-            level = list2[(int)(UnityEngine.Random.Range(0, 1.0f) * list2.Count)];
+            level = GameVO.Instance.levelList.GetNormalLevelId(first);
         }
         else if (GameVO.Instance.difficulty == DifficultyMode.Hard)
         {
-            level = list3[(int)(UnityEngine.Random.Range(0, 1.0f) * list3.Count)];
+            level = GameVO.Instance.levelList.GetHardLevelId(first);
         }
         new StartGameCommand(level);
         levelTxt.text = level + "";

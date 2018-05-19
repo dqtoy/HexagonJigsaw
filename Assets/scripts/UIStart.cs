@@ -6,6 +6,7 @@ using hexjig;
 using lib;
 using System;
 using DG.Tweening;
+using admob;
 
 public class UIStart : MonoBehaviour {
 
@@ -59,6 +60,7 @@ public class UIStart : MonoBehaviour {
         UIFix.SetDistanceToBottom(border3);
         UIFix.SetDistanceToTop(border4);
         backgrodunEffect.transform.localPosition = new Vector3(0, -GameVO.Instance.Height * 0.5f, backgrodunEffect.transform.localPosition.z);
+        loading.GetComponent<RectTransform>().sizeDelta = new Vector2(720, GameVO.Instance.PixelHeight * GameVO.Instance.scale);
 
         (Grammar.GetProperty(this, "bg" + UnityEngine.Random.Range(1, 6)) as GameObject).SetActive(true);
 
@@ -172,7 +174,6 @@ public class UIStart : MonoBehaviour {
         MainData.Instance.isLoading = false;
         loading.SetActive(false);
 
-        GameVO.Instance.achievement.LoginIn();
         //show = null;
         //GameVO.Instance.ShowModule(ModuleName.Main);
     }

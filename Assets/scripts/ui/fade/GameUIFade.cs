@@ -40,9 +40,15 @@ public class GameUIFade : UIFade
     {
         Sequence mySequence = DOTween.Sequence();
         ResourceManager.PlaySound("sound/gameui1", false, GameVO.Instance.soundVolumn.value / 100.0f);
-        mySequence.Append(operateBg.DOScaleY(0, 0.4f));
-        mySequence.Append(operateBg.DOScaleY(1, 0.4f)).onComplete = OnShowGameChangeInComplete0;
+        operateBg.DOScaleY(0, 0.4f).onComplete = FadeOutOperate;
         txt.DOScaleX(0, 0.4f);
+    }
+
+    private void FadeOutOperate()
+    {
+        restart.gameObject.SetActive(false);
+        tip.gameObject.SetActive(false);
+        operateBg.DOScaleY(1, 0.4f).onComplete = OnShowGameChangeInComplete0;
     }
 
     private void OnShowGameChangeOut(lib.Event e)
@@ -88,7 +94,7 @@ public class GameUIFade : UIFade
     {
         ResourceManager.PlaySound("sound/gamepassboom", false, GameVO.Instance.soundVolumn.value / 100.0f);
         effect1.SetActive(true);
-        //effect1.GetComponent<RectTransform>().localPosition = new Vector3(172 + UnityEngine.Random.Range(-100,100), 123 + +UnityEngine.Random.Range(-100, 100));
+        effect1.GetComponent<RectTransform>().localPosition = new Vector3(172 + UnityEngine.Random.Range(-100,100), 123 + +UnityEngine.Random.Range(-100, 100));
         ParticleSystem[] ps = effect1.gameObject.GetComponentsInChildren<ParticleSystem>();
         for (int i = 0; i < ps.Length; i++)
         {
@@ -98,6 +104,7 @@ public class GameUIFade : UIFade
 
     override public void FadeOut(ModuleName name)
     {
+        GameVO.Instance.admob.RemoveBanner();
         loopEffect = false;
         moduleName = name;
         if (name == ModuleName.Freedom || name == ModuleName.Daily)
@@ -217,6 +224,7 @@ public class GameUIFade : UIFade
 
     private void FadeInComplete()
     {
+        GameVO.Instance.admob.ShowBanner();
         GameVO.Instance.dispatcher.DispatchWith(GameEvent.SHOW_MODULE_COMPLETE, ModuleName.Game);
     }
 

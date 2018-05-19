@@ -91,6 +91,10 @@ public class GooglePlay : EventDispatcher {
     /// <returns></returns>
     public bool IsUnlockAchievement(string id)
     {
+        if(PlayGamesPlatform.Instance.GetAchievement(id) == null)
+        {
+            return false;
+        }
         return PlayGamesPlatform.Instance.GetAchievement(id).IsUnlocked;
     }
 
@@ -104,7 +108,4 @@ public class GooglePlay : EventDispatcher {
 
     public static string LOGIN_SUCCESS = "login_success";
     public static string LOGIN_FAIL = "login_fail";
-
-    public static string TotalTimeRankId = "CgkInbOFtb4REAIQBw";
-    public static string DailyTimeRankId = "CgkInbOFtb4REAIQBg";
 }

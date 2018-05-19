@@ -95,11 +95,27 @@ public class GameVO
 
     public Rank rank = new Rank();
 
+    public AdmobPlugin admob = new AdmobPlugin();
+
     public bool isLoading = true;
+
+    public LevelList levelList = new LevelList();
+
+    public bool isFirstGame = false;
 
     public GameVO()
     {
         instance = this;
+
+        if (PlayerPrefs.HasKey("isFirstGame"))
+        {
+            isFirstGame = false;
+        }
+        else
+        {
+            isFirstGame = true;
+            PlayerPrefs.SetInt("isFirstGame", 1);
+        }
 
         storage = new StorageVO();
 
@@ -126,6 +142,52 @@ public class GameVO
         musicVolumn.value = PlayerPrefs.HasKey("musicVolumn")? PlayerPrefs.GetInt("musicVolumn") : 60;
         soundVolumn.value = PlayerPrefs.HasKey("soundVolumn") ? PlayerPrefs.GetInt("soundVolumn") : 60;
         bgmId.value = 1;
+
+
+        //计算登录天数
+        int loginAutoDay = 1;
+        bool isDayFirstLogin = true;
+        if (PlayerPrefs.HasKey("loginYear") == false)
+        {
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int day = DateTime.Now.Day;
+            PlayerPrefs.SetInt("loginYear", year);
+            PlayerPrefs.SetInt("loginMonth", month);
+            PlayerPrefs.SetInt("loginDay", day);
+            PlayerPrefs.SetInt("loginAutoDay", loginAutoDay);
+        }
+        else
+        {
+            int year = PlayerPrefs.GetInt("loginYear");
+            int month = PlayerPrefs.GetInt("loginMonth");
+            int day = PlayerPrefs.GetInt("loginDay");
+            loginAutoDay = PlayerPrefs.GetInt("loginAutoDay");
+            if (DateTime.Now.Year == year && DateTime.Now.Month == month && DateTime.Now.Day == day)
+            {
+                isDayFirstLogin = false;
+            }
+            else
+            {
+                bool continueLogin = false;
+                DateTime lastLogin = new DateTime(year, month, day);
+                DateTime now = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                if (now.Subtract(lastLogin).TotalMilliseconds == 24 * 3600 * 1000)
+                {
+                    continueLogin = true;
+                }
+                if (continueLogin)
+                {
+                    loginAutoDay++;
+                }
+                else
+                {
+                    loginAutoDay = 1;
+                }
+                PlayerPrefs.SetInt("loginAutoDay", loginAutoDay);
+            }
+        }
+        GameVO.Instance.achievement.LoginIn(isDayFirstLogin, loginAutoDay);
     }
 
     private void OnLanguageChange(lib.Event e)
